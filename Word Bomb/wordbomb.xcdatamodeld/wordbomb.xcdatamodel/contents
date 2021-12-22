@@ -14,6 +14,7 @@
     <entity name="GameMode" representedClassName="GameMode" syncable="YES">
         <attribute name="gameType_" optional="YES" attributeType="String"/>
         <attribute name="instruction_" optional="YES" attributeType="String"/>
+        <attribute name="isDefault_" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name_" optional="YES" attributeType="String"/>
         <relationship name="queriesDB_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Database"/>
         <relationship name="wordsDB_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Database"/>
@@ -41,7 +42,7 @@
     </entity>
     <elements>
         <element name="Database" positionX="-182.5402832031251" positionY="160.2005920410156" width="128" height="89"/>
-        <element name="GameMode" positionX="-337.001953125" positionY="-21.2110595703125" width="128" height="104"/>
+        <element name="GameMode" positionX="-337.001953125" positionY="-21.2110595703125" width="128" height="119"/>
         <element name="Word" positionX="47.04217529296869" positionY="24.35401916503906" width="128" height="89"/>
     </elements>
 </model>

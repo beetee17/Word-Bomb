@@ -54,6 +54,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     
     func pauseGame() {
         viewToShow = .pauseMenu
+        Game.playSound(file: "back")
         Game.stopTimer()
     }
     
