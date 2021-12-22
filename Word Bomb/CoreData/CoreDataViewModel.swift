@@ -102,7 +102,8 @@ class CoreDataViewModel: ObservableObject {
                 }
             }
         }
-        moc.saveObjects()
+        context.saveObjects()
+        
         print("Initialised \(db.name) Database")
     }
 }
