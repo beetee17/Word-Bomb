@@ -21,7 +21,7 @@ struct ModeSelectButton: View {
     
     var body: some View {
         
-        Button(mode.name) {
+        Game.mainButton(label: mode.name) {
             withAnimation{
                 if viewModel.gkSelect {
                     if !GKLocalPlayer.local.isAuthenticated {
@@ -34,9 +34,7 @@ struct ModeSelectButton: View {
                     viewModel.startGame(mode: mode)
                 }
             }
-            
         }
-        .buttonStyle(MainButtonStyle())
         .contextMenu {
             Button(action: {
                 // to avoid glitchy animation

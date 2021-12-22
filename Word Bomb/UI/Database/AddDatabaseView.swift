@@ -38,9 +38,10 @@ struct DatabaseTextEditor: View {
 
                 .foregroundColor(Color(.label))
                 .multilineTextAlignment(.leading)
-                .background(Color(.gray).opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .background(Color(.secondarySystemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.horizontal, 25)
+            
             Text(text ?? placeholder)
             // following line is a hack to create an inset similar to the TextEditor inset...
                 .foregroundColor(Color(.placeholderText))
@@ -48,6 +49,9 @@ struct DatabaseTextEditor: View {
                 .padding(.leading, 30)
                 .padding(.top, 8)
                 .padding(.trailing, 20)
+                .disabled(true)
+                .allowsHitTesting(false) // does not work :(
+                
         }
         .font(.body)
     }
@@ -89,7 +93,6 @@ struct AddDatabaseView: View {
                 
                 TextField("Enter the name of your database", text: $dbName)
                     .padding(EdgeInsets(top: 8, leading: 6, bottom: 8, trailing: 6))
-                    .foregroundColor(.secondary)
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(10.0)
                     .padding(.horizontal, 25)

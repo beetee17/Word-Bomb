@@ -10,9 +10,9 @@ import CoreData
 
 class CoreDataViewModel: ObservableObject {
 
-    @Published var setUpComplete = UserDefaults.standard.bool(forKey: "Set Up Complete") {
+    @Published var setUpComplete = UserDefaults.standard.bool(forKey: "Set Up Completed") {
         didSet {
-            UserDefaults.standard.set(setUpComplete, forKey: "Set Up Complete")
+            UserDefaults.standard.set(setUpComplete, forKey: "Set Up Completed")
         }
     }
     @Published var progress: Float = 0

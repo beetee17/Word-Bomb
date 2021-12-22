@@ -27,5 +27,6 @@ class ErrorViewModel: NSObject, ObservableObject {
         bannerTitle = title
         bannerMessage = message
         bannerIsShown = true
+        Game.playSound(file: "ping")
     }
 }

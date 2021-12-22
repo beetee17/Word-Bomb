@@ -24,7 +24,7 @@ struct Word_BombApp: App {
         // register "default defaults"
         UserDefaults.standard.register(defaults: [
             "First Launch" : true,
-            "Set Up Complete" : false,
+            "Set Up Completed" : false,
             "Time Limit" : 10.0,
             "Time Multiplier" : 0.95,
             "Time Constraint" : 5.0,

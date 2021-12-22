@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import AVFoundation
 
 struct Device {
     static let width = UIScreen.main.bounds.width
@@ -42,11 +43,12 @@ struct Game {
     }
     
     static let mainAnimation = Animation.spring(response: 0.3, dampingFraction: 0.5, blendDuration: 0)
-    static func mainButton(label: String, systemImageName: String? = nil, image: AnyView? = nil, action: @escaping () -> Void) -> some View {
+    static func mainButton(label: String, systemImageName: String? = nil, image: AnyView? = nil, sound: String = "pop", action: @escaping () -> Void) -> some View {
         
-        precondition(systemImageName != nil || image != nil)
-        
-        return Button(action: action) {
+        return Button(action: {
+            Game.playSound(file: sound)
+            action()
+        }) {
             HStack {
                 if let systemName = systemImageName {
                     Image(systemName: systemName)
@@ -59,13 +61,37 @@ struct Game {
             }
         }
         .buttonStyle(MainButtonStyle())
+        
     }
     
     static func backButton(action: @escaping () -> Void) -> some View {
-        Button(action: action) {
+        Button(action: {
+            Game.playSound(file: "back")
+            action()
+        }) {
             Image(systemName: "arrow.backward")
                 .font(Font.title.bold())
                 .foregroundColor(.white)
         }
     }
+    
+    
+    static var audioPlayer:AVAudioPlayer?
+    
+    static func playSound(file: String, type: String = "wav") {
+        
+        if let path = Bundle.main.path(forResource: file, ofType: type){
+            
+            do {
+                
+                Game.audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: path))
+                Game.audioPlayer?.prepareToPlay()
+                Game.audioPlayer?.play()
+                
+            } catch {
+                print("Error")
+            }
+        }
+    }
+    
 }

@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct GameTypeSelectView: View {
     
     @EnvironmentObject var viewModel: WordBombGameViewModel
@@ -20,14 +19,13 @@ struct GameTypeSelectView: View {
             
             VStack(spacing: 50) {
                 ForEach(GameType.allCases, id: \.self) { type in
-                    Button(type.rawValue.uppercased()) {
+                    Game.mainButton(label: type.rawValue.uppercased()) {
                         
                         withAnimation {
                             viewModel.viewToShow = .modeSelect
                             viewModel.gameType = type
                         }
                     }
-                    .buttonStyle(MainButtonStyle())
                 }
             }
             Game.backButton {

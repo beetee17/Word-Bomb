@@ -26,7 +26,7 @@ struct PauseMenuView: View {
                 viewModel.restartGame()
             }
             
-            Game.mainButton(label: "QUIT", systemImageName: "flag") {
+            Game.mainButton(label: "QUIT", systemImageName: "flag", sound: "back") {
                 viewModel.viewToShow = .main
             }
         }

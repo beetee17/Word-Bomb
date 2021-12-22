@@ -118,7 +118,7 @@ struct WordBombGame: Codable {
     
     mutating func currentPlayerRanOutOfTime() {
         
-        
+        Game.playSound(file: "explosion")
         if GameCenter.isHost {
             Multiplayer.send(GameData(state: .playerTimedOut), toHost: false)
         }
