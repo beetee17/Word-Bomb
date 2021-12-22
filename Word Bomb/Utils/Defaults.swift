@@ -81,15 +81,14 @@ struct Game {
     static func playSound(file: String, type: String = "wav") {
         
         if let path = Bundle.main.path(forResource: file, ofType: type){
-            
             do {
                 
                 Game.audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: path))
                 Game.audioPlayer?.prepareToPlay()
                 Game.audioPlayer?.play()
                 
-            } catch {
-                print("Error")
+            } catch let error {
+                print("Error playing audio: \(error.localizedDescription)")
             }
         }
     }

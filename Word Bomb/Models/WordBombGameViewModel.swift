@@ -14,25 +14,27 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     
     @Published private var model: WordBombGame = WordBombGame()
     @Published private var gameModel: WordGameModel? = nil
+    
     @Published var viewToShow: ViewToShow = .main {
         didSet {
             switch viewToShow {
             case .main:
                 gkSelect = false
             case .game:
+                playRunningOutOfTimeSound = false
                 forceHideKeyboard = false
             default:
                 forceHideKeyboard = true
             }
         }
     }
+    @Published var gameType: GameType = .Classic
     @Published var gameMode: GameMode? = nil
     
     @Published var gkSelect = false
     
     @Published var input = ""
     @Published var forceHideKeyboard = false
-    @Published var gameType: GameType = .Classic
     
     @Published var debugging = false
     
@@ -225,6 +227,10 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         
         get { model.animateExplosion }
         set { model.animateExplosion =  newValue }
+    }
+    var playRunningOutOfTimeSound: Bool {
+        get { model.playRunningOutOfTimeSound }
+        set { model.playRunningOutOfTimeSound = newValue }
     }
     
     

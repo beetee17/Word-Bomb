@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TimerView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
-    @State var isPlaying = false
     
     var body: some View {
         if viewModel.playerQueue.count > 2 {
@@ -32,10 +31,12 @@ struct TimerView: View {
                 .font(.largeTitle)
                 .onChange(of: viewModel.timeLeft) { time in
                     print("time: \(time)")
-                    if time < 3 && !isPlaying {
-                        Game.playSound(file: "hissing")
-                        isPlaying = true
-                        // TODO: reset when player runs out of time
+                    if time < 3 && !viewModel.playRunningOutOfTimeSound{
+                        // do not interrupt if explosion sound is playing
+                        if !(Game.audioPlayer?.isPlaying ?? false) {
+                            Game.playSound(file: "hissing")
+                            viewModel.playRunningOutOfTimeSound = true
+                        }
                     }
                 }
         }

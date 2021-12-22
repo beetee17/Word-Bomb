@@ -30,8 +30,8 @@ struct WordBombGame: Codable {
         }
     }
     
-    var animateExplosion: Bool = false
-    
+    var animateExplosion = false
+    var playRunningOutOfTimeSound = false
     
     init(_ players: [Player]? = nil) {
         if let players = players {
@@ -119,6 +119,8 @@ struct WordBombGame: Codable {
     mutating func currentPlayerRanOutOfTime() {
         
         Game.playSound(file: "explosion")
+        playRunningOutOfTimeSound = false
+        
         if GameCenter.isHost {
             Multiplayer.send(GameData(state: .playerTimedOut), toHost: false)
         }
@@ -148,8 +150,6 @@ struct WordBombGame: Codable {
             updateTimeLimit()
         }
 
-        
-        
         animateExplosion = true
         
     }
