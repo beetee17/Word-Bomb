@@ -25,10 +25,11 @@ extension Database {
 
 extension Database {
     convenience init(context: NSManagedObjectContext,
-                     name: String, type: DBType, items: [Any]? = nil) {
+                     name: String, type: DBType, items: [Any]? = nil, isDefault: Bool = false) {
         self.init(context: context)
         self.name = name.trim().lowercased()
         self.type = type
+        self.isDefault_ = isDefault
         if let items = items as? [String] {
             for item in items {
                 self.addToWords_(Word(context: context, content: item))

@@ -85,7 +85,6 @@ struct CustomModeForm: View {
                 // User does not want to overwrite -> do nothing
             })
         }
-        
     }
 }
 

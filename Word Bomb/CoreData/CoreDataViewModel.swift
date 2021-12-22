@@ -40,19 +40,22 @@ class CoreDataViewModel: ObservableObject {
             
             let countries = Database(context: moc,
                                      name: "countries",
-                                     type: .words)
+                                     type: .words,
+                                     isDefault: true)
             self.populateDB(context: moc, db: countries, words: Game.countries)
             
             
             let syllables = Database(context: moc,
                                      name: "syllables",
-                                     type: .queries)
+                                     type: .queries,
+                                     isDefault: true)
             self.populateDB(context: moc, db: syllables, words: Game.syllables)
             
             let words = Database(context: moc,
                                  name: "words",
                                  type: .words,
-                                 items: Game.dictionary)
+                                 items: Game.dictionary,
+                                 isDefault: true)
             self.populateDB(context: moc, db: words, words: Game.dictionary)
             
             self.updateStatus(text: "Just awhile more...")

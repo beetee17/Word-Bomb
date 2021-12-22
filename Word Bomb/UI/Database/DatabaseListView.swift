@@ -20,6 +20,7 @@ struct DatabaseListView: View {
     @FetchRequest(entity: Database.entity(),
                   sortDescriptors: [NSSortDescriptor(keyPath: \Database.name_, ascending: true)],
                   predicate: NSPredicate(format: "type_ == %@", DBType.queries.rawValue)) var queriesDBs: FetchedResults<Database>
+    
     @State var presentAddDBSheet = false
     
     var body: some View {
@@ -51,18 +52,41 @@ struct DatabaseListView: View {
                 }
             }
         }
-        
+        .banner(isPresented: $errorHandler.bannerIsShown, title: errorHandler.bannerTitle, message: errorHandler.bannerMessage)
     }
 }
 
 struct DatabaseList: View {
     
+    @EnvironmentObject var errorHandler: ErrorViewModel
     @Environment(\.managedObjectContext) private var viewContext
     var databases: FetchedResults<Database>
     
     func deleteDB(at offsets: IndexSet) {
+        
         for index in offsets {
-            viewContext.delete(databases[index])
+            let db = databases[index]
+            guard !db.isDefault_ else {
+                errorHandler.showBanner(title: "Deletion Prohibited", message: "Cannot delete a default database!")
+                return
+            }
+            let request = GameMode.fetchRequest()
+            request.predicate = NSPredicate(format: "wordsDB_ == %@ OR queriesDB_ == %@", db, db)
+            
+            do {
+                // TODO: alert user that deleting the database will also delete the following game modes
+                viewContext.delete(db)
+                
+                let gameModesToDelete = try viewContext.fetch(request)
+                
+                for mode in gameModesToDelete {
+                    viewContext.delete(mode)
+                }
+            } catch let error {
+                print("Could not fetch relevant game modes to be deleted: \(error.localizedDescription)")
+            }
+            
+            
         }
         viewContext.saveObjects()
     }
