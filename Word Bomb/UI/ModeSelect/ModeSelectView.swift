@@ -41,11 +41,9 @@ struct ModeSelectView: View {
                 Color.clear
                 .onAppear() {
                     contentOverflow = contentGeometry.size.height > Device.height/2
-//                    print(contentGeometry.size.height)
                 }
                 .onChange(of: Date()) { _ in
                     contentOverflow = contentGeometry.size.height > Device.height/2
-//                    print(contentGeometry.size.height)
                 }
             })
             .useScrollView(when: contentOverflow)

@@ -19,6 +19,20 @@ struct ModeSelectButton: View {
     @State var showMatchMakerModal = false
     var mode: GameMode
     
+    func deleteMode() {
+        // to avoid glitchy animation
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7,
+                                      execute: {
+            guard !mode.isDefault_ else {
+                errorHandler.showBanner(title: "Deletion Prohibited", message: "Cannot delete a default game mode!")
+                return
+            }
+            viewContext.delete(self.mode)
+            viewContext.saveObjects()
+            Game.playSound(file: "back")
+        })
+    }
+    
     var body: some View {
         
         Game.mainButton(label: mode.name) {
@@ -36,14 +50,7 @@ struct ModeSelectButton: View {
             }
         }
         .contextMenu {
-            Button(action: {
-                // to avoid glitchy animation
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.7,
-                                              execute: {
-                    viewContext.delete(self.mode)
-                    viewContext.saveObjects()
-                })
-            })
+            Button(action: { deleteMode() })
             {
                 HStack {
                     Text("Delete \"\(mode.name.capitalized)\"")

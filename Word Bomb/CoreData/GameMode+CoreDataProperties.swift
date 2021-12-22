@@ -21,7 +21,8 @@ extension GameMode {
     @NSManaged public var name_: String?
     @NSManaged public var wordsDB_: Database?
     @NSManaged public var queriesDB_: Database?
-
+    @NSManaged public var isDefault_: Bool
+    
 }
 
 extension GameMode : Identifiable {
@@ -30,9 +31,11 @@ extension GameMode : Identifiable {
                      name: String,
                      instruction: String = "",
                      wordsDB: Database,
-                     queriesDB: Database? = nil) {
+                     queriesDB: Database? = nil,
+                     isDefault: Bool = false) {
         self.init(context: context)
         self.gameType = gameType
+        self.isDefault_ = isDefault
         self.name = name.trim().lowercased()
         self.instruction = instruction
         self.wordsDB = wordsDB
