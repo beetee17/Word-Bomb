@@ -77,7 +77,7 @@ struct CustomModeForm: View {
         .alert(isPresented: $errorHandler.alertIsShown) {
             Alert(title: Text("\(errorHandler.alertTitle)"),
                   message: Text("\(errorHandler.alertMessage)"),
-                  primaryButton: .default(Text("Continue")) {
+                  primaryButton: .default(Text("Overwrite")) {
                 // User wants to overwrite
                 viewModel.forceOverwrite(moc: viewContext)
             },

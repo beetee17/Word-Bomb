@@ -51,6 +51,20 @@ extension Text {
     }
 }
 
+public extension Binding where Value: Equatable {
+    init(_ source: Binding<Value?>, replacingNilWith nilProxy: Value) {
+        self.init(
+            get: { source.wrappedValue ?? nilProxy },
+            set: { newValue in
+                if newValue == nilProxy {
+                    source.wrappedValue = nil
+                }
+                else {
+                    source.wrappedValue = newValue
+                }
+        })
+    }
+}
 
 // Permanent Keyboard
 // https://stackoverflow.com/questions/65545374/how-to-always-show-the-keyboard-in-swiftui
