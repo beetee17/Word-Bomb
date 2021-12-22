@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19461" systemVersion="21A559" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Database" representedClassName="Database" syncable="YES">
+        <attribute name="isDefault_" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="name_" optional="YES" attributeType="String"/>
+        <attribute name="type_" optional="YES" attributeType="String"/>
+        <relationship name="words_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Word" inverseName="databases_" inverseEntity="Word"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="name_"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="GameMode" representedClassName="GameMode" syncable="YES">
+        <attribute name="gameType_" optional="YES" attributeType="String"/>
+        <attribute name="instruction_" optional="YES" attributeType="String"/>
+        <attribute name="name_" optional="YES" attributeType="String"/>
+        <relationship name="queriesDB_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Database"/>
+        <relationship name="wordsDB_" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Database"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="name_"/>
+                <constraint value="gameType_"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Word" representedClassName="Word" syncable="YES">
+        <attribute name="content_" optional="YES" attributeType="String"/>
+        <attribute name="frequency_" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="variant_" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="databases_" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Database" inverseName="words_" inverseEntity="Database">
+            <userInfo>
+                <entry key="key" value="value"/>
+            </userInfo>
+        </relationship>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="content_"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <elements>
+        <element name="Database" positionX="-182.5402832031251" positionY="160.2005920410156" width="128" height="89"/>
+        <element name="GameMode" positionX="-337.001953125" positionY="-21.2110595703125" width="128" height="104"/>
+        <element name="Word" positionX="47.04217529296869" positionY="24.35401916503906" width="128" height="89"/>
+    </elements>
+</model>
