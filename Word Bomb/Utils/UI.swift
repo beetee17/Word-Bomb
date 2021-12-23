@@ -67,15 +67,39 @@ public extension Binding where Value: Equatable {
 
 // Permanent Keyboard
 // https://stackoverflow.com/questions/65545374/how-to-always-show-the-keyboard-in-swiftui
+struct PermanentKeyboard: View {
+    @Binding var text: String
+    @Binding var forceResignFirstResponder: Bool
+    
+    var onCommitAction: () -> Void
+    
+    var body: some View {
+        ZStack {
+            PermanentKeyboardUIView(text: $text, forceResignFirstResponder: $forceResignFirstResponder)
+            
+            Text(text)
+                .opacity(text == "\n" ? 0 : 1)
+                .onChange(of: text) { _ in
+                    if text.last == "\n" {
+                        print("COMMITTED TEXT \(text)")
+                        onCommitAction()
+                        text = ""
+                    }
+                    
+                }
+                .ignoresSafeArea(.keyboard)
+        }
+    }
+}
 
-struct PermanentKeyboard: UIViewRepresentable {
+struct PermanentKeyboardUIView: UIViewRepresentable {
     @Binding var text: String
     @Binding var forceResignFirstResponder: Bool
     
     class Coordinator: NSObject, UITextFieldDelegate {
-        var parent: PermanentKeyboard
+        var parent: PermanentKeyboardUIView
         
-        init(_ parent: PermanentKeyboard) {
+        init(_ parent: PermanentKeyboardUIView) {
             self.parent = parent
         }
         

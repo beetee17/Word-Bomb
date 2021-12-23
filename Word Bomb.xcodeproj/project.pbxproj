@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		6C09D973276F383100D5F3EC /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C09D972276F383100D5F3EC /* LoadingView.swift */; };
 		6C0CEEA8269458D6007717E1 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0CEEA7269458D6007717E1 /* TopBarView.swift */; };
-		6C0CEEAB26945926007717E1 /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0CEEAA26945926007717E1 /* InputView.swift */; };
 		6C0CEEAE2694595C007717E1 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0CEEAD2694595C007717E1 /* PlayerView.swift */; };
 		6C0CEEB12694599C007717E1 /* OutputText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0CEEB02694599C007717E1 /* OutputText.swift */; };
 		6C0CEEBF2695975B007717E1 /* correct.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6C0CEEBE2695975B007717E1 /* correct.wav */; };
@@ -100,7 +99,6 @@
 /* Begin PBXFileReference section */
 		6C09D972276F383100D5F3EC /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		6C0CEEA7269458D6007717E1 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
-		6C0CEEAA26945926007717E1 /* InputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputView.swift; sourceTree = "<group>"; };
 		6C0CEEAD2694595C007717E1 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		6C0CEEB02694599C007717E1 /* OutputText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputText.swift; sourceTree = "<group>"; };
 		6C0CEEBE2695975B007717E1 /* correct.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = correct.wav; sourceTree = "<group>"; };
@@ -210,7 +208,6 @@
 				6C0CEEAD2694595C007717E1 /* PlayerView.swift */,
 				6C5DBE0B269BA600004A7F71 /* PlayerCarouselView.swift */,
 				6C65A31C26A1458D004209F4 /* BombAnimation.swift */,
-				6C0CEEAA26945926007717E1 /* InputView.swift */,
 				6C37E91D269F287B0079279E /* GamePlayView.swift */,
 				6C5DBE0D269CA6E0004A7F71 /* TwoPlayerView.swift */,
 				6C0CEEB02694599C007717E1 /* OutputText.swift */,
@@ -610,7 +607,6 @@
 				6C7E458C269B16A500E24504 /* SettingsMenu.swift in Sources */,
 				6CE00F1126A9BCF9005406FF /* GKPlayerView.swift in Sources */,
 				6C0CEEB12694599C007717E1 /* OutputText.swift in Sources */,
-				6C0CEEAB26945926007717E1 /* InputView.swift in Sources */,
 				6CB6F94F268F7E7D00FA9654 /* MainView.swift in Sources */,
 				6C2E20C2268DD81600CECD3F /* Word_Bomb_App.swift in Sources */,
 				6C86BCBC2773087700E2D25F /* CoreDataViewModel.swift in Sources */,
