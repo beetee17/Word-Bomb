@@ -10,12 +10,6 @@ import CoreData
 import GameKit
 import GameKitUI
 
-struct TestView: View {
-    @EnvironmentObject var viewModel: WordBombGameViewModel
-    var body: some View {
-        Game.mainButton(label: "BACK", action: { viewModel.viewToShow = .main})
-    }
-}
 struct GameView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     @EnvironmentObject var gkViewModel: GKMatchMakerAppModel
