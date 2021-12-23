@@ -11,6 +11,7 @@ struct NewWordsView: View {
     
     @Binding var wordsToAdd: [String]
     @State private var newWord: String = ""
+    @State private var forceResignKeyboard = false
     
     var body: some View {
         VStack {
@@ -18,14 +19,24 @@ struct NewWordsView: View {
                 HStack {
                     Image(systemName:"plus.circle.fill")
                         .foregroundColor(.green)
+                        .padding(.leading, 15)
                     
-                    TextField("New Entry", text: $newWord) { isEditing in } onCommit: {
+                    PermanentKeyboard(text: $newWord, forceResignFirstResponder: $forceResignKeyboard) {
+                        
                         if newWord.trim().count != 0 {
-                            wordsToAdd.append(newWord)
-                            newWord = ""
+                            wordsToAdd.append(newWord.trim())
+                            
+                        } else {
+                            forceResignKeyboard = true
                         }
+                        
                     }
                     .padding(.vertical, 5)
+                    
+                    Spacer()
+                }
+                .onTapGesture {
+                    forceResignKeyboard = false
                 }
                 
                 Divider()
@@ -41,6 +52,7 @@ struct NewWordsView: View {
                 }
                 
             }
+            
         }
     }
 }
