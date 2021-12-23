@@ -72,7 +72,6 @@ struct ModeSelectButton: View {
                 errorHandler.showBanner(title: "Match Making Failed", message: error.localizedDescription)
             } started: { (match) in
                 showMatchMakerModal = false
-                viewModel.setOnlinePlayers(match.players)
                 viewModel.startGame(mode: mode)
                 
             }

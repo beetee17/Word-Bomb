@@ -41,6 +41,16 @@ struct GamePlayView: View {
                 
                 VStack {
                     TopBarView(gkMatch: gkMatch)
+                        .onChange(of: viewModel.timeLeft) { time in
+                            print("time: \(time)")
+                            if time < 3 && !viewModel.playRunningOutOfTimeSound{
+                                // do not interrupt if explosion sound is playing
+                                if !(Game.audioPlayer?.isPlaying ?? false) {
+                                    Game.playSound(file: "hissing")
+                                    viewModel.playRunningOutOfTimeSound = true
+                                }
+                            }
+                        }
                     Spacer()
                 }
                 

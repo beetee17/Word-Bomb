@@ -23,13 +23,13 @@ struct PlayerView: View {
                     .transition(.scale)
             case 2:
                 TwoPlayerView()
-                    .offset(x: 0, y: 50)
+                    .offset(x: 0, y: Device.height*0.04)
                     .transition(.scale)
             default:
                 MainPlayer(player: viewModel.currentPlayer, animatePlayer: .constant(false))
-                    .offset(x: 0, y: 50)
+                    .offset(x: 0, y: Device.height*0.1)
                     .transition(.scale)
-                    
+                
             }
         }
         .animation(Game.mainAnimation)

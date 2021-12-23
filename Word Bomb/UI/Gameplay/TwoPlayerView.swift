@@ -35,7 +35,6 @@ struct TwoPlayerView: View {
             let rightPlayerOffset = -leftPlayerOffset
             
             BombView()
-            
                 .frame(width: Game.miniBombSize,
                        height: Game.miniBombSize)
                 .offset(x: viewModel.currentPlayer == viewModel.playerQueue[0] ? leftPlayerOffset : rightPlayerOffset,

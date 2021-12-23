@@ -11,7 +11,7 @@ struct TimerView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     
     var body: some View {
-        if viewModel.playerQueue.count > 2 {
+        if viewModel.playerQueue.count != 2 {
             ZStack {
                 BombView()
                     .frame(width: 100, height: 100)
@@ -29,16 +29,6 @@ struct TimerView: View {
         else {
             Text(String(format: "%.1f", viewModel.timeLeft))
                 .font(.largeTitle)
-                .onChange(of: viewModel.timeLeft) { time in
-                    print("time: \(time)")
-                    if time < 3 && !viewModel.playRunningOutOfTimeSound{
-                        // do not interrupt if explosion sound is playing
-                        if !(Game.audioPlayer?.isPlaying ?? false) {
-                            Game.playSound(file: "hissing")
-                            viewModel.playRunningOutOfTimeSound = true
-                        }
-                    }
-                }
         }
     }
 }

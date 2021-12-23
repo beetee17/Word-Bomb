@@ -67,7 +67,7 @@ struct WordBombGame: Codable {
             self.playerQueue = []
             let playerNames = UserDefaults.standard.stringArray(forKey: "Player Names") ?? []
 
-            for i in 0..<max(2, UserDefaults.standard.integer(forKey: "Num Players")) {
+            for i in 0..<max(1, UserDefaults.standard.integer(forKey: "Num Players")) {
                 
                 if i >= playerNames.count {
                     // If no name was set by the user for this player, create one with a generic name
@@ -155,12 +155,13 @@ struct WordBombGame: Codable {
         
         Game.playSound(file: "explosion")
         playRunningOutOfTimeSound = false
+        animateExplosion = true
         
+        // We need to keep game state on non-host devices in sync
         if GameCenter.isHost {
             Multiplayer.send(GameData(state: .playerTimedOut), toHost: false)
         }
-        
-        // mark player as no longer in the game
+
         currentPlayer.livesLeft -= 1
         
         for player in playerQueue {
@@ -173,19 +174,20 @@ struct WordBombGame: Codable {
         case false:
             output = "\(currentPlayer.name) Ran Out of Time!"
         }
+
+        guard playerQueue.count != 1 else {
+            // User is playing in training mode
+            return currentPlayer.livesLeft == 0 ? handleGameState(.gameOver) : updateTimeLimit()
+        }
         
         currentPlayer = playerQueue.nextPlayer(currentPlayer)
         
         switch playerQueue.count < 2 {
         case true:
-            // game over
             handleGameState(.gameOver)
         case false:
-            // continue game
             updateTimeLimit()
         }
-
-        animateExplosion = true
         
     }
     
@@ -200,7 +202,6 @@ struct WordBombGame: Codable {
         currentPlayer = playerQueue[0]
         
     }
-    
     
     /// Sets the relevant `Player` objects with the given `livesleft`.  Called in a multiplayer context to sync game state on non-host devices.
     /// - Parameter updatedPlayers: Mapping from `Player` name to lives left

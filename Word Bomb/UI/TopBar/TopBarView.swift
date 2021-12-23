@@ -37,7 +37,7 @@ struct TopBarView: View {
             else { RestartButton().opacity(0) }
         }
         .padding(.horizontal, 20)
-        .padding(.top, viewModel.playerQueue.count > 2 ? 0 : 50)
+        .padding(.top, viewModel.playerQueue.count != 2 ? 0 : 50)
         
     }
     

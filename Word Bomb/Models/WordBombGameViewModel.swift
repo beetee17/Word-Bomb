@@ -25,6 +25,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
             switch viewToShow {
             case .main:
                 gkSelect = false
+                trainingMode = false
             case .game:
                 playRunningOutOfTimeSound = false
                 forceHideKeyboard = false
@@ -40,8 +41,11 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// The game mode that the user has currently selected
     @Published var gameMode: GameMode? = nil
     
-    /// True if the user has selected the 'GAME CENTER' option under 'START GAME'
+    /// True if the user has selected the `"GAME CENTER"` option under `"START GAME"`
     @Published var gkSelect = false
+    
+    /// True if the user has selected the `"TRAINING MODE"` option under `"START GAME"`
+    @Published var trainingMode = false
     
     /// The current user input while in a game
     @Published var input = ""
@@ -94,20 +98,24 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         }
         
         gameModel.reset()
-        
-        if GameCenter.isHost {
-            setOnlinePlayers(GameCenter.viewModel.gkMatch!.players)
-        }
         startGame(mode: gameMode!)
         
     }
     
-    /// Starts a game with the given game mode
+    /// Starts a game with the given game mode, not least by initing the appropriate WordGameModel
     /// - Parameter mode: The given game mode
     func startGame(mode: GameMode) {
         
-        // process the gameMode by initing the appropriate WordGameModel
-        gameMode = mode
+        if trainingMode {
+            // Initialise a sharedModel with a single `Player`
+            let playerName = (UserDefaults.standard.stringArray(forKey: "Player Names") ?? ["1"]).first!
+            model = WordBombGame([Player(name: playerName)])
+            
+        } else if GameCenter.viewModel.showMatch {
+            setOnlinePlayers(GameCenter.viewModel.gkMatch!.players)
+        } else {
+            model = WordBombGame()
+        }
         
         switch mode.gameType {
         case .Exact: gameModel = ExactWordGameModel(wordsDB: mode.wordsDB)
@@ -130,6 +138,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         else { model.handleGameState(.initial,
                                      data: ["instruction" : mode.instruction]) }
         viewToShow = .game
+        gameMode = mode
         startTimer()
     }
     
@@ -140,8 +149,9 @@ class WordBombGameViewModel: NSObject, ObservableObject {
      */
     func processInput() {
         
-        
+       
         input = input.lowercased().trim()
+        print("Processing input: \(input)")
         
         if !(input == "" || model.timeLeft <= 0) {
             

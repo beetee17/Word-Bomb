@@ -123,7 +123,7 @@ extension Array where Element == Player {
         
         // cycle current player to back of queue if still playing
         if let currentPlayer = self.dequeue(), currentPlayer.livesLeft > 0 {
-            print("player with \(currentPlayer.livesLeft) lives left going to back of queue")
+            print("\(currentPlayer.name) with \(currentPlayer.livesLeft) lives left going to back of queue")
             self.enqueue(currentPlayer)
         }
         return self.first! // there will always be at least 1 player in the array

@@ -61,6 +61,12 @@ class MainViewVM: ObservableObject {
     func startGame() {
         showMultiplayerOptions.toggle()
     }
+    /// Called when the user selects `"TRAINING MODE`
+    func trainingMode() {
+        Game.viewModel.viewToShow = .gameTypeSelect
+        showMultiplayerOptions = false
+        Game.viewModel.trainingMode = true
+    }
     /// Called when the user selects `"PASS & PLAY`
     func passPlay() {
         Game.viewModel.viewToShow = .gameTypeSelect
@@ -136,14 +142,13 @@ struct MainMenuView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing:15) {
+            
             Game.mainButton(label: "START GAME", systemImageName: "gamecontroller") { viewModel.startGame() }
             
             if viewModel.showMultiplayerOptions {
                 
-                VStack(spacing:10) {
-                    Game.mainButton(label: "PASS & PLAY", systemImageName: "person.3") { viewModel.passPlay() }
-                    
+                VStack(spacing:15) {
                     Game.mainButton(label: "GAME CENTER",
                                     image: AnyView(Image("GK Icon")
                                                     .resizable()
@@ -151,26 +156,39 @@ struct MainMenuView: View {
                                                     .frame(height: 20))) {
                         viewModel.onlinePlay()
                     }
+                    
+                    Game.mainButton(label: "PASS & PLAY", systemImageName: "person.3") { viewModel.passPlay() }
+                    
+                    // testtube.2 or hammer or graduationcap or books.vertical or brain
+                    Game.mainButton(label: "TRAINING", systemImageName: "graduationcap") { viewModel.trainingMode() }
+                    
                 }
-            }
-            Game.mainButton(label: "CREATE MODE", systemImageName: "plus.circle") { viewModel.createMode() }
-            .sheet(isPresented: $viewModel.creatingMode) {
-                CustomModeForm()
-                    .environmentObject(errorHandler)
-                    .environment(\.managedObjectContext, viewContext)
+            } else {
                 
+                VStack(spacing:15) {
+                    Game.mainButton(label: "CREATE MODE", systemImageName: "plus.circle") { viewModel.createMode() }
+                    .sheet(isPresented: $viewModel.creatingMode) {
+                        CustomModeForm()
+                            .environmentObject(errorHandler)
+                            .environment(\.managedObjectContext, viewContext)
+                    }
+                    
+                    Game.mainButton(label: "DATABASE", systemImageName: "magnifyingglass.circle") { viewModel.searchDBs() }
+                    .sheet(isPresented: $viewModel.searchingDatabase) {
+                        DatabaseListView()
+                            .environment(\.managedObjectContext, viewContext)
+                            .environmentObject(errorHandler)
+                    }
+                    
+                    Game.mainButton(label: "SETTINGS", systemImageName: "gearshape") { viewModel.changeSettings() }
+                    .sheet(isPresented: $viewModel.changingSettings) { SettingsMenu().environmentObject(gameVM) }
+                }
+             
+                .transition(AnyTransition.offset(x:0, y:200).combined(with: .move(edge: viewModel.showMultiplayerOptions ? .top : .bottom)))
+                .animation(Game.mainAnimation)
             }
-            
-            Game.mainButton(label: "DATABASE", systemImageName: "magnifyingglass.circle") { viewModel.searchDBs() }
-            .sheet(isPresented: $viewModel.searchingDatabase) {
-                DatabaseListView()
-                    .environment(\.managedObjectContext, viewContext)
-                    .environmentObject(errorHandler)
-            }
-            
-            Game.mainButton(label: "SETTINGS", systemImageName: "gearshape") { viewModel.changeSettings() }
-            .sheet(isPresented: $viewModel.changingSettings) { SettingsMenu().environmentObject(gameVM) }
         }
+        
     }
 }
 struct MainView_Previews: PreviewProvider {
