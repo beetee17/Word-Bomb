@@ -58,7 +58,10 @@ struct GamePlayView: View {
                 
                 instructionText
                 queryText
-                InputView(gkMatch: gkMatch)
+                PermanentKeyboard(text: $viewModel.input, forceResignFirstResponder: $viewModel.forceHideKeyboard) {
+                    viewModel.processInput()
+                }
+                .font(Font.system(size: 20))
                     
                 ZStack {
                     Text("INVISIBLE PLACEHOLDER TEXT")
