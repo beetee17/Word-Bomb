@@ -38,7 +38,6 @@ struct SettingsMenu: View {
                         }
                     }
                     
-                    
                     Section(footer: Text("Initial time given to each player.")) {
                         Stepper("Time Limit: \(settings.timeLimit, specifier: "%.1f") s", value: $settings.timeLimit, in: 1...50, step: 0.5)
                     }
@@ -100,6 +99,7 @@ struct DonationButton: View {
     }
 }
 
+/// Source of truth for `SettingsMenu`. Handles the saving of game settings to `UserDefaults`
 class SettingsMenuVM: ObservableObject {
     @Published var numPlayers = UserDefaults.standard.integer(forKey: "Num Players") {
         didSet {

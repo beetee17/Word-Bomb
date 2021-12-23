@@ -9,30 +9,39 @@ import SwiftUI
 import GameKit
 import GameKitUI
 
+/// Source of truth for `MainView`. Handles programmatic navigation throughout `MainView`and controls the flow of the launch animation.
 class MainViewVM: ObservableObject {
     
-    @Published var logoAnimationCompleted = false // for delay purpose
+    /// `true` when the logo has finished animating. Used for delay purposes; it is toggled after a small amount of time after `animatingLogo` is `true`
+    @Published var logoAnimationCompleted = false
+    /// `true` if the logo is currently animating.
     @Published var animatingLogo = false
+    /// Represents the boolean stored in `UserDefaults` under `"First Launch`
     @Published var isFirstLaunch = UserDefaults.standard.bool(forKey: "First Launch") {
         didSet {
             UserDefaults.standard.setValue(false, forKey: "First Launch")
             print("set first launch to: \(UserDefaults.standard.bool(forKey: "First Launch"))")
         }
     }
+    /// `true` if animation has not started yet
     var beforeAnimating: Bool {
         !(animatingLogo || logoAnimationCompleted)
     }
+    /// `true` if tutorial overlay should be displayed. The tutorial should be displayed if it is the user's first launch of the game, and after the animation has completed
     var showTutorial: Bool {
         isFirstLaunch && logoAnimationCompleted
     }
     
+    /// `true` if user has selected `"CREATE MODE"`
     @Published var creatingMode = false
+    /// `true` if user has selected `"SETTINGS"`
     @Published var changingSettings = false
+    /// Toggled when user selects `"START GAME"`
     @Published var showMultiplayerOptions = false
+    /// `true` if user has selected `"DATABASE"`
     @Published var searchingDatabase = false
     
-    var gameVM = Game.viewModel
-    
+    /// Begins the animation. Should be called when `MainView` appears
     func beginAnimation() {
         withAnimation(.spring(response: 0.6, dampingFraction: 0.5, blendDuration: 1)) {
             animatingLogo = true
@@ -44,32 +53,34 @@ class MainViewVM: ObservableObject {
         }
     }
     
+    /// Called when the user dismisses the tutorial overlay
     func dismissTutorial() {
         isFirstLaunch = false
     }
-    
+    /// Called when the user selects `"START GAME"`
     func startGame() {
         showMultiplayerOptions.toggle()
     }
+    /// Called when the user selects `"PASS & PLAY`
     func passPlay() {
-        gameVM.viewToShow = .gameTypeSelect
+        Game.viewModel.viewToShow = .gameTypeSelect
         showMultiplayerOptions = false
     }
+    /// Called when the user selects `"GAME CENTER"`
     func onlinePlay() {
-        // bug where tapping the button does not immediately dismiss the main view?
-        if gameVM.viewToShow == .main {
-            print("selected game center")
-            gameVM.viewToShow = .gameTypeSelect
-            gameVM.gkSelect = true
-            showMultiplayerOptions = false
-        }
+        Game.viewModel.viewToShow = .gameTypeSelect
+        Game.viewModel.gkSelect = true
+        showMultiplayerOptions = false
     }
+    /// Called when the user selects `"SETTINGS"`
     func changeSettings() {
         changingSettings = true
     }
+    /// Called when the user selects `"CREATE MODE"`
     func createMode() {
         creatingMode = true
     }
+    /// Called when the user selects `"DATABASE"`
     func searchDBs() {
         searchingDatabase = true
     }
@@ -158,8 +169,7 @@ struct MainMenuView: View {
             }
             
             Game.mainButton(label: "SETTINGS", systemImageName: "gearshape") { viewModel.changeSettings() }
-            .sheet(isPresented: $viewModel.changingSettings) { SettingsMenu().environmentObject(gameVM)
-            }
+            .sheet(isPresented: $viewModel.changingSettings) { SettingsMenu().environmentObject(gameVM) }
         }
     }
 }
