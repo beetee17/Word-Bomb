@@ -106,7 +106,7 @@ extension NSManagedObjectContext {
         let request = Database.fetchRequest()
         request.predicate = NSPredicate(format: "name_ == %@ AND type_ == %@", name.lowercased(), type.rawValue)
         
-        let res = try! self.fetch(request)
+        let res = self.safeFetch(request)
         
         if res.count == 1 {
             Game.errorHandler.showAlert(title: "Database Already Exists", message: "Would you like to overwrite it?")
@@ -119,11 +119,21 @@ extension NSManagedObjectContext {
         let request = GameMode.fetchRequest()
         request.predicate = NSPredicate(format: "name_ == %@ AND gameType_ == %@", name.lowercased(), type.rawValue)
         
-        let res = try! self.fetch(request)
+        let res = self.safeFetch(request)
         if res.count == 1 {
             Game.errorHandler.showAlert(title: "Mode Already Exists", message: "Would you like to overwrite it?")
             return true
         }
         return false
+    }
+
+    func safeFetch<T>(_ request: NSFetchRequest<T>) -> [T] where T : NSFetchRequestResult {
+        do {
+            return try self.fetch(request)
+        } catch let error {
+            Game.errorHandler.showBanner(title: "Could not fetch \(T.self) items", message: error.localizedDescription)
+            print("Could not fetch the given request: \(request) \n\(error.localizedDescription)")
+            return []
+        }
     }
 }
