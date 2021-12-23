@@ -59,7 +59,7 @@ struct AuthenticationView: View {
             }
             
         }
-        .helpSheet()
+        .helpButton()
         .onAppear() {
             self.viewModel.load()
         }

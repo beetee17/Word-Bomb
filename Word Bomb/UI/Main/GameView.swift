@@ -10,32 +10,40 @@ import CoreData
 import GameKit
 import GameKitUI
 
+struct TestView: View {
+    @EnvironmentObject var viewModel: WordBombGameViewModel
+    var body: some View {
+        Game.mainButton(label: "BACK", action: { viewModel.viewToShow = .main})
+    }
+}
 struct GameView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     @EnvironmentObject var gkViewModel: GKMatchMakerAppModel
     @State var pauseMenu = false
     
-
+    
     var body: some View {
-        
-        switch viewModel.viewToShow {
-            
-        case .main: MainView()
-        case .gameTypeSelect: GameTypeSelectView()
-        case .modeSelect: ModeSelectView()
-        case .GKMain: GKContentView()
-        case .GKLogin: AuthenticationView()
-        case .game, .pauseMenu:
-            ZStack {
-
-                GamePlayView(gkMatch: gkViewModel.gkMatch)
+        ZStack {
+            switch viewModel.viewToShow {
                 
-                PauseMenuView()
-                    .helpSheet()
-                    .scaleEffect(.pauseMenu == viewModel.viewToShow ? 1 : 0.01)
-                    .ignoresSafeArea(.all)
+            case .main: MainView()
+            case .gameTypeSelect: GameTypeSelectView()
+            case .modeSelect: ModeSelectView()
+            case .GKMain: GKContentView()
+            case .GKLogin: AuthenticationView()
+            case .game, .pauseMenu:
+                ZStack {
+                    
+                    GamePlayView(gkMatch: gkViewModel.gkMatch)
+                    
+                    PauseMenuView()
+                        .helpButton()
+                        .scaleEffect(viewModel.viewToShow == .pauseMenu ? 1 : 0.01)
+                        .ignoresSafeArea(.all)
+                }
             }
         }
+        .if(![.game, .pauseMenu].contains(viewModel.viewToShow)) { $0.helpButton() }
     }
 }
 

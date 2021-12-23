@@ -32,7 +32,8 @@ struct GameTypeSelectView: View {
                 withAnimation { viewModel.viewToShow = .main } 
             }
         }
-        .helpSheet()
+//        .helpButton()
+        .frame(width: Device.width, height: Device.height)
         .transition(.asymmetric(insertion: AnyTransition.move(edge: .trailing), removal: AnyTransition.move(edge: .leading)))
         .animation(Game.mainAnimation)
         .environmentObject(viewModel)

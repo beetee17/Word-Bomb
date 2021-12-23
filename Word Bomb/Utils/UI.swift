@@ -182,7 +182,7 @@ extension View {
             return AnyView(self)
         }
     }
-    func helpSheet() -> some View {
+    func helpButton() -> some View {
         self.modifier(HelpSheet())
     }
     

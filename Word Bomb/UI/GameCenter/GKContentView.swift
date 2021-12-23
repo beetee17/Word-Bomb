@@ -74,7 +74,7 @@ struct GKContentView: View {
             }
             
         }
-        .helpSheet()
+        .helpButton()
         .transition(.asymmetric(insertion: AnyTransition.move(edge: .trailing), removal: AnyTransition.move(edge: .leading)))
         .animation(Game.mainAnimation)
         

@@ -55,7 +55,8 @@ struct ModeSelectView: View {
             }
             .offset(y: 25)
         }
-        .helpSheet()
+//        .helpButton()
+        .frame(width: Device.width, height: Device.height)
         .transition(.move(edge: .trailing))
         .animation(Game.mainAnimation)
     }
