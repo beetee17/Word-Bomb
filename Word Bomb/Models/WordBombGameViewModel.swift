@@ -10,11 +10,16 @@ import GameKit
 import GameKitUI
 
 
+/// Main view model that controls most of the game logic
 class WordBombGameViewModel: NSObject, ObservableObject {
     
+    /// Source of truth for many of the variables that concerns game logic
     @Published private var model: WordBombGame = WordBombGame()
+    
+    /// Responsible with processing user inputs and fetching new queries if necessary
     @Published private var gameModel: WordGameModel? = nil
     
+    /// Controls the current view shown to the user
     @Published var viewToShow: ViewToShow = .main {
         didSet {
             switch viewToShow {
@@ -28,38 +33,51 @@ class WordBombGameViewModel: NSObject, ObservableObject {
             }
         }
     }
+    
+    /// The game type that the user has currently selected
     @Published var gameType: GameType = .Classic
+    
+    /// The game mode that the user has currently selected
     @Published var gameMode: GameMode? = nil
     
+    /// True if the user has selected the 'GAME CENTER' option under 'START GAME'
     @Published var gkSelect = false
     
+    /// The current user input while in a game
     @Published var input = ""
+    
+    /// Used to hide the keyboard when not in an active game
     @Published var forceHideKeyboard = false
     
+    /// Enables developer-only configurations if True
     @Published var debugging = false
     
-    init(_ viewToShow: ViewToShow = .main) {
-        self.viewToShow = viewToShow
-        
-    }
-    
+    /// Setter for the shared model. Used to sync game state in online games between host and non-hosts
+    /// - Parameter model: shared model to be set
     func setSharedModel(_ model: WordBombGame) {
         self.model = model
         self.model.currentPlayer = self.model.playerQueue[0]
     }
+    
+    /// Updates player lives left. Used to sync game state in online games
+    /// - Parameter updatedPlayers: Mapping from player name to lives left
     func updatePlayerLives(_ updatedPlayers: [String:Int]) {
         model.updatePlayerLives(updatedPlayers)
     }
+    
+    /// Called when settings menu is dismissed. Resets the shared model to account for any changes.
     func updateGameSettings() {
         model = WordBombGame()
     }
     
+    /// Pauses the current game
     func pauseGame() {
         viewToShow = .pauseMenu
         Game.playSound(file: "back")
         Game.stopTimer()
     }
     
+    /// Resumes the current game
     func resumeGame() {
         viewToShow = .game
         if .gameOver != gameState {
@@ -67,6 +85,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         }
     }
     
+    /// Restarts the game with the same game mode
     func restartGame() {
         
         guard var gameModel = gameModel else {
@@ -83,6 +102,8 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         
     }
     
+    /// Starts a game with the given game mode
+    /// - Parameter mode: The given game mode
     func startGame(mode: GameMode) {
         
         // process the gameMode by initing the appropriate WordGameModel
@@ -112,6 +133,11 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         startTimer()
     }
     
+    /**
+     Processes the user's input to determine if it is correct/wrong, and updates the query if necessary
+     
+     Should be called whenever user commits text in the input textfield
+     */
     func processInput() {
         
         
@@ -144,6 +170,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         }
     }
     
+    /// Starts the game timer
     func startTimer() {
         print("Timer started")
         
@@ -188,46 +215,63 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         }
     }
     
+    /// Handles the given game state by passing it on to the model (source of truth)
+    /// - Parameters:
+    ///   - gameState: The game state to be handled
+    ///   - data: Key-value mapping of any relevant data for the handling
     func handleGameState(_ gameState: GameState, data: [String : Any]? = [:]) {
         model.handleGameState(gameState, data: data)
     }
     
-    // check if output is still the same as current to avoid clearing of new outputs
+    /// Clears the output text
+    /// - Parameter output: The current output text as reflected in the UI. This is needed for concurrency purposes - to check if the viewModel's output is the same as current to avoid clearing of new outputs
     func clearOutput(_ output: String) { if output == model.output { model.clearOutput() } }
     
-    // to allow contentView to read model's value and update
+    //MARK: Getters and Setters to allow the UI to read and write to the source of truth if required
+    /// Allow the UI to read the current playerQueue
     var playerQueue: [Player] { model.playerQueue }
     
+    /// Allow the UI to read the current player
     var currentPlayer: Player { model.currentPlayer }
     
+    /// Allow the UI to read the number of lives each player starts with
     var livesLeft: Int { model.livesLeft }
     
+    /// Allow the UI to read the current game's instruction text
     var instruction: String? { model.instruction }
     
+    /// Allow read and write to the current game's query text. Used in multiplayer games for non-host devices to sync game state.
     var query: String? {
         get { model.query }
         set { model.query = newValue }
     }
     
+    /// Allow the read and write to the current game's time limit. Used in multiplayer games for non-host devices to sync game state.
     var timeLimit: Float {
         get { model.timeLimit }
         set { model.timeLimit = newValue }
     }
     
+    /// Allow the read and write to the current game's time left. Used in multiplayer games for non-host devices to sync game state.
     var timeLeft: Float {
         get { model.timeLeft }
         set { model.timeLeft = newValue }
     }
     
+    /// Allow the UI to read the current game's output text
     var output: String { model.output }
     
+    /// Allow the UI to read the current game's state
     var gameState: GameState { model.gameState }
     
+    /// Allow the UI to control the explosion animation
     var animateExplosion: Bool {
         
         get { model.animateExplosion }
         set { model.animateExplosion =  newValue }
     }
+    
+    /// Allow the UI to control the playback of the running-out-of-time sound
     var playRunningOutOfTimeSound: Bool {
         get { model.playRunningOutOfTimeSound }
         set { model.playRunningOutOfTimeSound = newValue }
@@ -236,18 +280,23 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     
 }
 
-// MARK: - MULTIPLAYER
+// MARK: - MULTIPLAYER SECTION
 extension WordBombGameViewModel {
     
+    /// True if it is the current device's turn in a Game Center match
     var isMyGKTurn: Bool { GKLocalPlayer.local.displayName == model.currentPlayer.name }
-    var isMyTurn: Bool { UserDefaults.standard.string(forKey: "Display Name")! == model.currentPlayer.name }
     
+    /**
+     Resets the model (source of truth)
+     
+     Should be called when a multiplayer game has ended either due to lack of players, lost of connection or the game has ended
+     */
     func resetGameModel() {
-        // called when a multiplayer game has ended either due to lack of players, lost of connection or game just ended
         model = .init()
         Game.stopTimer()
     }
     
+    /// Removes the disconnected player from the game
     func handleDisconnected(from playerName: String) {
         for i in playerQueue.indices {
             guard i < playerQueue.count else { return }
@@ -258,6 +307,12 @@ extension WordBombGameViewModel {
             // function does not do anything if player is not in queue (e.g. the player lost just before disconnecting)
         }
     }
+    
+    /**
+     Processes the input received from participating players on the host-side
+     
+     Should only be called on the host device
+     */
     func processNonHostInput(_ input: String) {
         
         print("processing \(input)")
@@ -267,8 +322,9 @@ extension WordBombGameViewModel {
         
     }
     
-    func setOnlinePlayers(_ players: [Any])  {
-        guard let gkPlayers = players as? [GKPlayer] else { fatalError("Not a valid array of players") }
+    /// Updates the players to those participating in the Game Center match
+    /// - Parameter gkPlayers: Array of GKPlayer objects participating in the match
+    func setOnlinePlayers(_ gkPlayers: [GKPlayer])  {
         
         var players: [Player] = [Player(name: GKLocalPlayer.local.displayName)]
         
@@ -279,12 +335,10 @@ extension WordBombGameViewModel {
         print("gkplayers \(model.playerQueue)")
         print("current player \(model.currentPlayer)")
         setGKPlayerImages(gkPlayers)
-        
     }
-}
-
-// MARK: - GAME CENTER
-extension WordBombGameViewModel {
+    
+    /// Updates the Player objects with their corresponding Game Center profile picture
+    /// - Parameter gkPlayers: Array of GKPlayer objects participating in the match
     func setGKPlayerImages(_ gkPlayers: [GKPlayer]) {
         for player in model.playerQueue {
             if player.name == GKLocalPlayer.local.displayName {
@@ -306,4 +360,3 @@ extension WordBombGameViewModel {
         }
     }
 }
-

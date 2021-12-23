@@ -76,8 +76,7 @@ class MainViewVM: ObservableObject {
 }
 
 struct MainView: View {
-    // TODO: Logo animates every time main view is shown
-    // change to observableObject / environmentObject?
+    
     @StateObject var viewModel = MainViewVM()
     @Namespace var mainView
     

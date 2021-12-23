@@ -22,8 +22,8 @@ struct GameTypeSelectView: View {
                     Game.mainButton(label: type.rawValue.uppercased()) {
                         
                         withAnimation {
-                            viewModel.viewToShow = .modeSelect
                             viewModel.gameType = type
+                            viewModel.viewToShow = .modeSelect
                         }
                     }
                 }

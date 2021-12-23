@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 
+/// Custom `NSMergePolicy` that extends `.overwrite` to ensure uniqueness of `Word.content` on a per `Database` basis (i.e. any `Database` cannot have duplicates of the same word)
 class CustomMergePolicy: NSMergePolicy {
     
     init() {

@@ -29,34 +29,37 @@ import Foundation
 import GameKit
 import GameKitUI
 
+/**
+ View model that handles most of the Game Center aspects
+ 
+ Including but not limited to:
+ - Sending/receiving of game data as host or non-host
+ - Handling the receipt of match invitations
+ - Detecting player disconnections
+ */
 class GKMatchMakerAppModel: NSObject, ObservableObject {
     
-    @Published public var showAlert = false
-    @Published public var alertTitle: String = ""
-    @Published public var alertMessage: String = ""
-    
-    @Published public var showAuthentication = false {
-        didSet {
-//            print("showAuthentication: local player is connected: \(GKLocalPlayer.local.isAuthenticated)")
-            print("showAuthentication was set to \(showAuthentication)")
-        }
-    }
+    /// Determines if `GKInvitationView` should be displayed. Should be true when a non-nil `GKInvite` is received.
     @Published public var showInvite = false
+    
+    /// Determines if `GamePlayView(gkMatch: gkMatch)` should be displayed. Should be true when `gkMatch` is non-nil
     @Published public var showMatch = false
     
-    
+    /// The current invitation to be handled.
     @Published public var invite: Invite = Invite.zero {
         didSet {
             let sender = invite.gkInvite?.sender.displayName
             print("GK: Received Invite of \(invite) from \(sender) with Auth Status \(invite.needsToAuthenticate)")
             self.showInvite = invite.gkInvite != nil
             GameCenter.hostPlayerName = sender
-            self.showAuthentication = invite.needsToAuthenticate ?? false
         }
     }
+    
+    /// The current `GKMatch` to play, if any
     @Published public var gkMatch: GKMatch?
     {
         didSet {
+            // Transition to the GamePlayView if not nil
             if gkMatch != nil {
                 self.showInvite = false
                 self.showMatch = true
@@ -64,6 +67,7 @@ class GKMatchMakerAppModel: NSObject, ObservableObject {
         }
     }
     
+    /// Mapping from each participating `GKPlayer` to a boolean that is `true` if the `GKPlayer` is connected to `gkMatch`
     public var gkIsConnected: [GKPlayer : Bool] = [:]
     
     private var cancellableInvite: AnyCancellable?
@@ -109,12 +113,13 @@ class GKMatchMakerAppModel: NSObject, ObservableObject {
         self.cancellableMatch?.cancel()
     }
     
-    public func showAlert(title: String, message: String) {
-        self.showAlert = true
-        self.alertTitle = title
-        self.alertMessage = message
-    }
-    
+    /**
+     Cancels the current `GKMatch`.
+     Should be called when:
+     - The user taps on the Quit Button
+     - As a non-host player, if the host player disconnects
+     - As the host player, if there are no non-host players in the match
+     */
     func cancel() {
         DispatchQueue.main.async {
             Game.viewModel.resetGameModel()
@@ -127,6 +132,14 @@ class GKMatchMakerAppModel: NSObject, ObservableObject {
 }
 
 extension GKMatchMakerAppModel: GKMatchDelegate {
+    
+    /// Inherited from GKMatchDelegate.match(_:didReceive:fromRemotePlayer:). Handles the receipt of data depending on whether user if host or non-host.
+    /// The host mainly receives user input to be processed from non-host players
+    /// Non-host players mainly receive data to sync game state with the host
+    /// - Parameters:
+    ///   - match: The current `GKMatch`
+    ///   - data: The data received by the user
+    ///   - player: The sender of the data
     func match(_ match: GKMatch, didReceive data: Data, fromRemotePlayer player: GKPlayer) {
         do {
             let data = try JSONDecoder().decode(GameData.self, from: data)
@@ -150,11 +163,21 @@ extension GKMatchMakerAppModel: GKMatchDelegate {
         }
     }
     
+    /*
+     Inherited from GKMatchDelegate.match(_:player:didChange:). Handles change in connection state of the participating players.
+     
+     Cancel the `GKMatch` if too many non-hosts have disconnected, or if the host player has disconnected
+     When a non-host player disconnects, remove the player from the match
+     - Parameters:
+     - match: The current `GKMatch`
+     - player: The `GKPlayer` whose connection status has changed
+     - state: The current connection state of `player`
+     */
     func match(_ match: GKMatch, player: GKPlayer, didChange state: GKPlayerConnectionState) {
         
         DispatchQueue.main.async {
             self.gkIsConnected[player] = .disconnected == state ? false : true
-            self.showAlert(title: "Connection Update", message: "\(player.displayName) has \(.disconnected == state ? "disconnected" : "connected")")
+            Game.errorHandler.showAlert(title: "Connection Update", message: "\(player.displayName) has \(.disconnected == state ? "disconnected" : "connected")")
         }
         print("player \(player) connection status changed to \(state)")
         print("players left \(match.players)")

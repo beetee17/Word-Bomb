@@ -9,6 +9,7 @@ import SwiftUI
 
 
 struct SectionHeaderText: View {
+    
     var text: String
     init(_ text: String) {
         self.text = text
@@ -157,6 +158,7 @@ struct AddDatabaseView: View {
 }
 
 struct AddDatabaseView_Previews: PreviewProvider {
+
     static var previews: some View {
         AddDatabaseView()
     }

@@ -73,17 +73,13 @@ struct DatabaseList: View {
             let request = GameMode.fetchRequest()
             request.predicate = NSPredicate(format: "wordsDB_ == %@ OR queriesDB_ == %@", db, db)
             
-            do {
-                // TODO: alert user that deleting the database will also delete the following game modes
-                viewContext.delete(db)
-                
-                let gameModesToDelete = try viewContext.fetch(request)
-                
-                for mode in gameModesToDelete {
-                    viewContext.delete(mode)
-                }
-            } catch let error {
-                print("Could not fetch relevant game modes to be deleted: \(error.localizedDescription)")
+            // TODO: alert user that deleting the database will also delete the following game modes
+            viewContext.delete(db)
+            
+            let gameModesToDelete = viewContext.safeFetch(request)
+            
+            for mode in gameModesToDelete {
+                viewContext.delete(mode)
             }
             
             

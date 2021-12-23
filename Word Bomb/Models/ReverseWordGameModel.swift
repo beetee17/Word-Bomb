@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 
+/// Implements the mechanism for games of the `.Reverse` type
 struct ReverseWordGameModel: WordGameModel {
     
     var wordsDB: Database
@@ -29,7 +30,7 @@ struct ReverseWordGameModel: WordGameModel {
         
         request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND content_ == %@", wordsDB, input)
         request.fetchLimit = 1
-        let searchResult = try! moc.fetch(request)
+        let searchResult = moc.safeFetch(request)
         print(searchResult)
         
         if searchResult.count != 0 {

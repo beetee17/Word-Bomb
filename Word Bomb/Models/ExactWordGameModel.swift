@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 
+/// Implements the mechanism for games of the `.Exact` type
 struct ExactWordGameModel: WordGameModel {
     var wordsDB: Database
     var usedWords = Set<String>()
@@ -16,7 +17,7 @@ struct ExactWordGameModel: WordGameModel {
         let request = Word.fetchRequest()
         request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND variant_ = %@", wordsDB, "\(input.variant)")
         
-        let variants = try! moc.fetch(request).map({ $0.content })
+        let variants = moc.safeFetch(request).map({ $0.content })
         
         print("variants of \(input.content): \(variants)")
         
@@ -35,7 +36,7 @@ struct ExactWordGameModel: WordGameModel {
         let request: NSFetchRequest<Word> = Word.fetchRequest()
         
         request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND content_ == %@", wordsDB, input)
-        let searchResult = try! moc.fetch(request)
+        let searchResult = moc.safeFetch(request)
         
         if searchResult.count != 0 {
             print("\(input.uppercased()) IS CORRECT")

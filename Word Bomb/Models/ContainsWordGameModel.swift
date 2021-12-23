@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 
+/// Implements the mechanism for games of the `.Classic` type
 struct ContainsWordGameModel: WordGameModel {
     var wordsDB: Database
     var queries: [(String, Int)]
@@ -18,7 +19,7 @@ struct ContainsWordGameModel: WordGameModel {
     var pivot: Int
     var numTurns = 0
     var numTurnsBeforeDifficultyIncrease = 2
-    //    var difficultyMultiplier = UserDefaults.standard.double(forKey: "Difficulty Multiplier")
+
     var syllableDifficulty = UserDefaults.standard.double(forKey: "Syllable Difficulty")
     
     init(wordsDB: Database, queries: [(String, Int)]) {
@@ -40,7 +41,7 @@ struct ContainsWordGameModel: WordGameModel {
         
         request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND content_ == %@", wordsDB, input)
         request.fetchLimit = 1
-        let searchResult = try! moc.fetch(request)
+        let searchResult = moc.safeFetch(request)
         print(searchResult)
         
         if input.contains(query!) && searchResult.count != 0 {
@@ -67,7 +68,7 @@ struct ContainsWordGameModel: WordGameModel {
         let request = Word.fetchRequest()
         request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND variant_ = %@", wordsDB, "\(input.variant)")
         
-        let variants = try! moc.fetch(request).map({ $0.content })
+        let variants = moc.safeFetch(request).map({ $0.content })
         
         print("variants of \(input.content): \(variants)")
         
@@ -109,7 +110,7 @@ struct ContainsWordGameModel: WordGameModel {
         // need to check database for one usable answer
         let request: NSFetchRequest<Word> = Word.fetchRequest()
         request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND content_ CONTAINS %@", wordsDB, query)
-        let words = try! moc.fetch(request)
+        let words = moc.safeFetch(request)
 
         for word in words {
             if !usedWords.contains(word.content) { return true }
