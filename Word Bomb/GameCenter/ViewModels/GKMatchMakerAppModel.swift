@@ -49,7 +49,7 @@ class GKMatchMakerAppModel: NSObject, ObservableObject {
     @Published public var invite: Invite = Invite.zero {
         didSet {
             let sender = invite.gkInvite?.sender.displayName
-            print("GK: Received Invite of \(invite) from \(sender) with Auth Status \(invite.needsToAuthenticate)")
+            print("GK: Received Invite of \(invite) from \(sender ?? "Unknown Sender") with Authentication Status \(String(describing: invite.needsToAuthenticate))")
             self.showInvite = invite.gkInvite != nil
             GameCenter.hostPlayerName = sender
         }

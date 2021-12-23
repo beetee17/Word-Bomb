@@ -86,7 +86,7 @@ struct ContainsWordGameModel: WordGameModel {
             query = weightedRandomElement(items: queries).trim()
             print("getting random query \(query)")
         }
-        print("GOT RANDOM QUERY \(query) with frequency \(queries.first(where: { $0.0 == query })?.1)")
+        print("GOT RANDOM QUERY \(query) with frequency \(String(describing: queries.first(where: { $0.0 == query })?.1))")
         
         
         // pivot at some percentage of max element, defined by syllableDifficulty

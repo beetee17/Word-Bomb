@@ -37,8 +37,9 @@ struct Word_BombApp: App {
         ])
         
         moc.automaticallyMergesChangesFromParent = true
+        
         // Initialise Revenue Cat
-        Purchases.debugLogsEnabled = true
+        Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: "appl_PbFyqlyrPaJzyFUtKnwBuUxLvNN")
     }
     @State private var authRequired = true

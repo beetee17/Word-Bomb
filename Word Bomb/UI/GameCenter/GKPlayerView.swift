@@ -60,7 +60,7 @@ struct GKPlayerView: View {
         .onAppear() {
             DispatchQueue.global().async {
                 GKLocalPlayer.local.loadPhoto(for: GKPlayer.PhotoSize.normal) { (image, error) in
-                    print("\(String(describing: error)) Error loading GKPlayer Image: \(image ?? nil)")
+                    print("\(String(describing: error)) Error loading GKLocalPlayer Image")
                     playerImage = image
                     
                 }

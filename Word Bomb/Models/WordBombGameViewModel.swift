@@ -353,7 +353,7 @@ extension WordBombGameViewModel {
         for player in model.playerQueue {
             if player.name == GKLocalPlayer.local.displayName {
                 GKLocalPlayer.local.loadPhoto(for: GKPlayer.PhotoSize.normal) { image, error in
-                    print("got image \(image ?? nil) for player \(player.name) with error \(String(describing: error))")
+                    print("got image for player \(player.name) with error \(String(describing: error))")
                     player.setImage(image)
                 }
             }
@@ -361,7 +361,7 @@ extension WordBombGameViewModel {
                 for gkPlayer in gkPlayers {
                     if player.name == gkPlayer.displayName {
                         gkPlayer.loadPhoto(for: GKPlayer.PhotoSize.normal) { image, error in
-                            print("got image \(image ?? nil) for player \(player.name) with error \(String(describing: error))")
+                            print("got image for player \(player.name) with error \(String(describing: error))")
                             player.setImage(image)
                         }
                     }
