@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+
 struct DatabaseView: View {
     
     @Environment(\.editMode) var isEditing
@@ -78,16 +79,10 @@ struct DatabaseView: View {
         }
     }
     func saveChanges() {
-        do {
-            for word in wordsToAdd {
-                let _ = Word(context: moc, content: word, db: db)
-            }
-            
-            try moc.save()
-            
-        } catch {
-            print("Failed to save changes. \(error.localizedDescription)")
+        for word in wordsToAdd {
+            let _ = Word(context: moc, content: word, db: db)
         }
+        moc.saveObjects()
     }
 }
 
