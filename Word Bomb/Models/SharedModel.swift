@@ -67,7 +67,7 @@ struct WordBombGame: Codable {
             self.playerQueue = []
             let playerNames = UserDefaults.standard.stringArray(forKey: "Player Names") ?? []
 
-            for i in 0..<max(1, UserDefaults.standard.integer(forKey: "Num Players")) {
+            for i in 0..<max(2, UserDefaults.standard.integer(forKey: "Num Players")) {
                 
                 if i >= playerNames.count {
                     // If no name was set by the user for this player, create one with a generic name
