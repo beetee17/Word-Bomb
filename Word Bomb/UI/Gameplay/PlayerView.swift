@@ -63,27 +63,16 @@ struct PlayerLives: View {
     var body: some View {
         
         HStack {
+            let totalLives = viewModel.totalLives
             
             // redraws the hearts when player livesLeft changes
-            // smaller size depending on total number of lives to fit under avatar
-            
-            ForEach(0..<player.livesLeft, id: \.self) { i in
-                // draws remaining lives filled with red
-                Image(systemName: "heart.fill")
+            ForEach(0..<viewModel.totalLives, id: \.self) { i in
+                // draws player's remaining lives filled with red
+                Image(systemName: i < player.livesLeft ? "heart.fill" : "heart")
                     .resizable()
-                    .frame(width: viewModel.livesLeft > 4 ? CGFloat(68 / viewModel.livesLeft) : 20.0,
-                           height: viewModel.livesLeft > 4 ? CGFloat(68 / viewModel.livesLeft) : 20.0,
-                           alignment: .center)
-                    .foregroundColor(.red)
-                
-            }
-            
-            ForEach(0..<max(0, viewModel.livesLeft - player.livesLeft), id: \.self) { i in
-                // draws lives lost (if any) unfilled
-                Image(systemName: "heart")
-                    .resizable()
-                    .frame(width: viewModel.livesLeft > 4 ? CGFloat(68 / viewModel.livesLeft) : 20.0,
-                           height: viewModel.livesLeft > 4 ? CGFloat(68 / viewModel.livesLeft) : 20.0,
+                    // smaller size depending on total number of lives to fit under avatar
+                    .frame(width: totalLives > 4 ? CGFloat(68 / totalLives) : 20.0,
+                           height: totalLives > 4 ? CGFloat(68 / totalLives) : 20.0,
                            alignment: .center)
                     .foregroundColor(.red)
                 
