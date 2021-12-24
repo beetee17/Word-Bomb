@@ -12,17 +12,17 @@ import GameKitUI
 struct GamePlayView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     
-    var gkMatch: GKMatch? 
+    var gkMatch: GKMatch?
     
     var instructionText: some View {
         viewModel.instruction.map { Text($0)
-            .boldText()
+                .boldText()
             
         }
     }
     var queryText: some View {
         viewModel.query.map { Text($0)
-            .boldText()
+                .boldText()
         }
     }
     
@@ -65,22 +65,25 @@ struct GamePlayView: View {
             
             VStack {
                 Spacer()
-                
-                instructionText
-                queryText
-                PermanentKeyboard(text: $viewModel.input, forceResignFirstResponder: $viewModel.forceHideKeyboard) {
-                    viewModel.processInput()
-                }
-                .font(Font.system(size: 20))
+                if viewModel.gameState == .gameOver {
+                    Text("Word Count: \(viewModel.numCorrect)")
+                        .boldText()
+                } else {
+                    instructionText
+                    queryText
+                    PermanentKeyboard(text: $viewModel.input, forceResignFirstResponder: $viewModel.forceHideKeyboard) {
+                        viewModel.processInput()
+                    }
+                    .font(Font.system(size: 20))
                     
-                ZStack {
-                    Text("INVISIBLE PLACEHOLDER TEXT")
-                        .font(.system(size: 20, weight: .bold, design: .default))
-                        .textCase(.uppercase)
-                        .opacity(0)
-                    OutputText()
+                    ZStack {
+                        Text("INVISIBLE PLACEHOLDER TEXT")
+                            .font(.system(size: 20, weight: .bold, design: .default))
+                            .textCase(.uppercase)
+                            .opacity(0)
+                        OutputText()
+                    }
                 }
-                
                 Spacer()
             }
             .offset(y: Device.height*0.05)

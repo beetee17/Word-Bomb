@@ -16,7 +16,7 @@ struct WordBombGame: Codable {
     var players: Players
     
     /// The number of lives that each player begins with, as per the host's settings
-    var livesLeft = UserDefaults.standard.integer(forKey: "Player Lives")
+    var totalLives = UserDefaults.standard.integer(forKey: "Player Lives")
     
     /// The time allowed for each player, as per the host's settings. The limit may decrease with each turn depending on the other relevant settings
     var timeLimit = UserDefaults.standard.float(forKey: "Time Limit")
@@ -26,6 +26,9 @@ struct WordBombGame: Codable {
     
     /// The current state of the game
     var gameState: GameState = .initial
+    
+    /// The number of correct answers used in the game
+    var numCorrect = 0
     
     /// The output text to be displayed depending on player input
     var output = ""
@@ -64,9 +67,7 @@ struct WordBombGame: Codable {
         // reset the time for other player iff answer from prev player was correct
         
         if GameCenter.isHost {
-            
             Multiplayer.send(GameData(state: .playerInput, input: input, response: response.status), toHost: false)
-
         }
         
         output = response.status.outputText(input)
@@ -82,6 +83,7 @@ struct WordBombGame: Codable {
                 }
             }
             _ = players.nextPlayer()
+            numCorrect += 1
             playRunningOutOfTimeSound = false
             
             if !GameCenter.isOnline {

@@ -237,7 +237,10 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     var players: Players { model.players }
     
     /// Allow the UI to read the number of lives each player starts with
-    var livesLeft: Int { model.livesLeft }
+    var totalLives: Int { model.totalLives }
+    
+    /// Allow the UI to read the number of correct answers used so far
+    var numCorrect: Int { model.numCorrect }
     
     /// Allow the UI to read the current game's instruction text
     var instruction: String? { model.instruction }

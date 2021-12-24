@@ -33,15 +33,13 @@ struct TopBarView: View {
             
             Spacer()
             
-            if .gameOver == viewModel.gameState { RestartButton().opacity(1) }
-            else { RestartButton().opacity(0) }
+            if .gameOver == viewModel.gameState { RestartButton() }
+            else { Text("\(viewModel.numCorrect)") }
         }
         .padding(.horizontal, 20)
         .padding(.top, viewModel.players.queue.count != 2 ? 0 : 50)
         
     }
-    
-    
 }
 
 
