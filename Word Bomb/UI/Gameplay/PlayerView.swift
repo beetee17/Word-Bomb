@@ -41,13 +41,12 @@ struct PlayerName: View {
     var player: Player
     
     var body: some View {
-        switch .gameOver == viewModel.gameState && viewModel.players.current.name == player.name {
-        case true:
-            
+        if viewModel.gameState == .gameOver && viewModel.players.current == player && !viewModel.trainingMode {
+        
             Text("\(player.name) WINS!")
                 .font(/*@START_MENU_TOKEN@*/.largeTitle/*@END_MENU_TOKEN@*/)
                 .lineLimit(1).minimumScaleFactor(0.5)
-        case false:
+        } else {
             
             Text("\(player.name)")
                 .font(.largeTitle)
