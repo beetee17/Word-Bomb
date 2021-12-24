@@ -14,18 +14,6 @@ struct GamePlayView: View {
     
     var gkMatch: GKMatch?
     
-    var instructionText: some View {
-        viewModel.instruction.map { Text($0)
-                .boldText()
-            
-        }
-    }
-    var queryText: some View {
-        viewModel.query.map { Text($0)
-                .boldText()
-        }
-    }
-    
     var body: some View {
         ZStack {
             
@@ -69,8 +57,8 @@ struct GamePlayView: View {
                     Text("Word Count: \(viewModel.numCorrect)")
                         .boldText()
                 } else {
-                    instructionText
-                    queryText
+                    Text(viewModel.instruction ?? "").boldText()
+                    Text(viewModel.query ?? "").boldText()
                     PermanentKeyboard(text: $viewModel.input, forceResignFirstResponder: $viewModel.forceHideKeyboard) {
                         viewModel.processInput()
                     }
