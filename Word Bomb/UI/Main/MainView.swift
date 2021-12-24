@@ -185,7 +185,6 @@ struct MainMenuView: View {
                 }
              
                 .transition(AnyTransition.offset(x:0, y:200).combined(with: .move(edge: viewModel.showMultiplayerOptions ? .top : .bottom)))
-                .animation(Game.mainAnimation)
             }
         }
         

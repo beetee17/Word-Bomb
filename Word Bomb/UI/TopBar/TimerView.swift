@@ -11,7 +11,7 @@ struct TimerView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     
     var body: some View {
-        if viewModel.playerQueue.count != 2 {
+        if viewModel.players.queue.count != 2 {
             ZStack {
                 BombView()
                     .frame(width: 100, height: 100)

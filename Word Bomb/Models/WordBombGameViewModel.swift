@@ -14,7 +14,7 @@ import GameKitUI
 class WordBombGameViewModel: NSObject, ObservableObject {
     
     /// Source of truth for many of the variables that concerns game logic
-    @Published private var model: WordBombGame = WordBombGame()
+    @Published private var model: WordBombGame = WordBombGame(players: Players())
     
     /// Responsible with processing user inputs and fetching new queries if necessary
     @Published private var gameModel: WordGameModel? = nil
@@ -60,18 +60,11 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// - Parameter model: shared model to be set
     func setSharedModel(_ model: WordBombGame) {
         self.model = model
-        self.model.currentPlayer = self.model.playerQueue[0]
-    }
-    
-    /// Updates player lives left. Used to sync game state in online games
-    /// - Parameter updatedPlayers: Mapping from player name to lives left
-    func updatePlayerLives(_ updatedPlayers: [String:Int]) {
-        model.updatePlayerLives(updatedPlayers)
     }
     
     /// Called when settings menu is dismissed. Resets the shared model to account for any changes.
     func updateGameSettings() {
-        model = WordBombGame()
+        model = WordBombGame(players: Players())
     }
     
     /// Pauses the current game
@@ -106,16 +99,18 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// - Parameter mode: The given game mode
     func startGame(mode: GameMode) {
         
+        var players = Players()
+        
         if trainingMode {
             // Initialise a sharedModel with a single `Player`
             let playerName = (UserDefaults.standard.stringArray(forKey: "Player Names") ?? ["1"]).first!
-            model = WordBombGame([Player(name: playerName)])
+            players = Players(from:[Player(name: playerName)])
             
         } else if GameCenter.viewModel.showMatch {
-            setOnlinePlayers(GameCenter.viewModel.gkMatch!.players)
-        } else {
-            model = WordBombGame()
+            players = getOnlinePlayers(GameCenter.viewModel.gkMatch!.players)
         }
+        
+        model = WordBombGame(players: players)
         
         switch mode.gameType {
         case .Exact: gameModel = ExactWordGameModel(wordsDB: mode.wordsDB)
@@ -205,7 +200,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                         
                     }
                     if roundedValue % 10 == 0 && model.timeLeft > 0.1 {
-                        let playerLives = Dictionary(model.playerQueue.map { ($0.name, $0.livesLeft) }) { first, _ in first }
+                        let playerLives = Dictionary(model.players.queue.map { ($0.name, $0.livesLeft) }) { first, _ in first }
                         if GameCenter.isHost {
                             Multiplayer.send(GameData(playerLives: playerLives), toHost: false)
                             
@@ -238,11 +233,8 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     func clearOutput(_ output: String) { if output == model.output { model.clearOutput() } }
     
     //MARK: Getters and Setters to allow the UI to read and write to the source of truth if required
-    /// Allow the UI to read the current playerQueue
-    var playerQueue: [Player] { model.playerQueue }
-    
-    /// Allow the UI to read the current player
-    var currentPlayer: Player { model.currentPlayer }
+    /// Allow the UI to read the `model.players`
+    var players: Players { model.players }
     
     /// Allow the UI to read the number of lives each player starts with
     var livesLeft: Int { model.livesLeft }
@@ -294,7 +286,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
 extension WordBombGameViewModel {
     
     /// True if it is the current device's turn in a Game Center match
-    var isMyGKTurn: Bool { GKLocalPlayer.local.displayName == model.currentPlayer.name }
+    var isMyGKTurn: Bool { GKLocalPlayer.local.displayName == model.players.current.name }
     
     /**
      Resets the model (source of truth)
@@ -302,12 +294,13 @@ extension WordBombGameViewModel {
      Should be called when a multiplayer game has ended either due to lack of players, lost of connection or the game has ended
      */
     func resetGameModel() {
-        model = .init()
+        model = .init(players: Players())
         Game.stopTimer()
     }
     
     /// Removes the disconnected player from the game
     func handleDisconnected(from playerName: String) {
+        let playerQueue = players.queue
         for i in playerQueue.indices {
             guard i < playerQueue.count else { return }
             // if multiple disconnects at the same time -> this function may be called simultaneously
@@ -332,25 +325,24 @@ extension WordBombGameViewModel {
         
     }
     
-    /// Updates the players to those participating in the Game Center match
+    /// Returns `Players` object for those participating in the Game Center match
     /// - Parameter gkPlayers: Array of GKPlayer objects participating in the match
-    func setOnlinePlayers(_ gkPlayers: [GKPlayer])  {
+    func getOnlinePlayers(_ gkPlayers: [GKPlayer]) -> Players {
         
         var players: [Player] = [Player(name: GKLocalPlayer.local.displayName)]
         
         for player in gkPlayers {
             players.append(Player(name: player.displayName))
         }
-        model = .init(players)
-        print("gkplayers \(model.playerQueue)")
-        print("current player \(model.currentPlayer)")
-        setGKPlayerImages(gkPlayers)
+        setGKPlayerImages(for: players, with: gkPlayers)
+        return Players(from: players)
     }
     
-    /// Updates the Player objects with their corresponding Game Center profile picture
+    /// Updates `Player` objects with their corresponding Game Center profile picture
+    /// - Parameter players: Array of `Player` objects to be updated
     /// - Parameter gkPlayers: Array of GKPlayer objects participating in the match
-    func setGKPlayerImages(_ gkPlayers: [GKPlayer]) {
-        for player in model.playerQueue {
+    func setGKPlayerImages(for players: [Player], with gkPlayers: [GKPlayer]) {
+        for player in players {
             if player.name == GKLocalPlayer.local.displayName {
                 GKLocalPlayer.local.loadPhoto(for: GKPlayer.PhotoSize.normal) { image, error in
                     print("got image for player \(player.name) with error \(String(describing: error))")

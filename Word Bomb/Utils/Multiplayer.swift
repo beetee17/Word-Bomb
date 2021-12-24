@@ -38,13 +38,13 @@ struct GameData: Codable {
                 
                 Game.viewModel.setSharedModel(model)
                 
-                for player in Game.viewModel.playerQueue {
+                for player in Game.viewModel.players.queue {
                     print("\(player.name): \(player.livesLeft) lives")
                 }
                 Game.viewModel.viewToShow = .game
                 Game.viewModel.startTimer()
                 if let match = GameCenter.viewModel.gkMatch {
-                    Game.viewModel.setGKPlayerImages(match.players)
+                    Game.viewModel.setGKPlayerImages(for: Game.viewModel.players.queue, with: match.players)
                 } else { print("No GKMatch found??") }
             }
         }
@@ -71,7 +71,7 @@ struct GameData: Codable {
         }
         else if let updatedPlayers = self.playerLives {
             print("Received updated playerQueue from host ")
-            Game.viewModel.updatePlayerLives(updatedPlayers)
+            Game.viewModel.players.updatePlayerLives(with: updatedPlayers)
             print("Updated player queue")
         }
         else if let query = self.query {

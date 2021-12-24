@@ -9,14 +9,14 @@ import SwiftUI
 
 
 struct PlayerView: View {
-    // Appears in game scene to display current player's name
     
+    // Appears in game scene to display current player's name
     @EnvironmentObject var viewModel: WordBombGameViewModel
     
     var body: some View {
         
         ZStack {
-            switch viewModel.playerQueue.count {
+            switch viewModel.players.queue.count {
                 
             case 3...Int.max:
                 PlayerCarouselView()
@@ -26,7 +26,7 @@ struct PlayerView: View {
                     .offset(x: 0, y: Device.height*0.04)
                     .transition(.scale)
             default:
-                MainPlayer(player: viewModel.currentPlayer, animatePlayer: .constant(false))
+                MainPlayer(player: viewModel.players.current, animatePlayer: .constant(false))
                     .offset(x: 0, y: Device.height*0.1)
                     .transition(.scale)
                 
@@ -41,7 +41,7 @@ struct PlayerName: View {
     var player: Player
     
     var body: some View {
-        switch .gameOver == viewModel.gameState && viewModel.currentPlayer.name == player.name {
+        switch .gameOver == viewModel.gameState && viewModel.players.current.name == player.name {
         case true:
             
             Text("\(player.name) WINS!")

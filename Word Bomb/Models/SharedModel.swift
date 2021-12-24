@@ -12,19 +12,8 @@ import Foundation
  e.g. it does not implement the function that handles processing of user input since that differs depending on game mode
  */
 struct WordBombGame: Codable {
-    /**
-     A mutating array of `Player` objects that provides information about the current sequence of players.
-     
-     The order of objects in `playerQueue` is modified after each turn; it follows a carousel-like structure.
-     `Player` objects are removed from `playerQueue` when they run out of lives
-     */
-    var playerQueue: [Player]
     
-    /// Non-mutating array of `Player` objects containing every player in the current game. This allows us to reset `playerQueue` when restarting the game .
-    var players: [Player]
-    
-    /// The `Player` object representing the current player in the game
-    var currentPlayer: Player
+    var players: Players
     
     /// The number of lives that each player begins with, as per the host's settings
     var livesLeft = UserDefaults.standard.integer(forKey: "Player Lives")
@@ -56,36 +45,10 @@ struct WordBombGame: Codable {
     /// Controls the playback of the sound when `timeLeft` is low.
     var playRunningOutOfTimeSound = false
     
-    /// Initialises the shared model with an optional array of `Player` objects
-    /// - Parameter players: if `players` is nil, fallback to the user settings for the number of players and the names of each player
-    init(_ players: [Player]? = nil) {
-        if let players = players {
-            self.playerQueue = players
-            
-        }
-        else {
-            self.playerQueue = []
-            let playerNames = UserDefaults.standard.stringArray(forKey: "Player Names") ?? []
-
-            for i in 0..<max(1, UserDefaults.standard.integer(forKey: "Num Players")) {
-                
-                if i >= playerNames.count {
-                    // If no name was set by the user for this player, create one with a generic name
-                    self.playerQueue.enqueue(Player(name: "Player \(i+1)"))
-                }
-                else {
-                    self.playerQueue.enqueue(Player(name: playerNames[i]))
-                }
-            }
-        }
-
-        self.currentPlayer = self.playerQueue[0]
-        self.players = self.playerQueue
-    }
-    
     /// Updates the time limit based on the the `"Time Multiplier"` and `"Time Constraint"` settings
     mutating func updateTimeLimit() {
-        if currentPlayer == players.first! {
+        // TODO: why do we need this conditional
+        if players.current == players.queue.first! {
             timeLimit = max(UserDefaults.standard.float(forKey:"Time Constraint"), timeLimit * UserDefaults.standard.float(forKey: "Time Multiplier"))
             print("time multiplied")
         }
@@ -118,8 +81,8 @@ struct WordBombGame: Codable {
                     Multiplayer.send(GameData(query: query), toHost: false)
                 }
             }
-            
-            currentPlayer = playerQueue.nextPlayer(currentPlayer)
+            _ = players.nextPlayer()
+            playRunningOutOfTimeSound = false
             
             if !GameCenter.isOnline {
                 // only if host or offline should update time limit
@@ -130,9 +93,6 @@ struct WordBombGame: Codable {
                 Multiplayer.send(GameData(timeLimit: timeLimit), toHost: false)
             }
         }
-        
-        
-    
     }
     
     /// Resets the output text to an empty string
@@ -141,13 +101,7 @@ struct WordBombGame: Codable {
     /// Removes `player` from the game. Should be called in multiplayer context if `player` disconnects
     /// - Parameter player: `Player` object to be removed
     mutating func remove(_ player: Player) {
-        if player == currentPlayer {
-            // move to next player first if current player is to be removed
-            currentPlayer = playerQueue.nextPlayer(currentPlayer)
-            timeLeft = timeLimit
-        }
-        playerQueue.remove(at: playerQueue.firstIndex(of: player)!)
-        players.remove(at: players.firstIndex(of: player)!)
+        players.remove(player)
     }
     
     /// Handles the game state when the current player runs out of time
@@ -161,34 +115,11 @@ struct WordBombGame: Codable {
         if GameCenter.isHost {
             Multiplayer.send(GameData(state: .playerTimedOut), toHost: false)
         }
-
-        currentPlayer.livesLeft -= 1
         
-        for player in playerQueue {
-            print("\(player.name): \(player.livesLeft) lives")
-            
-        }
-        switch currentPlayer.livesLeft == 0 {
-        case true:
-            output = "\(currentPlayer.name) Lost!"
-        case false:
-            output = "\(currentPlayer.name) Ran Out of Time!"
-        }
-
-        guard playerQueue.count != 1 else {
-            // User is playing in training mode
-            return currentPlayer.livesLeft == 0 ? handleGameState(.gameOver) : updateTimeLimit()
-        }
+        let (output, isGameOver) = players.currentPlayerRanOutOfTime()
+        self.output = output
         
-        currentPlayer = playerQueue.nextPlayer(currentPlayer)
-        
-        switch playerQueue.count < 2 {
-        case true:
-            handleGameState(.gameOver)
-        case false:
-            updateTimeLimit()
-        }
-        
+        return isGameOver ? handleGameState(.gameOver) : updateTimeLimit()
     }
     
     /// Resets the relevant variables to restart the game
@@ -196,24 +127,7 @@ struct WordBombGame: Codable {
 
         timeLimit = UserDefaults.standard.float(forKey: "Time Limit")
         timeLeft = timeLimit
-        
         players.reset()
-        playerQueue = players
-        currentPlayer = playerQueue[0]
-        
-    }
-    
-    /// Sets the relevant `Player` objects with the given `livesleft`.  Called in a multiplayer context to sync game state on non-host devices.
-    /// - Parameter updatedPlayers: Mapping from `Player` name to lives left
-    mutating func updatePlayerLives(_ updatedPlayers: [String:Int]) {
-       
-        for player in playerQueue {
-            print("before updated \(player.name): \(player.livesLeft) lives")
-            if let updatedLives = updatedPlayers[player.name], player.livesLeft != updatedLives {
-                player.livesLeft = updatedLives
-            }
-            print("updated \(player.name): \(player.livesLeft) lives")
-        }
     }
     
     /// Resets the output, query and instruction texts to empty strings
@@ -236,7 +150,7 @@ struct WordBombGame: Codable {
             clearUI()
             
             if let players = data?["players"] as? [Player] {
-                self = .init(players)
+                self.players = Players(from: players)
                 
             }
             restartGame()

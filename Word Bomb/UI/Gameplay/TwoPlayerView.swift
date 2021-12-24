@@ -19,10 +19,10 @@ struct TwoPlayerView: View {
         
         ZStack {
             HStack(spacing: 90) {
-                ForEach(viewModel.playerQueue) { player in
+                ForEach(viewModel.players.queue) { player in
                     ZStack {
                         MainPlayer(player: player, animatePlayer: .constant(false))
-                            .scaleEffect(viewModel.currentPlayer == player ? 1 : 0.9)
+                            .scaleEffect(viewModel.players.current == player ? 1 : 0.9)
                             .animation(.easeInOut)
       
                     }
@@ -37,14 +37,14 @@ struct TwoPlayerView: View {
             BombView()
                 .frame(width: Game.miniBombSize,
                        height: Game.miniBombSize)
-                .offset(x: viewModel.currentPlayer == viewModel.playerQueue[0] ? leftPlayerOffset : rightPlayerOffset,
+                .offset(x: viewModel.players.current == viewModel.players.queue[0] ? leftPlayerOffset : rightPlayerOffset,
                         y: 0)
                 .animation(.easeInOut(duration: 0.3).delay(.playerTimedOut == viewModel.gameState ? 0.8 : 0))
                 .overlay (
                     BombExplosion()
                         .frame(width: Game.miniBombSize*1.5,
                                height: Game.miniBombSize*1.5)
-                        .offset(x: viewModel.currentPlayer == viewModel.playerQueue[0] ? rightPlayerOffset + Game.miniBombExplosionOffset : leftPlayerOffset + Game.miniBombExplosionOffset,
+                        .offset(x: viewModel.players.current == viewModel.players.queue[0] ? rightPlayerOffset + Game.miniBombExplosionOffset : leftPlayerOffset + Game.miniBombExplosionOffset,
                                 y: Game.miniBombExplosionOffset)
                 )
  
