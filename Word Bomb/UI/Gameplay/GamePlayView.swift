@@ -75,15 +75,16 @@ struct GamePlayView: View {
                         viewModel.processInput()
                     }
                     .font(Font.system(size: 20))
-                    
-                    ZStack {
-                        Text("INVISIBLE PLACEHOLDER TEXT")
-                            .font(.system(size: 20, weight: .bold, design: .default))
-                            .textCase(.uppercase)
-                            .opacity(0)
-                        OutputText()
-                    }
                 }
+                
+                ZStack {
+                    Text("INVISIBLE PLACEHOLDER TEXT")
+                        .font(.system(size: 20, weight: .bold, design: .default))
+                        .textCase(.uppercase)
+                        .opacity(0)
+                    OutputText()
+                }
+                
                 Spacer()
             }
             .offset(y: Device.height*0.05)
