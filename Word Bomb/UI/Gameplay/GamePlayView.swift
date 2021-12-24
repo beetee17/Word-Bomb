@@ -77,13 +77,7 @@ struct GamePlayView: View {
                     .font(Font.system(size: 20))
                 }
                 
-                ZStack {
-                    Text("INVISIBLE PLACEHOLDER TEXT")
-                        .font(.system(size: 20, weight: .bold, design: .default))
-                        .textCase(.uppercase)
-                        .opacity(0)
-                    OutputText()
-                }
+                OutputText()
                 
                 Spacer()
             }
