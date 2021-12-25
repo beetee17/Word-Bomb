@@ -16,11 +16,12 @@ struct ParticlesModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         ZStack {
-            ForEach(0..<100, id: \.self) { index in
+            ForEach(0..<200, id: \.self) { index in
                 content
                     .frame(width: CGFloat.random(in: 7...12), height: CGFloat.random(in: 15...20))
                     .rotationEffect(.degrees(Double.random(in: 0...90)))
-                    .hueRotation(Angle(degrees: time * 100))
+//                    .hueRotation(Angle(degrees: time * 100))
+                    .foregroundColor(Color(.random))
                     .scaleEffect(scale)
                     .modifier(FireworkParticlesGeometryEffect(time: time))
                     .opacity(((duration-time) / duration))
@@ -32,5 +33,12 @@ struct ParticlesModifier: ViewModifier {
                 self.scale = 1.0
             }
         }
+    }
+}
+
+extension UIColor {
+    static var random: UIColor {
+        // gets bright colors
+        return .init(hue: .random(in: 0...1), saturation: 1, brightness: 1, alpha: 1)
     }
 }

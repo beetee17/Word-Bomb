@@ -22,10 +22,10 @@ struct GameOverText: View {
                 Text("Previous Best: \(gameMode.highScore)")
                     .boldText()
                     .onAppear() {
-                        gameMode.updateHighScore(with: numCorrect)
                         if numCorrect <= gameMode.highScore {
                             Game.playSound(file: "explosion")
                         }
+                        gameMode.updateHighScore(with: numCorrect)
                     }
             }
         }

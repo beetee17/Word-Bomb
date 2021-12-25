@@ -12,12 +12,10 @@ struct ConfettiView: View {
         ZStack {
             
             Rectangle()
-                .foregroundColor(Color.blue)
                 .modifier(ParticlesModifier())
                 .offset(x: -100, y : -50)
             
             Rectangle()
-                .foregroundColor(Color.red)
                 .modifier(ParticlesModifier())
                 .offset(x: 60, y : 70)
         }
@@ -31,3 +29,4 @@ struct ConfettiView_Previews: PreviewProvider {
         ConfettiView()
     }
 }
+
