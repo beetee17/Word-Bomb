@@ -38,12 +38,16 @@ struct TopBarView: View {
             Spacer()
             
             if .gameOver == viewModel.gameState { RestartButton() }
-            else { Text("\(viewModel.numCorrect)/\(viewModel.totalWords)") }
+            else if viewModel.totalWords < 1000 {
+                Text("\(viewModel.numCorrect)/\(viewModel.totalWords)")
+            } else {
+                Text("\(viewModel.numCorrect)")
+            }
         }
         .padding(.horizontal, 20)
-        // TODO: Get rid of this ugliness
-        .offset(x: 0, y: viewModel.players.allPlayers.count == 2 ? 0 : -50)
-        
+        // The top bar is smaller when there are less than 3 players due to the bomb explosion animation.
+        .frame(height: Game.miniBombSize*1.5)
+        .offset(x: 0,y: -Device.height*0.03)
     }
 }
 
