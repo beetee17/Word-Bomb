@@ -26,24 +26,6 @@ struct FireworkParticlesGeometryEffect : GeometryEffect {
         return ProjectionTransform(affineTranslation)
     }
 }
-//struct FireworkParticlesGeometryEffect : GeometryEffect {
-//
-//    var x_cor: Double
-//    var y_cor: Double
-//
-//    var animatableData: AnimatablePair<Double, Double> {
-//        get { AnimatablePair(Double(x_cor), Double(y_cor)) }
-//        set {
-//            x_cor = newValue.first
-//            y_cor = newValue.second
-//        }
-//    }
-//
-//    func effectValue(size: CGSize) -> ProjectionTransform {
-//
-//        let affineTranslation =  CGAffineTransform(translationX: x_cor, y: y_cor)
-//        return ProjectionTransform(affineTranslation)
-//    }
-//}
+
 
 
