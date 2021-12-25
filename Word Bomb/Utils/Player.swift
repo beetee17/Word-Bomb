@@ -18,6 +18,7 @@ class Player: Codable, Equatable, Identifiable {
     var score = 0
     var name:String
     var id = UUID()
+    var totalLives = UserDefaults.standard.integer(forKey: "Player Lives")
     var livesLeft = UserDefaults.standard.integer(forKey: "Player Lives")
     var image: Data? = nil
     
@@ -31,11 +32,11 @@ class Player: Codable, Equatable, Identifiable {
     
     func reset() {
         score = 0
-        livesLeft = UserDefaults.standard.integer(forKey: "Player Lives")
+        livesLeft = totalLives
     }
 }
 
-class Players: Codable, Identifiable, ObservableObject {
+class Players: Codable, Identifiable {
     
     /// Non-mutating array of `Player` objects containing every player in the current game. This allows us to reset the `queue` when restarting the game .
     var allPlayers: [Player]
@@ -50,7 +51,9 @@ class Players: Codable, Identifiable, ObservableObject {
     
     /// The `Player` object representing the current player in the game
     var current: Player
-    
+    var totalLives: Int {
+        current.totalLives
+    }
     var numTurnsInCurrentRound = 0
     var numRounds = 1
     var numCorrect = 0
