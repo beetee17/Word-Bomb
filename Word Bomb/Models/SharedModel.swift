@@ -16,10 +16,10 @@ struct WordBombGame: Codable {
     var players: Players
     
     /// The number of lives that each player begins with, as per the host's settings
-    var totalLives = UserDefaults.standard.integer(forKey: "Player Lives")
+    private(set) var totalLives = UserDefaults.standard.integer(forKey: "Player Lives")
     
     /// The time allowed for each player, as per the host's settings. The limit may decrease with each turn depending on the other relevant settings
-    var timeLimit = UserDefaults.standard.float(forKey: "Time Limit")
+    private(set) var timeLimit = UserDefaults.standard.float(forKey: "Time Limit")
     
     /// The amount of time left for the current player.
     var timeLeft = UserDefaults.standard.float(forKey: "Time Limit")
@@ -27,8 +27,8 @@ struct WordBombGame: Codable {
     /// The current state of the game
     var gameState: GameState = .initial
     
-    /// The number of correct answers used in the game
-    var numCorrect = 0
+    /// The number of correct answers used in the game. The score should only be set within the model
+    private(set) var numCorrect = 0
     
     /// The output text to be displayed depending on player input
     var output = ""
@@ -107,6 +107,7 @@ struct WordBombGame: Codable {
     mutating func currentPlayerRanOutOfTime() {
         
         playRunningOutOfTimeSound = false
+        Game.playSound(file: "explosion")
         
         // We need to keep game state on non-host devices in sync
         if GameCenter.isHost {

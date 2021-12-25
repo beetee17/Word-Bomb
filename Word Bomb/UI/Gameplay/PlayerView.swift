@@ -15,7 +15,7 @@ struct PlayerView: View {
     var body: some View {
         
         ZStack {
-            switch viewModel.players.queue.count {
+            switch viewModel.model.players.queue.count {
                 
             case 3...Int.max:
                 PlayerCarouselView()
@@ -27,12 +27,12 @@ struct PlayerView: View {
                 if viewModel.trainingMode {
                     HStack {
                         Text("Lives: ").boldText()
-                        PlayerLives(player: viewModel.players.current)
+                        PlayerLives(player: viewModel.model.players.current)
                     }
                     .offset(x: 0, y: Device.height*0.2)
                     
                 } else {
-                    MainPlayer(player: viewModel.players.current, animatePlayer: .constant(false))
+                    MainPlayer(player: viewModel.model.players.current, animatePlayer: .constant(false))
                         .offset(x: 0, y: Device.height*0.1)
                         .transition(.scale)
                 }
@@ -48,7 +48,7 @@ struct PlayerName: View {
     var player: Player
     
     var body: some View {
-        if viewModel.gameState == .gameOver && viewModel.players.current == player && !viewModel.trainingMode {
+        if viewModel.model.gameState == .gameOver && viewModel.model.players.current == player && !viewModel.trainingMode {
         
             Text("\(player.name) WINS!")
                 .font(/*@START_MENU_TOKEN@*/.largeTitle/*@END_MENU_TOKEN@*/)
@@ -69,10 +69,10 @@ struct PlayerLives: View {
     var body: some View {
         
         HStack {
-            let totalLives = viewModel.totalLives
+            let totalLives = viewModel.model.totalLives
             
             // redraws the hearts when player livesLeft changes
-            ForEach(0..<viewModel.totalLives, id: \.self) { i in
+            ForEach(0..<viewModel.model.totalLives, id: \.self) { i in
                 // draws player's remaining lives filled with red
                 Image(systemName: i < player.livesLeft ? "heart.fill" : "heart")
                     .resizable()
@@ -116,6 +116,9 @@ struct PlayerView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PlayerView().environmentObject(WordBombGameViewModel())
+        Group {
+            PlayerView().environmentObject(WordBombGameViewModel.preview(numPlayers: 3))
+            PlayerView().environmentObject(WordBombGameViewModel.preview(numPlayers: 2))
+        }
     }
 }

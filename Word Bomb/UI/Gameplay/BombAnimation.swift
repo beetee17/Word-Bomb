@@ -53,9 +53,6 @@ struct BombExplosion: View {
             .opacity(animating ? 1 : 0)
             .onChange(of: gameState) { _ in
                 animateIfNeeded()
-                if gameState == .playerTimedOut {
-                    Game.playSound(file: "explosion")
-                }
             }
     }
     func animateIfNeeded() {

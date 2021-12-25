@@ -38,13 +38,13 @@ struct GameData: Codable {
                 
                 Game.viewModel.setSharedModel(model)
                 
-                for player in Game.viewModel.players.queue {
+                for player in Game.viewModel.model.players.queue {
                     print("\(player.name): \(player.livesLeft) lives")
                 }
                 Game.viewModel.viewToShow = .game
                 Game.viewModel.startTimer()
                 if let match = GameCenter.viewModel.gkMatch {
-                    Game.viewModel.setGKPlayerImages(for: Game.viewModel.players.queue, with: match.players)
+                    Game.viewModel.setGKPlayerImages(for: Game.viewModel.model.players.queue, with: match.players)
                 } else { print("No GKMatch found??") }
             }
         }
@@ -71,12 +71,12 @@ struct GameData: Codable {
         }
         else if let updatedPlayers = self.playerLives {
             print("Received updated playerQueue from host ")
-            Game.viewModel.players.updatePlayerLives(with: updatedPlayers)
+            Game.viewModel.model.players.updatePlayerLives(with: updatedPlayers)
             print("Updated player queue")
         }
         else if let query = self.query {
             print("received new query from host \(query)")
-            Game.viewModel.query = query
+            Game.viewModel.model.query = query
         }
         else if let input = self.input {
             print("Got data from non-host device ! \(input)")
@@ -84,12 +84,12 @@ struct GameData: Codable {
         }
         else if let timeLeft = self.timeLeft {
             print("received updated time left from host \(timeLeft)")
-            Game.viewModel.timeLeft = timeLeft
+            Game.viewModel.model.timeLeft = timeLeft
         }
         
         else if let timeLimit = self.timeLimit {
             print("receive new time limit from host \(timeLimit)")
-            Game.viewModel.timeLeft = timeLimit
+            Game.viewModel.model.timeLeft = timeLimit
         }
     }
     

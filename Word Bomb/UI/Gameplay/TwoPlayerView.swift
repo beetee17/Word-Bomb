@@ -19,10 +19,10 @@ struct TwoPlayerView: View {
         
         ZStack {
             HStack(spacing: 90) {
-                ForEach(viewModel.players.queue) { player in
+                ForEach(viewModel.model.players.queue) { player in
                     ZStack {
                         MainPlayer(player: player, animatePlayer: .constant(false))
-                            .scaleEffect(viewModel.players.current == player ? 1 : 0.9)
+                            .scaleEffect(viewModel.model.players.current == player ? 1 : 0.9)
                             .animation(.easeInOut)
       
                     }
@@ -34,17 +34,17 @@ struct TwoPlayerView: View {
             let leftPlayerOffset = -frameWidth/2 + Game.playerAvatarSize*0.75
             let rightPlayerOffset = -leftPlayerOffset
             
-            BombView(timeLeft: $viewModel.timeLeft, timeLimit: viewModel.timeLimit)
+            BombView(timeLeft: $viewModel.model.timeLeft, timeLimit: viewModel.model.timeLimit)
                 .frame(width: Game.miniBombSize,
                        height: Game.miniBombSize)
-                .offset(x: viewModel.players.current == viewModel.players.queue[0] ? leftPlayerOffset : rightPlayerOffset,
+                .offset(x: viewModel.model.players.current == viewModel.model.players.queue[0] ? leftPlayerOffset : rightPlayerOffset,
                         y: 0)
-                .animation(.easeInOut(duration: 0.3).delay(.playerTimedOut == viewModel.gameState ? 0.8 : 0))
+                .animation(.easeInOut(duration: 0.3).delay(.playerTimedOut == viewModel.model.gameState ? 0.8 : 0))
                 .overlay (
-                    BombExplosion(gameState: $viewModel.gameState)
+                    BombExplosion(gameState: $viewModel.model.gameState)
                         .frame(width: Game.miniBombSize*1.5,
                                height: Game.miniBombSize*1.5)
-                        .offset(x: viewModel.players.current == viewModel.players.queue[0] ? rightPlayerOffset + Game.miniBombExplosionOffset : leftPlayerOffset + Game.miniBombExplosionOffset,
+                        .offset(x: viewModel.model.players.current == viewModel.model.players.queue[0] ? rightPlayerOffset + Game.miniBombExplosionOffset : leftPlayerOffset + Game.miniBombExplosionOffset,
                                 y: Game.miniBombExplosionOffset)
                 )
  

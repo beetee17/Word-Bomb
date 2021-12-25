@@ -11,9 +11,9 @@ struct PlayerCarouselView: View {
     @State var animatePlayers = false
 
     var body: some View {
-        let currentPlayer = viewModel.players.queue[0]
-        let nextPlayer = viewModel.players.queue[1]
-        let prevPlayer = viewModel.players.queue[back: 0]
+        let currentPlayer = viewModel.model.players.queue[0]
+        let nextPlayer = viewModel.model.players.queue[1]
+        let prevPlayer = viewModel.model.players.queue[back: 0]
         
         let playerSize = Game.playerAvatarSize
         let spacing = CGFloat(5.0)
@@ -41,14 +41,14 @@ struct PlayerCarouselView: View {
 
             ZStack {
 
-                RightPlayer(player: animatePlayers ? viewModel.players.queue[back: 1] : prevPlayer)
+                RightPlayer(player: animatePlayers ? viewModel.model.players.queue[back: 1] : prevPlayer)
                     .scaleEffect(animatePlayers ? 0.01 : 0.9)
 
             }
         }
         .animation(animatePlayers ? .easeInOut(duration: 0.3) : nil)
 
-        .onChange(of: viewModel.players.queue, perform: { _ in
+        .onChange(of: viewModel.model.players.queue, perform: { _ in
 
             withAnimation { animatePlayers.toggle() }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: { animatePlayers = false })

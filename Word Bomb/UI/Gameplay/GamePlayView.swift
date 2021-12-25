@@ -44,22 +44,22 @@ struct GamePlayView: View {
             
             VStack {
                 Spacer()
-                if viewModel.gameState == .gameOver {
+                if viewModel.model.gameState == .gameOver {
                     GameOverText(
                         gameMode: viewModel.gameMode!,
-                        numCorrect: viewModel.numCorrect,
+                        numCorrect: viewModel.model.numCorrect,
                         trainingMode: viewModel.trainingMode)
                     
                 } else {
-                    Text(viewModel.instruction ?? "").boldText()
-                    Text(viewModel.query ?? "").boldText()
+                    Text(viewModel.model.instruction ).boldText()
+                    Text(viewModel.model.query ?? "").boldText()
                     PermanentKeyboard(text: $viewModel.input, forceResignFirstResponder: $viewModel.forceHideKeyboard) {
                         viewModel.processInput()
                     }
                     .font(Font.system(size: 20))
                 }
                 
-                OutputText(text: $viewModel.output)
+                OutputText(text: $viewModel.model.output)
                 
                 Spacer()
             }

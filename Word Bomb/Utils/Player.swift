@@ -35,7 +35,7 @@ class Player: Codable, Equatable, Identifiable {
     }
 }
 
-class Players: Codable, Identifiable {
+class Players: Codable, Identifiable, ObservableObject {
     
     /// Non-mutating array of `Player` objects containing every player in the current game. This allows us to reset the `queue` when restarting the game .
     var allPlayers: [Player]
@@ -101,6 +101,7 @@ class Players: Codable, Identifiable {
     /// - Parameter player: `Player` object to be removed
     func remove(_ player: Player) {
         guard let index = queue.firstIndex(of: player) else { return }
+        print("Player removed")
         queue.remove(at: index)
     }
     

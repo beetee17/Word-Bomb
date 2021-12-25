@@ -22,7 +22,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         return viewModel
     }
     /// Source of truth for many of the variables that concerns game logic
-    @Published private var model: WordBombGame = WordBombGame(players: Players())
+    @Published var model: WordBombGame = WordBombGame(players: Players())
     
     /// Responsible with processing user inputs and fetching new queries if necessary
     @Published private var gameModel: WordGameModel? = nil
@@ -35,7 +35,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                 gkSelect = false
                 trainingMode = false
             case .game:
-                playRunningOutOfTimeSound = false
+                model.playRunningOutOfTimeSound = false
                 forceHideKeyboard = false
             default:
                 forceHideKeyboard = true
@@ -80,14 +80,14 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// Resumes the current game
     func resumeGame() {
         viewToShow = .game
-        if .gameOver != gameState {
+        if .gameOver != model.gameState {
             startTimer()
         }
     }
     
     /// Updates the high score of the current mode. Should only be called at gameOver state in training mode
     func updateHighScore() {
-        gameMode?.highScore = numCorrect
+        gameMode?.highScore = model.numCorrect
     }
     
     /// Restarts the game with the same game mode
@@ -101,6 +101,20 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         gameModel.reset()
         startGame(mode: gameMode!)
         
+    }
+    /// inits the appropriate WordGameModel for the given game mode
+    /// - Parameter mode: The given game mode
+    func setGameModel(for mode: GameMode) {
+        switch mode.gameType {
+        case .Exact: gameModel = ExactWordGameModel(wordsDB: mode.wordsDB)
+            
+        case .Classic:
+            let queries = mode.queriesDB.words.map({ ($0.content, $0.frequency) })
+            gameModel = ContainsWordGameModel(wordsDB: mode.wordsDB, queries: queries)
+            
+        case .Reverse:
+            gameModel = ReverseWordGameModel(wordsDB: mode.wordsDB)
+        }
     }
     
     /// Starts a game with the given game mode, not least by initing the appropriate WordGameModel
@@ -120,16 +134,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         
         model = WordBombGame(players: players)
         
-        switch mode.gameType {
-        case .Exact: gameModel = ExactWordGameModel(wordsDB: mode.wordsDB)
-            
-        case .Classic:
-            let queries = mode.queriesDB.words.map({ ($0.content, $0.frequency) })
-            gameModel = ContainsWordGameModel(wordsDB: mode.wordsDB, queries: queries)
-            
-        case .Reverse:
-            gameModel = ReverseWordGameModel(wordsDB: mode.wordsDB)
-        }
+        setGameModel(for: mode)
         
         if GameCenter.isHost || !GameCenter.isOnline {
             print("getting query")
@@ -204,7 +209,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                     if roundedValue % 5 == 0 && model.timeLeft > 0.4 {
                         
                         if GameCenter.isHost {
-                            Multiplayer.send(GameData(timeLeft: timeLeft), toHost: false)
+                            Multiplayer.send(GameData(timeLeft: model.timeLeft), toHost: false)
                             
                         }
                         
@@ -238,56 +243,6 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         model.handleGameState(gameState, data: data)
     }
     
-    //MARK: Getters and Setters to allow the UI to read and write to the source of truth if required
-    /// Allow the UI to read the `model.players`
-    var players: Players { model.players }
-    
-    /// Allow the UI to read the number of lives each player starts with
-    var totalLives: Int { model.totalLives }
-    
-    /// Allow the UI to read the number of correct answers used so far
-    var numCorrect: Int { model.numCorrect }
-    
-    /// Allow the UI to read the current game's instruction text
-    var instruction: String? { model.instruction }
-    
-    /// Allow read and write to the current game's query text. Used in multiplayer games for non-host devices to sync game state.
-    var query: String? {
-        get { model.query }
-        set { model.query = newValue }
-    }
-    
-    /// Allow the read and write to the current game's time limit. Used in multiplayer games for non-host devices to sync game state.
-    var timeLimit: Float {
-        get { model.timeLimit }
-        set { model.timeLimit = newValue }
-    }
-    
-    /// Allow the read and write to the current game's time left. Used in multiplayer games for non-host devices to sync game state.
-    var timeLeft: Float {
-        get { model.timeLeft }
-        set { model.timeLeft = newValue }
-    }
-    
-    /// Allow the UI to read the current game's output text
-    var output: String {
-        get { model.output }
-        set { model.output = newValue }
-    }
-    
-    /// Allow the UI to read the current game's state
-    var gameState: GameState {
-        get { model.gameState }
-        set { model.gameState = newValue }
-    }
-    
-    /// Allow the UI to control the playback of the running-out-of-time sound
-    var playRunningOutOfTimeSound: Bool {
-        get { model.playRunningOutOfTimeSound }
-        set { model.playRunningOutOfTimeSound = newValue }
-    }
-    
-    
 }
 
 // MARK: - MULTIPLAYER SECTION
@@ -308,7 +263,7 @@ extension WordBombGameViewModel {
     
     /// Removes the disconnected player from the game
     func handleDisconnected(from playerName: String) {
-        let playerQueue = players.queue
+        let playerQueue = model.players.queue
         for i in playerQueue.indices {
             guard i < playerQueue.count else { return }
             // if multiple disconnects at the same time -> this function may be called simultaneously

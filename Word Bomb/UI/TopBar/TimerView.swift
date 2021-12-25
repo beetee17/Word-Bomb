@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct TimerView: View {
-    
-    @State var numPlayers: Int
+    // TODO: why are bindings needed
+    @Binding var players: Players
     @Binding var timeLeft: Float
     @State var timeLimit: Float
     @Binding var gameState: GameState
     @Binding var playRunningOutOfTimeSound: Bool
     
     var body: some View {
-        Group {
-            if numPlayers != 2 {
+        ZStack {
+            if players.queue.count != 2 {
                 ZStack {
                     BombView(timeLeft: $timeLeft, timeLimit: timeLimit)
                         .frame(width: 100, height: 100)
@@ -58,7 +58,7 @@ struct TimerView_Previews: PreviewProvider {
         
         var body: some View {
             VStack {
-                TimerView(numPlayers: numPlayers, timeLeft: .constant(10), timeLimit: 10, gameState: $gameState, playRunningOutOfTimeSound: .constant(false))
+                TimerView(players: .constant(Players()), timeLeft: .constant(10), timeLimit: 10, gameState: $gameState, playRunningOutOfTimeSound: .constant(false))
                 
                 Button("Test Explosion!") {
                     gameState = .playerTimedOut

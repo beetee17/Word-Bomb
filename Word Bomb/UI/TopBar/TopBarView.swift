@@ -27,21 +27,21 @@ struct TopBarView: View {
             Spacer()
             
             TimerView(
-                numPlayers: viewModel.players.queue.count,
-                timeLeft: $viewModel.timeLeft,
-                timeLimit: viewModel.timeLimit,
-                gameState: $viewModel.gameState,
-                playRunningOutOfTimeSound: $viewModel.playRunningOutOfTimeSound
+                players: $viewModel.model.players,
+                timeLeft: $viewModel.model.timeLeft,
+                timeLimit: viewModel.model.timeLimit,
+                gameState: $viewModel.model.gameState,
+                playRunningOutOfTimeSound: $viewModel.model.playRunningOutOfTimeSound
             )
                 .offset(x: gkMatch == nil ? 0 : -20)
             
             Spacer()
             
-            if .gameOver == viewModel.gameState { RestartButton() }
+            if .gameOver == viewModel.model.gameState { RestartButton() }
             else if viewModel.totalWords < 1000 {
-                Text("\(viewModel.numCorrect)/\(viewModel.totalWords)")
+                Text("\(viewModel.model.numCorrect)/\(viewModel.totalWords)")
             } else {
-                Text("\(viewModel.numCorrect)")
+                Text("\(viewModel.model.numCorrect)")
             }
         }
         .padding(.horizontal, 20)
