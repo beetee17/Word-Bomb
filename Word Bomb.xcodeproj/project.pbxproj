@@ -67,6 +67,11 @@
 		6CB5BAA827734A7D00F49E7A /* hissing.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CB5BAA327734A4B00F49E7A /* hissing.wav */; };
 		6CB5BAAA27734F4000F49E7A /* back.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CB5BAA927734F3000F49E7A /* back.wav */; };
 		6CB5BAAC2773525F00F49E7A /* countdown.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CB5BAAB2773524B00F49E7A /* countdown.wav */; };
+		6CB5BAB127770DD400F49E7A /* GameOverText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BAB027770DD400F49E7A /* GameOverText.swift */; };
+		6CB5BAB427770EF300F49E7A /* FireworkParticlesEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BAB327770EF300F49E7A /* FireworkParticlesEffect.swift */; };
+		6CB5BAB627770F2300F49E7A /* ParticlesModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BAB527770F2300F49E7A /* ParticlesModifier.swift */; };
+		6CB5BAB827770F7700F49E7A /* ConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BAB727770F7600F49E7A /* ConfettiView.swift */; };
+		6CB5BABA277714E600F49E7A /* highscore.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CB5BAB9277714B200F49E7A /* highscore.wav */; };
 		6CB6F93F268F627300FA9654 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F93E268F627300FA9654 /* GameView.swift */; };
 		6CB6F942268F62C000FA9654 /* PauseMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F941268F62C000FA9654 /* PauseMenuView.swift */; };
 		6CB6F945268F62D800FA9654 /* ModeSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F944268F62D800FA9654 /* ModeSelectView.swift */; };
@@ -158,6 +163,12 @@
 		6CB5BAA927734F3000F49E7A /* back.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; path = back.wav; sourceTree = "<group>"; };
 		6CB5BAAB2773524B00F49E7A /* countdown.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; path = countdown.wav; sourceTree = "<group>"; };
 		6CB5BAAE2773531200F49E7A /* explosion.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = explosion.gif; sourceTree = "<group>"; };
+		6CB5BAAF2776FDE800F49E7A /* wordbomb 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "wordbomb 2.xcdatamodel"; sourceTree = "<group>"; };
+		6CB5BAB027770DD400F49E7A /* GameOverText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverText.swift; sourceTree = "<group>"; };
+		6CB5BAB327770EF300F49E7A /* FireworkParticlesEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireworkParticlesEffect.swift; sourceTree = "<group>"; };
+		6CB5BAB527770F2300F49E7A /* ParticlesModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticlesModifier.swift; sourceTree = "<group>"; };
+		6CB5BAB727770F7600F49E7A /* ConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiView.swift; sourceTree = "<group>"; };
+		6CB5BAB9277714B200F49E7A /* highscore.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; name = highscore.wav; path = "Word Bomb/highscore.wav"; sourceTree = SOURCE_ROOT; };
 		6CB6F93E268F627300FA9654 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		6CB6F941268F62C000FA9654 /* PauseMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseMenuView.swift; sourceTree = "<group>"; };
 		6CB6F944268F62D800FA9654 /* ModeSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeSelectView.swift; sourceTree = "<group>"; };
@@ -209,6 +220,7 @@
 				6C5DBE0B269BA600004A7F71 /* PlayerCarouselView.swift */,
 				6C65A31C26A1458D004209F4 /* BombAnimation.swift */,
 				6C37E91D269F287B0079279E /* GamePlayView.swift */,
+				6CB5BAB027770DD400F49E7A /* GameOverText.swift */,
 				6C5DBE0D269CA6E0004A7F71 /* TwoPlayerView.swift */,
 				6C0CEEB02694599C007717E1 /* OutputText.swift */,
 				6CB6F941268F62C000FA9654 /* PauseMenuView.swift */,
@@ -358,6 +370,7 @@
 		6CB5BAAD277352A200F49E7A /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				6CB5BAB9277714B200F49E7A /* highscore.wav */,
 				6CB5BAAE2773531200F49E7A /* explosion.gif */,
 				6C65A32926A1BA8B004209F4 /* explosion-2-merge.gif */,
 				6C0CEEBE2695975B007717E1 /* correct.wav */,
@@ -369,6 +382,16 @@
 				6CB5BAAB2773524B00F49E7A /* countdown.wav */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		6CB5BAB227770ED000F49E7A /* Confetti */ = {
+			isa = PBXGroup;
+			children = (
+				6CB5BAB327770EF300F49E7A /* FireworkParticlesEffect.swift */,
+				6CB5BAB527770F2300F49E7A /* ParticlesModifier.swift */,
+				6CB5BAB727770F7600F49E7A /* ConfettiView.swift */,
+			);
+			path = Confetti;
 			sourceTree = "<group>";
 		};
 		6CE00E6D26A99FD4005406FF /* Frameworks */ = {
@@ -432,6 +455,7 @@
 				6C646E7726AE8BAA003989AB /* GameCenter */,
 				6C2D67D026A2AB9A006A0347 /* Main */,
 				6CE00F1726AB2A25005406FF /* TopBar */,
+				6CB5BAB227770ED000F49E7A /* Confetti */,
 				6C2D67CD26A2AABD006A0347 /* Gameplay */,
 				6C2D67CF26A2AAD7006A0347 /* ModeSelect */,
 				6CA33F9526BA91B700080CE6 /* Database */,
@@ -538,6 +562,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CB5BABA277714E600F49E7A /* highscore.wav in Resources */,
 				6CB5BAAC2773525F00F49E7A /* countdown.wav in Resources */,
 				6CB5BAAA27734F4000F49E7A /* back.wav in Resources */,
 				6CB5BAA727734A7D00F49E7A /* explosion.wav in Resources */,
@@ -569,6 +594,7 @@
 				6C5DBE0C269BA600004A7F71 /* PlayerCarouselView.swift in Sources */,
 				6CB6F948268F633600FA9654 /* UI.swift in Sources */,
 				6C7E458E269B249400E24504 /* PlayerEditorView.swift in Sources */,
+				6CB5BAB827770F7700F49E7A /* ConfettiView.swift in Sources */,
 				6C86BCBE2773087700E2D25F /* Database+CoreDataProperties.swift in Sources */,
 				6CF953972692F65700D16E60 /* ContainsWordGameModel.swift in Sources */,
 				6CA33F9726BA91FD00080CE6 /* DatabaseListView.swift in Sources */,
@@ -593,6 +619,7 @@
 				6C2E20D5268DEFD700CECD3F /* WordBombGameViewModel.swift in Sources */,
 				6C646E7626ADC9FF003989AB /* GKHostText.swift in Sources */,
 				6CF9539C2692F68E00D16E60 /* Data.swift in Sources */,
+				6CB5BAB627770F2300F49E7A /* ParticlesModifier.swift in Sources */,
 				6CE00F0C26A9BBF8005406FF /* MatchMakingViewModel.swift in Sources */,
 				6CB6F93F268F627300FA9654 /* GameView.swift in Sources */,
 				6CB6F94B268F64A300FA9654 /* LogoView.swift in Sources */,
@@ -603,6 +630,7 @@
 				6C0CEEA8269458D6007717E1 /* TopBarView.swift in Sources */,
 				6C2D67CC26A2A800006A0347 /* Enums.swift in Sources */,
 				6CE00F1226A9BCF9005406FF /* GKContentView.swift in Sources */,
+				6CB5BAB127770DD400F49E7A /* GameOverText.swift in Sources */,
 				6CF953942692F64D00D16E60 /* ExactWordGameModel.swift in Sources */,
 				6C7E458C269B16A500E24504 /* SettingsMenu.swift in Sources */,
 				6CE00F1126A9BCF9005406FF /* GKPlayerView.swift in Sources */,
@@ -613,6 +641,7 @@
 				6C86BCC42773088000E2D25F /* Word+CoreDataClass.swift in Sources */,
 				6C249D4A2698B33800B9C002 /* GameTypeSelectView.swift in Sources */,
 				6CA33FA326BAB94400080CE6 /* NewWordsView.swift in Sources */,
+				6CB5BAB427770EF300F49E7A /* FireworkParticlesEffect.swift in Sources */,
 				6C86BCBF2773087700E2D25F /* Database+CoreDataClass.swift in Sources */,
 				6C249D482698B31E00B9C002 /* ReverseWordGameModel.swift in Sources */,
 				6C2D67CA26A2A7EA006A0347 /* Defaults.swift in Sources */,
@@ -876,9 +905,10 @@
 		6C0CEEE52695BEAF007717E1 /* wordbomb.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				6CB5BAAF2776FDE800F49E7A /* wordbomb 2.xcdatamodel */,
 				6C0CEEE62695BEAF007717E1 /* wordbomb.xcdatamodel */,
 			);
-			currentVersion = 6C0CEEE62695BEAF007717E1 /* wordbomb.xcdatamodel */;
+			currentVersion = 6CB5BAAF2776FDE800F49E7A /* wordbomb 2.xcdatamodel */;
 			path = wordbomb.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

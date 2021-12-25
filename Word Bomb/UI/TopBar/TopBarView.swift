@@ -30,7 +30,9 @@ struct TopBarView: View {
                 numPlayers: viewModel.players.queue.count,
                 timeLeft: $viewModel.timeLeft,
                 timeLimit: viewModel.timeLimit,
-                gameState: $viewModel.gameState)
+                gameState: $viewModel.gameState,
+                playRunningOutOfTimeSound: $viewModel.playRunningOutOfTimeSound
+            )
                 .offset(x: gkMatch == nil ? 0 : -20)
             
             Spacer()
@@ -39,7 +41,8 @@ struct TopBarView: View {
             else { Text("\(viewModel.numCorrect)/\(viewModel.totalWords)") }
         }
         .padding(.horizontal, 20)
-        .padding(.top, viewModel.players.queue.count != 2 ? 0 : 50)
+        // TODO: Get rid of this ugliness
+        .offset(x: 0, y: viewModel.players.allPlayers.count == 2 ? 0 : -50)
         
     }
 }

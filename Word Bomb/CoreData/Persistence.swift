@@ -53,13 +53,20 @@ struct PersistenceController {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
+        
         container.loadPersistentStores { [self] description, error in
             if let error = error {
                 print("Core Data failed to load: \(error.localizedDescription)")
                 return
             }
-            
+
             container.viewContext.mergePolicy = CustomMergePolicy()
+            
+            // support for lightweight migrations
+            let description = NSPersistentStoreDescription()
+            description.shouldMigrateStoreAutomatically = true
+            description.shouldInferMappingModelAutomatically = true
+            container.persistentStoreDescriptions.append(description)
         }
     }
     

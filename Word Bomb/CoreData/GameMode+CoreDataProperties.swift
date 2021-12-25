@@ -22,6 +22,7 @@ extension GameMode {
     @NSManaged public var wordsDB_: Database?
     @NSManaged public var queriesDB_: Database?
     @NSManaged public var isDefault_: Bool
+    @NSManaged public var highScore_: Int32
     
 }
 
@@ -39,6 +40,7 @@ extension GameMode : Identifiable {
         self.name = name.trim().lowercased()
         self.instruction = instruction
         self.wordsDB = wordsDB
+        self.highScore = 0
         if let queries = queriesDB {
             self.queriesDB = queries
         }
@@ -83,6 +85,19 @@ extension GameMode : Identifiable {
         set {
             queriesDB_ = newValue
         }
+    }
+    
+    var highScore: Int {
+        get {
+            return Int(highScore_)
+        }
+        set {
+            highScore_ = Int32(newValue)
+        }
+    }
+    func updateHighScore(with score: Int) {
+        highScore = max(highScore, score)
+        moc.saveObjects() 
     }
 }
 

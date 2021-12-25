@@ -22,14 +22,15 @@ struct PlayerView: View {
                     .transition(.scale)
             case 2:
                 TwoPlayerView()
-                    .offset(x: 0, y: Device.height*0.04)
                     .transition(.scale)
             default:
                 if viewModel.trainingMode {
                     HStack {
                         Text("Lives: ").boldText()
                         PlayerLives(player: viewModel.players.current)
-                    }.offset(x: 0, y: Device.height*0.2)
+                    }
+                    .offset(x: 0, y: Device.height*0.2)
+                    
                 } else {
                     MainPlayer(player: viewModel.players.current, animatePlayer: .constant(false))
                         .offset(x: 0, y: Device.height*0.1)
@@ -114,6 +115,7 @@ struct PlayerAvatar: View {
 struct PlayerView_Previews: PreviewProvider {
     
     static var previews: some View {
+        
         PlayerView().environmentObject(WordBombGameViewModel())
     }
 }

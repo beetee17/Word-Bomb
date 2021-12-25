@@ -82,6 +82,11 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         }
     }
     
+    /// Updates the high score of the current mode. Should only be called at gameOver state in training mode
+    func updateHighScore() {
+        gameMode?.highScore = numCorrect
+    }
+    
     /// Restarts the game with the same game mode
     func restartGame() {
         

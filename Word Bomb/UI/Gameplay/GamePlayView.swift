@@ -29,33 +29,27 @@ struct GamePlayView: View {
                 
                 VStack {
                     TopBarView(gkMatch: gkMatch)
-                        .onChange(of: viewModel.timeLeft) { time in
-                            print("time: \(time)")
-                            if time < 3 && !viewModel.playRunningOutOfTimeSound{
-                                // do not interrupt if explosion sound is playing
-                                if !(Game.audioPlayer?.isPlaying ?? false) {
-                                    Game.playSound(file: "hissing")
-                                    viewModel.playRunningOutOfTimeSound = true
-                                }
-                            }
-                        }
+                        
                     Spacer()
                 }
                 
                 VStack {
                     PlayerView()
-                        .offset(x: 0, y: Device.height*0.1)
+                        .padding(.top, Device.height*0.1)
                     Spacer()
                 }
                 
             }
-            .ignoresSafeArea(.all)
+            .ignoresSafeArea(.keyboard)
             
             VStack {
                 Spacer()
                 if viewModel.gameState == .gameOver {
-                    Text("Word Count: \(viewModel.numCorrect)")
-                        .boldText()
+                    GameOverText(
+                        gameMode: viewModel.gameMode!,
+                        numCorrect: viewModel.numCorrect,
+                        trainingMode: viewModel.trainingMode)
+                    
                 } else {
                     Text(viewModel.instruction ?? "").boldText()
                     Text(viewModel.query ?? "").boldText()
@@ -74,7 +68,6 @@ struct GamePlayView: View {
         }
         .blur(radius: .pauseMenu == viewModel.viewToShow ? 10 : 0, opaque: false)
     }
-    
 }
 
 struct GamePlayView_Previews: PreviewProvider {
