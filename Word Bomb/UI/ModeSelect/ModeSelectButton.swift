@@ -88,6 +88,6 @@ struct ModeSelectButton_Previews: PreviewProvider {
                 
         }
         .environment(\.managedObjectContext, moc_preview)
-        .environmentObject(WordBombGameViewModel.preview)
+        .environmentObject(WordBombGameViewModel.preview())
     }
 }

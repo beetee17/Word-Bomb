@@ -46,7 +46,7 @@ struct GameView: View {
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
         GameView()
-            .environmentObject(WordBombGameViewModel())
+            .environmentObject(WordBombGameViewModel.preview())
             .environmentObject(GKMatchMakerAppModel())
     }
 }

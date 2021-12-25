@@ -81,6 +81,14 @@ class Players: Codable, Identifiable {
         self.queue = self.allPlayers
         self.current = queue.first!
     }
+    convenience init(from playerNames: [String]) {
+        
+        var players: [Player] = []
+        for playerName in playerNames {
+            players.append(Player(name: playerName))
+        }
+        self.init(from: players)
+    }
     
     func find(_ player: Player) -> Int? {
         for i in allPlayers.indices {

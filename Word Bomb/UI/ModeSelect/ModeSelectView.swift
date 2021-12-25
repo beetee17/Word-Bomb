@@ -79,6 +79,5 @@ struct ModeSelectView_Previews: PreviewProvider {
     static var previews: some View {
         ModeSelectView(gameType: .constant(.Classic), viewToShow: .constant(.modeSelect))
             .environment(\.managedObjectContext, moc_preview)
-            .environmentObject(WordBombGameViewModel.preview)
     }
 }

@@ -13,11 +13,14 @@ import GameKitUI
 /// Main view model that controls most of the game logic
 class WordBombGameViewModel: NSObject, ObservableObject {
     
-    static var preview: WordBombGameViewModel = {
+    static func preview(numPlayers: Int = 3) -> WordBombGameViewModel {
         let viewModel = WordBombGameViewModel()
+        let players = Players(from: (1...numPlayers).map({"Player \($0)"}))
+        
+        viewModel.model = WordBombGame(players: players)
         viewModel.gameType = .Classic
         return viewModel
-    }()
+    }
     /// Source of truth for many of the variables that concerns game logic
     @Published private var model: WordBombGame = WordBombGame(players: Players())
     

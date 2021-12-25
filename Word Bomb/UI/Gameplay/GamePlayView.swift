@@ -73,8 +73,11 @@ struct GamePlayView: View {
 struct GamePlayView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            GamePlayView(gkMatch: nil).environmentObject(WordBombGameViewModel())
-            GamePlayView(gkMatch: GKMatch()).environmentObject(WordBombGameViewModel())
+            GamePlayView(gkMatch: nil).environmentObject(WordBombGameViewModel.preview(numPlayers: 3))
+            
+            GamePlayView(gkMatch: nil).environmentObject(WordBombGameViewModel.preview(numPlayers: 2))
+            
+            GamePlayView(gkMatch: nil).environmentObject(WordBombGameViewModel.preview(numPlayers: 1))
         }
     }
 }
