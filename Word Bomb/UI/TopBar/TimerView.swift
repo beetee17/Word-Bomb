@@ -12,7 +12,7 @@ struct TimerView: View {
     @Binding var players: Players
     @Binding var timeLeft: Float
     @State var timeLimit: Float
-    @Binding var gameState: GameState
+    @Binding var animateExplosion: Bool
     @Binding var playRunningOutOfTimeSound: Bool
     
     var body: some View {
@@ -25,7 +25,7 @@ struct TimerView: View {
                             Text(String(format: "%.1f", timeLeft))
                                 .offset(x: 5, y: 10))
                     
-                    BombExplosion(gameState: $gameState)
+                    BombExplosion(animating: $animateExplosion)
                         .offset(x: 10, y: 10)
                     // to center explosion on bomb
                 }
@@ -48,31 +48,31 @@ struct TimerView: View {
     }
 }
 
-
-struct TimerView_Previews: PreviewProvider {
-    
-    struct TimerView_Harness: View {
-        
-        var numPlayers: Int
-        @State private var gameState: GameState = .playing
-        
-        var body: some View {
-            VStack {
-                TimerView(players: .constant(Players()), timeLeft: .constant(10), timeLimit: 10, gameState: $gameState, playRunningOutOfTimeSound: .constant(false))
-                
-                Button("Test Explosion!") {
-                    gameState = .playerTimedOut
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        gameState = .playing
-                    }
-                }
-            }
-        }
-    }
-    static var previews: some View {
-        Group {
-            TimerView_Harness(numPlayers: 3)
-            TimerView_Harness(numPlayers: 2)
-        }
-    }
-}
+//
+//struct TimerView_Previews: PreviewProvider {
+//
+//    struct TimerView_Harness: View {
+//
+//        var numPlayers: Int
+//        @State private var gameState: GameState = .playing
+//
+//        var body: some View {
+//            VStack {
+//                TimerView(players: .constant(Players()), timeLeft: .constant(10), timeLimit: 10, gameState: $gameState, playRunningOutOfTimeSound: .constant(false))
+//
+//                Button("Test Explosion!") {
+//                    gameState = .playerTimedOut
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                        gameState = .playing
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    static var previews: some View {
+//        Group {
+//            TimerView_Harness(numPlayers: 3)
+//            TimerView_Harness(numPlayers: 2)
+//        }
+//    }
+//}

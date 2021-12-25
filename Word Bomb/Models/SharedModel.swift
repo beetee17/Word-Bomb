@@ -16,7 +16,6 @@ struct WordBombGame: Codable {
     var players: Players
     
     /// The number of lives that each player begins with, as per the host's settings
-    private(set) var totalLives = UserDefaults.standard.integer(forKey: "Player Lives")
     
     /// The time allowed for each player, as per the host's settings. The limit may decrease with each turn depending on the other relevant settings
     private(set) var timeLimit = UserDefaults.standard.float(forKey: "Time Limit")
@@ -107,7 +106,6 @@ struct WordBombGame: Codable {
     mutating func currentPlayerRanOutOfTime() {
         
         playRunningOutOfTimeSound = false
-        Game.playSound(file: "explosion")
         
         // We need to keep game state on non-host devices in sync
         if GameCenter.isHost {
@@ -117,7 +115,13 @@ struct WordBombGame: Codable {
         let (output, isGameOver) = players.currentPlayerRanOutOfTime()
         self.output = output
         
-        return isGameOver ? handleGameState(.gameOver) : updateTimeLimit()
+        if isGameOver {
+            handleGameState(.gameOver)
+        } else {
+            animateExplosion = true
+            Game.playSound(file: "explosion")
+            updateTimeLimit()
+        }
     }
     
     /// Resets the relevant variables to restart the game

@@ -40,8 +40,7 @@ struct BombView: View {
 
 struct BombExplosion: View {
     
-    @State var animating = false
-    @Binding var gameState: GameState
+    @Binding var animating: Bool
     
     var body: some View {
         
@@ -51,25 +50,51 @@ struct BombExplosion: View {
             .aspectRatio(contentMode: .fill)
             .frame(width: Game.bombSize, height: Game.bombSize)
             .opacity(animating ? 1 : 0)
-            .onChange(of: gameState) { _ in
-                animateIfNeeded()
+            .onChange(of: animating) { _ in
+                DispatchQueue.main.asyncAfter(deadline: .now() + Game.explosionDuration) {
+                    animating = false
+                    print("FALSE AGAIN")
+                }
             }
-    }
-    func animateIfNeeded() {
-        if gameState == .playerTimedOut || gameState == .gameOver {
-            animating = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + Game.explosionDuration) {
-                animating = false
-            }
-        }
     }
 }
 
 
 
+struct BombView_Preview: PreviewProvider {
+    
+    struct BombView_Harness: View {
+        
+        @State private var timeLeft: Float = 10
+        @State private var timeLimit: Float = 10
+        
+        var body: some View {
+            BombView(timeLeft: $timeLeft, timeLimit: timeLimit)
+        }
+    }
+    
+    static var previews: some View {
+        BombView_Harness()
+    }
+}
 
-//struct BombView: PreviewProvider {
-//    static var previews: some View {
-//        BombAnimation()
-//    }
-//}
+struct BombExplosion_Preview: PreviewProvider {
+    
+    struct BombExplosion_Harness: View {
+        
+        @State private var animating = false
+        
+        var body: some View {
+            VStack {
+                BombExplosion(animating: $animating)
+                Button("Animate!") {
+                    animating.toggle()
+                }
+            }
+        }
+    }
+    
+    static var previews: some View {
+        BombExplosion_Harness()
+    }
+}

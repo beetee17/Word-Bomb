@@ -10,8 +10,6 @@ import SwiftUI
 struct TwoPlayerView: View {
     
     @EnvironmentObject var viewModel: WordBombGameViewModel
-    @Namespace private var nameSpace
-    
     
     var body: some View {
 
@@ -41,7 +39,7 @@ struct TwoPlayerView: View {
                         y: 0)
                 .animation(.easeInOut(duration: 0.3).delay(.playerTimedOut == viewModel.model.gameState ? 0.8 : 0))
                 .overlay (
-                    BombExplosion(gameState: $viewModel.model.gameState)
+                    BombExplosion(animating: $viewModel.model.animateExplosion)
                         .frame(width: Game.miniBombSize*1.5,
                                height: Game.miniBombSize*1.5)
                         .offset(x: viewModel.model.players.current == viewModel.model.players.queue[0] ? rightPlayerOffset + Game.miniBombExplosionOffset : leftPlayerOffset + Game.miniBombExplosionOffset,

@@ -30,7 +30,7 @@ struct TopBarView: View {
                 players: $viewModel.model.players,
                 timeLeft: $viewModel.model.timeLeft,
                 timeLimit: viewModel.model.timeLimit,
-                gameState: $viewModel.model.gameState,
+                animateExplosion: $viewModel.model.animateExplosion,
                 playRunningOutOfTimeSound: $viewModel.model.playRunningOutOfTimeSound
             )
                 .offset(x: gkMatch == nil ? 0 : -20)
