@@ -34,14 +34,14 @@ struct TwoPlayerView: View {
             let leftPlayerOffset = -frameWidth/2 + Game.playerAvatarSize*0.75
             let rightPlayerOffset = -leftPlayerOffset
             
-            BombView()
+            BombView(timeLeft: $viewModel.timeLeft, timeLimit: viewModel.timeLimit)
                 .frame(width: Game.miniBombSize,
                        height: Game.miniBombSize)
                 .offset(x: viewModel.players.current == viewModel.players.queue[0] ? leftPlayerOffset : rightPlayerOffset,
                         y: 0)
                 .animation(.easeInOut(duration: 0.3).delay(.playerTimedOut == viewModel.gameState ? 0.8 : 0))
                 .overlay (
-                    BombExplosion()
+                    BombExplosion(gameState: $viewModel.gameState)
                         .frame(width: Game.miniBombSize*1.5,
                                height: Game.miniBombSize*1.5)
                         .offset(x: viewModel.players.current == viewModel.players.queue[0] ? rightPlayerOffset + Game.miniBombExplosionOffset : leftPlayerOffset + Game.miniBombExplosionOffset,
@@ -58,22 +58,3 @@ struct TwoPlayerView_Previews: PreviewProvider {
         TwoPlayerView().environmentObject(WordBombGameViewModel())
     }
 }
-
-//import SDWebImageSwiftUI
-//struct Test: View {
-//    @State var animate = false
-//    var body: some View {
-//        VStack {
-//            AnimatedImage(name: "explosion-2-merge.gif", isAnimating: $animate)
-////                .resizable()
-//                .customLoopCount(1)
-//                
-////                .frame(width:200, height:200)
-//            
-//            Button("PLAY") {
-//                animate.toggle()
-//            }
-//        }
-//    }
-//}
-

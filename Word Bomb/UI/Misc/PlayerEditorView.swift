@@ -38,15 +38,26 @@ struct PlayerEditorView: View {
         .onAppear() {
             for index in 1...numPlayers {
                 if index-1 >= playerNames.count {
-                    playerNames.append("Player")
+                    playerNames.append("Player \(index)")
                 }
             }
         }
     }
 }
 
-//struct PlayerEditorView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PlayerEditorView(playerNames: ["Player"], numPlayers: 5)
-//    }
-//}
+struct PlayerEditorView_Previews: PreviewProvider {
+    
+    struct PlayerEditorView_Harness: View {
+        
+        @State private var playerNames: [String] = ["Test Player 1"]
+        private var numPlayers = 3
+        
+        var body: some View {
+            PlayerEditorView(playerNames: $playerNames, numPlayers: numPlayers)
+        }
+    }
+    
+    static var previews: some View {
+        PlayerEditorView_Harness()
+    }
+}

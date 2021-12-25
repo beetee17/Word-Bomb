@@ -32,8 +32,18 @@ struct WordSearchBar: View {
     }
 }
 
-//struct WordSearchBar_Previews: PreviewProvider {
-//    static var previews: some View {
-//        WordSearchBar(dbHandler: DatabaseHandler(db: Database(context: moc)))
-//    }
-//}
+struct WordSearchBar_Previews: PreviewProvider {
+    
+    struct WordSearchBar_Harness: View {
+        
+        @State private var filter = ""
+        
+        var body: some View {
+            WordSearchBar(filter: $filter)
+        }
+    }
+    
+    static var previews: some View {
+        WordSearchBar_Harness()
+    }
+}

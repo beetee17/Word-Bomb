@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PauseButton: View {
-    @EnvironmentObject var viewModel: WordBombGameViewModel
+    @Binding var viewToShow: ViewToShow
     
     var body: some View {
         
@@ -16,7 +16,7 @@ struct PauseButton: View {
             print("Pause Game")
             // delay to allow keyboard to fully hide first -> may mean less responsiveness as user
             withAnimation(.spring(response:0.1, dampingFraction:0.6).delay(0.15)) {
-                viewModel.pauseGame()
+                pauseGame()
             }
         }) {
             
@@ -26,9 +26,16 @@ struct PauseButton: View {
                 .frame(width: 25, height: 25)
         }
     }
+    
+    /// Pauses the current game
+    func pauseGame() {
+        viewToShow = .pauseMenu
+        Game.playSound(file: "back")
+        Game.stopTimer()
+    }
 }
 struct PauseButton_Previews: PreviewProvider {
     static var previews: some View {
-        PauseButton()
+        PauseButton(viewToShow: .constant(.pauseMenu))
     }
 }

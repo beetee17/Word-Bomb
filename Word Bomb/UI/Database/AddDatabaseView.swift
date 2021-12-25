@@ -31,7 +31,6 @@ struct DatabaseTextEditor: View {
         self._text = text
     }
     
-    
     var body: some View {
         ZStack(alignment: .topLeading) {
             let placeholder = "Separate words by new lines, and commas if they should be grouped together!\nFor examaple:\nChina \nAmerica, US, USA"
@@ -60,7 +59,7 @@ struct DatabaseTextEditor: View {
 }
 struct AddDatabaseView: View {
     
-    @EnvironmentObject var errorHandler: ErrorViewModel
+    @ObservedObject var errorHandler = Game.errorHandler
     @EnvironmentObject var cdViewModel: CoreDataViewModel
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -161,5 +160,7 @@ struct AddDatabaseView_Previews: PreviewProvider {
 
     static var previews: some View {
         AddDatabaseView()
+            .environmentObject(CoreDataViewModel())
+            .environment(\.managedObjectContext, moc_preview)
     }
 }

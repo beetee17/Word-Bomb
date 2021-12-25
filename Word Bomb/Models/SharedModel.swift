@@ -45,7 +45,7 @@ struct WordBombGame: Codable {
     /// Controls when the explosion animation is run. Should be true when a player runs out of time
     var animateExplosion = false
     
-    /// Controls the playback of the sound when `timeLeft` is low.
+    /// Controls the playback of the sound when `timeLeft` is low. Should be set to false after each turn.
     var playRunningOutOfTimeSound = false
     
     /// Updates the time limit based on the the `"Time Multiplier"` and `"Time Constraint"` settings
@@ -97,9 +97,6 @@ struct WordBombGame: Codable {
         }
     }
     
-    /// Resets the output text to an empty string
-    mutating func clearOutput() { output =  "" }
-    
     /// Removes `player` from the game. Should be called in multiplayer context if `player` disconnects
     /// - Parameter player: `Player` object to be removed
     mutating func remove(_ player: Player) {
@@ -109,9 +106,7 @@ struct WordBombGame: Codable {
     /// Handles the game state when the current player runs out of time
     mutating func currentPlayerRanOutOfTime() {
         
-        Game.playSound(file: "explosion")
         playRunningOutOfTimeSound = false
-        animateExplosion = true
         
         // We need to keep game state on non-host devices in sync
         if GameCenter.isHost {

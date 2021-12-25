@@ -9,10 +9,7 @@ import SwiftUI
 
 
 struct PauseMenuView: View {
-    // Presented when game is paused
-    
     @EnvironmentObject var viewModel: WordBombGameViewModel
-    @EnvironmentObject var errorHandler: ErrorViewModel
     
     var body: some View {
         
@@ -25,7 +22,6 @@ struct PauseMenuView: View {
             Game.mainButton(label: "RESTART", systemImageName: "gobackward") {
                 viewModel.restartGame()
             }
-            
             Game.mainButton(label: "QUIT", systemImageName: "flag", sound: "back") {
                 viewModel.viewToShow = .main
             }
@@ -37,5 +33,6 @@ struct PauseMenuView_Previews: PreviewProvider {
     
     static var previews: some View {
         PauseMenuView()
+            .environmentObject(WordBombGameViewModel())
     }
 }

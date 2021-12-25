@@ -13,8 +13,6 @@ struct ModeSelectButton: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var viewModel: WordBombGameViewModel
-    @EnvironmentObject var gkViewModel: GKMatchMakerAppModel
-    @EnvironmentObject var errorHandler: ErrorViewModel
     
     @State var showMatchMakerModal = false
     var mode: GameMode
@@ -24,7 +22,7 @@ struct ModeSelectButton: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7,
                                       execute: {
             guard !mode.isDefault_ else {
-                errorHandler.showBanner(title: "Deletion Prohibited", message: "Cannot delete a default game mode!")
+                Game.errorHandler.showBanner(title: "Deletion Prohibited", message: "Cannot delete a default game mode!")
                 return
             }
             viewContext.delete(self.mode)
@@ -39,7 +37,7 @@ struct ModeSelectButton: View {
             withAnimation{
                 if viewModel.gkSelect {
                     if !GKLocalPlayer.local.isAuthenticated {
-                        errorHandler.showBanner(title: "Match Making Failed", message: "Login to Game Center to play online!")
+                        Game.errorHandler.showBanner(title: "Match Making Failed", message: "Login to Game Center to play online!")
                         
                     } else {
                         showMatchMakerModal.toggle()
@@ -69,7 +67,7 @@ struct ModeSelectButton: View {
                 
             } failed: { (error) in
                 showMatchMakerModal = false
-                errorHandler.showBanner(title: "Match Making Failed", message: error.localizedDescription)
+                Game.errorHandler.showBanner(title: "Match Making Failed", message: error.localizedDescription)
             } started: { (match) in
                 showMatchMakerModal = false
                 viewModel.startGame(mode: mode)
@@ -80,8 +78,16 @@ struct ModeSelectButton: View {
     
 }
 
-//struct ModeSelectButton_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ModeSelectButton(mode:)
-//    }
-//}
+struct ModeSelectButton_Previews: PreviewProvider {
+    static var previews: some View {
+        
+        Group {
+            ModeSelectButton(mode: .exampleNonDefault)
+
+            ModeSelectButton(mode: .exampleDefault)
+                
+        }
+        .environment(\.managedObjectContext, moc_preview)
+        .environmentObject(WordBombGameViewModel.preview)
+    }
+}

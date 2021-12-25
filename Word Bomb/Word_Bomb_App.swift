@@ -12,6 +12,7 @@ import CoreData
 import Purchases
 
 let moc = PersistenceController.shared.container.viewContext
+let moc_preview = PersistenceController.preview.container.viewContext
 
 @main
 struct Word_BombApp: App {

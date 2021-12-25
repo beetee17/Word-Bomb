@@ -57,8 +57,18 @@ struct NewWordsView: View {
     }
 }
 
-//struct NewWordsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NewWordsView(dbHandler: DatabaseHandler(db: Database(context: moc)))
-//    }
-//}
+struct NewWordsView_Previews: PreviewProvider {
+    
+    struct NewWordsView_Harness: View {
+        
+        @State private var wordsToAdd: [String] = ["Test"]
+        
+        var body: some View {
+            NewWordsView(wordsToAdd: $wordsToAdd)
+        }
+    }
+    
+    static var previews: some View {
+        NewWordsView_Harness()
+    }
+}

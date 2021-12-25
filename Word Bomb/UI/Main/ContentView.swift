@@ -38,6 +38,7 @@ struct ContentView_Previews: PreviewProvider {
 
        ContentView()
             .environmentObject(WordBombGameViewModel())
+            .environmentObject(CoreDataViewModel())
     }
 }
 

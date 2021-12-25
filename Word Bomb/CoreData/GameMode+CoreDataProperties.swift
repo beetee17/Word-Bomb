@@ -85,3 +85,12 @@ extension GameMode : Identifiable {
         }
     }
 }
+
+extension GameMode {
+    static var exampleNonDefault: GameMode {
+        GameMode(context: moc_preview, gameType: .Classic, name: "Deletable Mode", wordsDB: .exampleWords, queriesDB: .exampleSyllables)
+    }
+    static var exampleDefault: GameMode {
+        GameMode(context: moc_preview, gameType: .Classic, name: "Not Deletable Mode", wordsDB: .exampleWords, queriesDB: .exampleSyllables, isDefault: true)
+    }
+}

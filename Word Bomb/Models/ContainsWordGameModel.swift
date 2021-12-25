@@ -11,10 +11,12 @@ import CoreData
 /// Implements the mechanism for games of the `.Classic` type
 struct ContainsWordGameModel: WordGameModel {
     var wordsDB: Database
+    
     var queries: [(String, Int)]
     var queriesCopy: [(String, Int)]
     
     var usedWords = Set<String>()
+    var totalWords: Int
     
     var pivot: Int
     var numTurns = 0
@@ -27,6 +29,7 @@ struct ContainsWordGameModel: WordGameModel {
         self.queries = queries
         self.queriesCopy = queries
         self.pivot = queries.bisect(at: Int(syllableDifficulty*100.0))
+        totalWords = moc.getUniqueWords(db: wordsDB)
     }
     
     mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, query: String?) {

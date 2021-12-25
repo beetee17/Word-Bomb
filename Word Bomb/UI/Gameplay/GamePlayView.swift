@@ -65,7 +65,7 @@ struct GamePlayView: View {
                     .font(Font.system(size: 20))
                 }
                 
-                OutputText()
+                OutputText(text: $viewModel.output)
                 
                 Spacer()
             }
@@ -79,6 +79,9 @@ struct GamePlayView: View {
 
 struct GamePlayView_Previews: PreviewProvider {
     static var previews: some View {
-        GamePlayView(gkMatch: GKMatch()).environmentObject(WordBombGameViewModel())
+        Group {
+            GamePlayView(gkMatch: nil).environmentObject(WordBombGameViewModel())
+            GamePlayView(gkMatch: GKMatch()).environmentObject(WordBombGameViewModel())
+        }
     }
 }

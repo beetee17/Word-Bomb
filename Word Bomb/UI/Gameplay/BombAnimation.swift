@@ -10,11 +10,12 @@ import SDWebImageSwiftUI
 
 struct BombView: View {
     
-    @EnvironmentObject var viewModel: WordBombGameViewModel
-
+    @Binding var timeLeft: Float
+    @State var timeLimit: Float
+    
     var body: some View {
         
-        Image(updateFrame(numTotalFrames: 24, timeLeft: viewModel.timeLeft, timeLimit: viewModel.timeLimit))
+        Image(updateFrame(numTotalFrames: 24, timeLeft: timeLeft, timeLimit: timeLimit))
             .resizable()
             .scaledToFit()
   
@@ -38,23 +39,27 @@ struct BombView: View {
 
 
 struct BombExplosion: View {
-    @EnvironmentObject var viewModel: WordBombGameViewModel
+    
+    @State var animateExplosion = false
+    @Binding var gameState: GameState
     
     var body: some View {
-
-        AnimatedImage(name: "explosion-2-merge.gif", isAnimating: $viewModel.animateExplosion)
+        
+        AnimatedImage(name: "explosion-2-merge.gif", isAnimating: $animateExplosion)
             .resizable()
             .pausable(false)
             .aspectRatio(contentMode: .fill)
             .frame(width: Game.bombSize, height: Game.bombSize)
-            .opacity(viewModel.animateExplosion ? 1 : 0)
-            .onChange(of: viewModel.animateExplosion) { _ in
-                DispatchQueue.main.asyncAfter(deadline: .now() + Game.explosionDuration) {
-                    viewModel.animateExplosion = false
+            .opacity(animateExplosion ? 1 : 0)
+            .onChange(of: gameState) { _ in
+                if gameState == .playerTimedOut || gameState == .gameOver {
+                    animateExplosion = true
+                    Game.playSound(file: "explosion")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Game.explosionDuration) {
+                        animateExplosion = false
+                    }
                 }
             }
-            
-            
     }
 }
 

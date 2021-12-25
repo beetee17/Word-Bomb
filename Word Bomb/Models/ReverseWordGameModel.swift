@@ -13,6 +13,12 @@ struct ReverseWordGameModel: WordGameModel {
     
     var wordsDB: Database
     var usedWords = Set<String>()
+    var totalWords: Int
+    
+    init(wordsDB: Database) {
+        self.wordsDB = wordsDB
+        totalWords = moc.getUniqueWords(db: wordsDB)
+    }
     
     mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, query: String?) {
   

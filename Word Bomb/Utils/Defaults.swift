@@ -80,7 +80,7 @@ struct Game {
     
     static func playSound(file: String, type: String = "wav") {
         
-        if let path = Bundle.main.path(forResource: file, ofType: type){
+        if let path = Bundle.main.path(forResource: file, ofType: type) {
             do {
                 
                 Game.audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: path))
@@ -92,5 +92,4 @@ struct Game {
             }
         }
     }
-    
 }

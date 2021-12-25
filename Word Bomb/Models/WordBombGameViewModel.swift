@@ -13,6 +13,11 @@ import GameKitUI
 /// Main view model that controls most of the game logic
 class WordBombGameViewModel: NSObject, ObservableObject {
     
+    static var preview: WordBombGameViewModel = {
+        let viewModel = WordBombGameViewModel()
+        viewModel.gameType = .Classic
+        return viewModel
+    }()
     /// Source of truth for many of the variables that concerns game logic
     @Published private var model: WordBombGame = WordBombGame(players: Players())
     
@@ -41,6 +46,8 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// The game mode that the user has currently selected
     @Published var gameMode: GameMode? = nil
     
+    @Published var totalWords = 0
+    
     /// True if the user has selected the `"GAME CENTER"` option under `"START GAME"`
     @Published var gkSelect = false
     
@@ -65,13 +72,6 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// Called when settings menu is dismissed. Resets the shared model to account for any changes.
     func updateGameSettings() {
         model = WordBombGame(players: Players())
-    }
-    
-    /// Pauses the current game
-    func pauseGame() {
-        viewToShow = .pauseMenu
-        Game.playSound(file: "back")
-        Game.stopTimer()
     }
     
     /// Resumes the current game
@@ -132,6 +132,8 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         }
         else { model.handleGameState(.initial,
                                      data: ["instruction" : mode.instruction]) }
+        
+        totalWords = gameModel?.totalWords ?? 0
         viewToShow = .game
         gameMode = mode
         startTimer()
@@ -228,10 +230,6 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         model.handleGameState(gameState, data: data)
     }
     
-    /// Clears the output text
-    /// - Parameter output: The current output text as reflected in the UI. This is needed for concurrency purposes - to check if the viewModel's output is the same as current to avoid clearing of new outputs
-    func clearOutput(_ output: String) { if output == model.output { model.clearOutput() } }
-    
     //MARK: Getters and Setters to allow the UI to read and write to the source of truth if required
     /// Allow the UI to read the `model.players`
     var players: Players { model.players }
@@ -264,16 +262,15 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     }
     
     /// Allow the UI to read the current game's output text
-    var output: String { model.output }
+    var output: String {
+        get { model.output }
+        set { model.output = newValue }
+    }
     
     /// Allow the UI to read the current game's state
-    var gameState: GameState { model.gameState }
-    
-    /// Allow the UI to control the explosion animation
-    var animateExplosion: Bool {
-        
-        get { model.animateExplosion }
-        set { model.animateExplosion =  newValue }
+    var gameState: GameState {
+        get { model.gameState }
+        set { model.gameState = newValue }
     }
     
     /// Allow the UI to control the playback of the running-out-of-time sound

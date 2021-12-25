@@ -9,7 +9,6 @@ import SwiftUI
 
 struct RestartButton: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
-    @EnvironmentObject var errorHandler: ErrorViewModel
     
     var body: some View {
         Button(action: {
@@ -18,7 +17,7 @@ struct RestartButton: View {
                 // do not allow restart for non host in online match
                 viewModel.restartGame()
             } else {
-                errorHandler.showBanner(title: "Unable To Restart Game", message: "Only the host is able to do so!")
+                Game.errorHandler.showBanner(title: "Unable To Restart Game", message: "Only the host is able to do so!")
             }
         }) {
             Image(systemName: "gobackward")
@@ -32,5 +31,6 @@ struct RestartButton: View {
 struct RestartButton_Previews: PreviewProvider {
     static var previews: some View {
         RestartButton()
+            .environmentObject(WordBombGameViewModel())
     }
 }

@@ -138,5 +138,6 @@ class SettingsMenuVM: ObservableObject {
 struct SettingsMenuForm_Previews: PreviewProvider {
     static var previews: some View {
         SettingsMenu()
+            .environmentObject(WordBombGameViewModel())
     }
 }

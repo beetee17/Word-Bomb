@@ -9,9 +9,11 @@ import SwiftUI
 
 
 struct ModeSelectView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var viewModel: WordBombGameViewModel
     
+    @Binding var gameType: GameType
+    @Binding var viewToShow: ViewToShow
+    
+    @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \GameMode.name_, ascending: true)],
         animation: .default)
@@ -27,7 +29,7 @@ struct ModeSelectView: View {
             
             VStack(spacing: 50) {
                 ForEach(modes, id: \.self) { mode in
-                    if mode.gameType == viewModel.gameType {
+                    if mode.gameType == gameType {
                         ModeSelectButton(mode: mode)
                     }
                 }
@@ -51,11 +53,10 @@ struct ModeSelectView: View {
             .frame(width: Device.width)
             
             Game.backButton {
-                withAnimation { viewModel.viewToShow = .gameTypeSelect }
+                withAnimation { viewToShow = .gameTypeSelect }
             }
             .offset(y: 25)
         }
-//        .helpButton()
         .frame(width: Device.width, height: Device.height)
         .transition(.move(edge: .trailing))
         .animation(Game.mainAnimation)
@@ -76,6 +77,8 @@ struct SelectModeText: View {
 struct ModeSelectView_Previews: PreviewProvider {
     
     static var previews: some View {
-        ModeSelectView().environmentObject(WordBombGameViewModel())
+        ModeSelectView(gameType: .constant(.Classic), viewToShow: .constant(.modeSelect))
+            .environment(\.managedObjectContext, moc_preview)
+            .environmentObject(WordBombGameViewModel.preview)
     }
 }

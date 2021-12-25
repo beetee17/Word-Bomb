@@ -16,6 +16,7 @@ protocol WordGameModel {
     /// Set of words already used in the current game. Prevents players from giving the same answer more than once
     var usedWords: Set<String> { get set }
     
+    var totalWords: Int { get set }
     
     /// Returns the outcome of the user input
     /// - Parameter input: The user input

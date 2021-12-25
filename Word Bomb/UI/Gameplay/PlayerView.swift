@@ -10,7 +10,6 @@ import SwiftUI
 
 struct PlayerView: View {
     
-    // Appears in game scene to display current player's name
     @EnvironmentObject var viewModel: WordBombGameViewModel
     
     var body: some View {
@@ -26,9 +25,16 @@ struct PlayerView: View {
                     .offset(x: 0, y: Device.height*0.04)
                     .transition(.scale)
             default:
-                MainPlayer(player: viewModel.players.current, animatePlayer: .constant(false))
-                    .offset(x: 0, y: Device.height*0.1)
-                    .transition(.scale)
+                if viewModel.trainingMode {
+                    HStack {
+                        Text("Lives: ").boldText()
+                        PlayerLives(player: viewModel.players.current)
+                    }.offset(x: 0, y: Device.height*0.2)
+                } else {
+                    MainPlayer(player: viewModel.players.current, animatePlayer: .constant(false))
+                        .offset(x: 0, y: Device.height*0.1)
+                        .transition(.scale)
+                }
                 
             }
         }
@@ -80,7 +86,6 @@ struct PlayerLives: View {
     }
 }
 struct PlayerAvatar: View {
-    @EnvironmentObject var viewModel: WordBombGameViewModel
     var player: Player
     
     var body: some View {

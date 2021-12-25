@@ -21,8 +21,10 @@ struct GameView: View {
             switch viewModel.viewToShow {
                 
             case .main: MainView()
-            case .gameTypeSelect: GameTypeSelectView()
-            case .modeSelect: ModeSelectView()
+            case .gameTypeSelect:
+                GameTypeSelectView(gameType: $viewModel.gameType, viewToShow: $viewModel.viewToShow)
+            case .modeSelect:
+                ModeSelectView(gameType: $viewModel.gameType, viewToShow: $viewModel.viewToShow)
             case .GKMain: GKContentView()
             case .GKLogin: AuthenticationView()
             case .game, .pauseMenu:
@@ -41,14 +43,10 @@ struct GameView: View {
     }
 }
 
-//struct GameView_Previews: PreviewProvider {
-//    
-//    static var previews: some View {
-//        let game = WordBombGameViewModel(.game)
-//        game.startGame(mode: Game.WordGame)
-//        
-//        return Group {
-//            GameView().environmentObject(game)
-//        }
-//    }
-//}
+struct GameView_Previews: PreviewProvider {
+    static var previews: some View {
+        GameView()
+            .environmentObject(WordBombGameViewModel())
+            .environmentObject(GKMatchMakerAppModel())
+    }
+}

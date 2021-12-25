@@ -9,7 +9,6 @@ import SwiftUI
 import GameKitUI
 
 struct GKQuitButton: View {
-    @EnvironmentObject var gameViewModel: WordBombGameViewModel
     
     var body: some View {
         // TODO: Add confirmation dialog

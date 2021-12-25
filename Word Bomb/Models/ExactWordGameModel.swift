@@ -12,6 +12,12 @@ import CoreData
 struct ExactWordGameModel: WordGameModel {
     var wordsDB: Database
     var usedWords = Set<String>()
+    var totalWords: Int
+    
+    init(wordsDB: Database) {
+        self.wordsDB = wordsDB
+        totalWords = moc.getUniqueWords(db: wordsDB)
+    }
     
     mutating func updateUsedWords(input: Word) {
         let request = Word.fetchRequest()

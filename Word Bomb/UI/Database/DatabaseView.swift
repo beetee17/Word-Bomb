@@ -109,3 +109,13 @@ struct FilteredList<T: NSManagedObject, Content: View>: View {
         self.content = content
     }
 }
+
+struct DatabaseView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        let testDB = Database(context: moc_preview, name: "countries", type: .words, items: ["Hello"])
+        
+        DatabaseView(db: testDB)
+            .environment(\.managedObjectContext, moc_preview)
+    }
+}

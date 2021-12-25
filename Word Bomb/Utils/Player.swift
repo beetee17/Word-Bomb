@@ -51,7 +51,8 @@ class Players: Codable, Identifiable {
     /// The `Player` object representing the current player in the game
     var current: Player
     
-    var numRounds = 0
+    var numTurnsInCurrentRound = 0
+    var numRounds = 1
     var numCorrect = 0
     
     /// Initialises with an optional array of `Player` objects
@@ -88,10 +89,6 @@ class Players: Codable, Identifiable {
         return nil
     }
     
-    func numPlaying() -> Int {
-        return queue.count
-    }
-    
     /// Removes `player` from the game. Should be called in multiplayer context if `player` disconnects
     /// - Parameter player: `Player` object to be removed
     func remove(_ player: Player) {
@@ -102,6 +99,7 @@ class Players: Codable, Identifiable {
     /// Updates `current` and `queue`  when `current` runs out of time
     /// - Returns: Tuple containing the output text to be displayed, and a Boolean corresponding to if the game is over
     func currentPlayerRanOutOfTime() -> (String, Bool) {
+        
         var output = ""
         
         current.livesLeft -= 1
@@ -119,7 +117,7 @@ class Players: Codable, Identifiable {
         
         guard queue.count != 1 else {
             // User is playing in training mode
-            return (output, current.livesLeft == 0)
+            return ("You Ran Out of Time!", current.livesLeft == 0)
         }
         
         let currPlayer = nextPlayer()
@@ -136,7 +134,7 @@ class Players: Codable, Identifiable {
         
         let prev = current
         
-        switch numPlaying() {
+        switch queue.count {
         case 1:
             current = queue.first!
         case 2:
@@ -147,6 +145,13 @@ class Players: Codable, Identifiable {
             print("\(current.name) with \(current.livesLeft) lives left going to back of queue")
             queue.append(queue.dequeue()!)
             current = queue.first!
+        }
+        
+        numTurnsInCurrentRound += 1
+        if numTurnsInCurrentRound >= queue.count {
+            numRounds += 1
+            print("numRounds: \(numRounds)")
+            numTurnsInCurrentRound = 0
         }
         
         return prev
@@ -170,6 +175,9 @@ class Players: Codable, Identifiable {
         }
         queue = allPlayers
         current = queue.first!
+        
+        numRounds = 1
+        numTurnsInCurrentRound = 0
+        numCorrect = 0
     }
-    
 }

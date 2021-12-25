@@ -9,7 +9,8 @@ import SwiftUI
 
 struct GameTypeSelectView: View {
     
-    @EnvironmentObject var viewModel: WordBombGameViewModel
+    @Binding var gameType: GameType
+    @Binding var viewToShow: ViewToShow
     
     var body: some View {
         
@@ -22,20 +23,19 @@ struct GameTypeSelectView: View {
                     Game.mainButton(label: type.rawValue.uppercased()) {
                         
                         withAnimation {
-                            viewModel.gameType = type
-                            viewModel.viewToShow = .modeSelect
+                            gameType = type
+                            viewToShow = .modeSelect
                         }
                     }
                 }
             }
             Game.backButton {
-                withAnimation { viewModel.viewToShow = .main } 
+                withAnimation { viewToShow = .main }
             }
         }
         .frame(width: Device.width, height: Device.height)
         .transition(.asymmetric(insertion: AnyTransition.move(edge: .trailing), removal: AnyTransition.move(edge: .leading)))
         .animation(Game.mainAnimation)
-        .environmentObject(viewModel)
     }
 }
 
@@ -55,6 +55,6 @@ struct SelectGameTypeText: View {
 struct GameTypeSelectView_Previews: PreviewProvider {
     
     static var previews: some View {
-        GameTypeSelectView().environmentObject(WordBombGameViewModel())
+        GameTypeSelectView(gameType: .constant(.Classic), viewToShow: .constant(.gameTypeSelect))
     }
 }

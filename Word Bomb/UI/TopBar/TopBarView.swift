@@ -9,8 +9,6 @@ import SwiftUI
 import GameKit
 
 struct TopBarView: View {
-    // Appears in game screen for user to access pause menu, restart a game
-    // and see current time left
     
     @EnvironmentObject var viewModel: WordBombGameViewModel
     var gkMatch: GKMatch?
@@ -21,20 +19,24 @@ struct TopBarView: View {
             
             switch gkMatch == nil {
             case true:
-                PauseButton()
+                PauseButton(viewToShow: $viewModel.viewToShow)
             case false:
                 GKQuitButton()
             }
 
             Spacer()
             
-            TimerView()
+            TimerView(
+                numPlayers: viewModel.players.queue.count,
+                timeLeft: $viewModel.timeLeft,
+                timeLimit: viewModel.timeLimit,
+                gameState: $viewModel.gameState)
                 .offset(x: gkMatch == nil ? 0 : -20)
             
             Spacer()
             
             if .gameOver == viewModel.gameState { RestartButton() }
-            else { Text("\(viewModel.numCorrect)") }
+            else { Text("\(viewModel.numCorrect)/\(viewModel.totalWords)") }
         }
         .padding(.horizontal, 20)
         .padding(.top, viewModel.players.queue.count != 2 ? 0 : 50)

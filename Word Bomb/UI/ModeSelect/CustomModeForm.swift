@@ -9,10 +9,10 @@ import SwiftUI
 import CoreData
 
 struct CustomModeForm: View {
+    
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var errorHandler: ErrorViewModel
-    @EnvironmentObject var gameViewModel: WordBombGameViewModel
+    @ObservedObject var errorHandler = Game.errorHandler
     @StateObject var viewModel = CustomModeFormVM()
     
     @FetchRequest(entity: Database.entity(),
@@ -90,7 +90,6 @@ struct CustomModeForm: View {
 
 struct DatabaseListing: View {
     
-    @EnvironmentObject var errorHandler: ErrorViewModel
     var databases: FetchedResults<Database>
     @Binding var selection: Database?
     
@@ -102,7 +101,7 @@ struct DatabaseListing: View {
                     if db.words_?.count != 0 {
                         selection = db
                     } else {
-                        errorHandler.showBanner(title: "Empty Database",
+                        Game.errorHandler.showBanner(title: "Empty Database",
                                                message: "Please select another database")
                     }
                     
@@ -159,8 +158,9 @@ class CustomModeFormVM: ObservableObject {
     }
 }
 
-//struct CustomModeForm_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CustomModeForm()
-//    }
-//}
+struct CustomModeForm_Previews: PreviewProvider {
+    static var previews: some View {
+        CustomModeForm()
+            .environment(\.managedObjectContext, moc_preview)
+    }
+}

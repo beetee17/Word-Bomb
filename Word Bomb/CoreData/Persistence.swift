@@ -8,22 +8,30 @@
 import CoreData
 
 struct PersistenceController {
+    
     static let shared = PersistenceController()
     
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         
-        let wordsPreview = Database(context: viewContext)
-        wordsPreview.name = "words"
+        let defaultDB = Database(context: viewContext, name: "default database", type: .words, items: ["word1", "word2", "word3"], isDefault: true)
         
-        let countriesPreview = Database(context: viewContext)
-        countriesPreview.name = "countries"
+        let wordsPreview1 = Database(context: viewContext, name: "non-empty words", type: .words, items: ["word1", "word2", "word3"])
+        
+        let wordsPreview2 = Database(context: viewContext, name: "empty words", type: .words)
+        
+        let syllablesPreview1 = Database(context: viewContext, name: "non-empty syllables", type: .queries, items: ["syllable1", "syllable2", "syllable3"])
+        
+        let syllablesPreview2 = Database(context: viewContext, name: "empty syllables", type: .queries)
         
         for type in GameType.allCases {
             
-            let newMode = GameMode(context: viewContext, gameType: type, name: "Test Mode", instruction: "Test Instruction", wordsDB: wordsPreview, queriesDB: countriesPreview)
+            let defaultMode = GameMode(context: viewContext, gameType: type, name: "(Default) Test Mode 1", instruction: "Test Instruction", wordsDB: wordsPreview1, queriesDB: syllablesPreview1, isDefault: true)
             
+            for i in 2...4 {
+                let newMode = GameMode(context: viewContext, gameType: type, name: "Test Mode \(i)", instruction: "Test Instruction", wordsDB: wordsPreview1, queriesDB: syllablesPreview1)
+            }
         }
         
         do {
@@ -135,5 +143,19 @@ extension NSManagedObjectContext {
             print("Could not fetch the given request: \(request) \n\(error.localizedDescription)")
             return []
         }
+    }
+    
+    func getUniqueWords(db: Database) -> Int {
+        let request: NSFetchRequest<NSDictionary> = NSFetchRequest(entityName: "Word")
+        // Required! Unless you set the resultType to NSDictionaryResultType, distinct can't work.
+        // All objects in the backing store are implicitly distinct, but two dictionaries can be duplicates.
+        // Since you only want distinct names, only ask for the 'name' property.
+        request.propertiesToFetch = ["variant_"]
+        request.returnsDistinctResults = true
+        request.resultType = NSFetchRequestResultType.dictionaryResultType
+        request.predicate = NSPredicate(format: "databases_ CONTAINS %@", db)
+    
+        // moc.count(for: request) counts all values??
+        return moc.safeFetch(request).count
     }
 }

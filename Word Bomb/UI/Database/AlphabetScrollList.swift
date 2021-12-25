@@ -37,8 +37,18 @@ struct AlphabetScrollList: View {
 }
 
 
-//struct AlphabetScrollList_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AlphabetScrollList(dbHandler: DatabaseHandler(db: Database(context: moc)))
-//    }
-//}
+struct AlphabetScrollList_Previews: PreviewProvider {
+    
+    struct AlphabetScrollList_Harness: View {
+        
+        @State private var filter: String? = nil
+        
+        var body: some View {
+            AlphabetScrollList(filter: $filter)
+        }
+    }
+    
+    static var previews: some View {
+        AlphabetScrollList_Harness()
+    }
+}

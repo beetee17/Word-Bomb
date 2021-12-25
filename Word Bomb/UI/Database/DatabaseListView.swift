@@ -11,7 +11,7 @@ import CoreData
 
 
 struct DatabaseListView: View {
-    @EnvironmentObject var errorHandler: ErrorViewModel
+    @ObservedObject var errorHandler = Game.errorHandler
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(entity: Database.entity(),
                   sortDescriptors: [NSSortDescriptor(keyPath: \Database.name_, ascending: true)],
@@ -37,7 +37,6 @@ struct DatabaseListView: View {
             .sheet(isPresented: $presentAddDBSheet, content: {
                 AddDatabaseView()
                     .environment(\.managedObjectContext, viewContext)
-                    .environmentObject(errorHandler)
                 
             })
             .toolbar {
@@ -58,7 +57,6 @@ struct DatabaseListView: View {
 
 struct DatabaseList: View {
     
-    @EnvironmentObject var errorHandler: ErrorViewModel
     @Environment(\.managedObjectContext) private var viewContext
     var databases: FetchedResults<Database>
     
@@ -67,7 +65,7 @@ struct DatabaseList: View {
         for index in offsets {
             let db = databases[index]
             guard !db.isDefault_ else {
-                errorHandler.showBanner(title: "Deletion Prohibited", message: "Cannot delete a default database!")
+                Game.errorHandler.showBanner(title: "Deletion Prohibited", message: "Cannot delete a default database!")
                 return
             }
             let request = GameMode.fetchRequest()
@@ -122,5 +120,6 @@ struct DatabaseList: View {
 struct DatabaseListView_Previews: PreviewProvider {
     static var previews: some View {
         DatabaseListView()
+            .environment(\.managedObjectContext, moc_preview)
     }
 }
