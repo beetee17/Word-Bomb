@@ -93,23 +93,6 @@ struct RightPlayer: View {
     }
 }
 
-struct MainPlayer:  View {
-    var player: Player
-    @Binding var animatePlayer: Bool
-    var body: some View {
-
-        VStack(spacing: 5) {
-
-            PlayerAvatar(player: player)
-            if !animatePlayer {
-                PlayerName(player: player)
-                    .transition(.identity)
-            }
-            PlayerLives(player: player)
-
-        }
-    }
-}
 struct PlayerCarouselView_Previews: PreviewProvider {
     static var previews: some View {
         PlayerCarouselView().environmentObject(WordBombGameViewModel())

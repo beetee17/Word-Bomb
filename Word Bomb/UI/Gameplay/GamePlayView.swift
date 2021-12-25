@@ -34,7 +34,7 @@ struct GamePlayView: View {
                 }
                 
                 VStack {
-                    PlayerView()
+                    PlayerView(players: $viewModel.model.players, trainingMode: viewModel.trainingMode)
                         .padding(.top, Device.height*0.1)
                     Spacer()
                 }
