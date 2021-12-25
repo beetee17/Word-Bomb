@@ -22,16 +22,14 @@ struct GameOverText: View {
                 Text("Previous Best: \(gameMode.highScore)")
                     .boldText()
                     .onAppear() {
-                        if numCorrect > gameMode.highScore {
-                            Game.playSound(file: "highscore")
-                        }
                         gameMode.updateHighScore(with: numCorrect)
+                        if numCorrect <= gameMode.highScore {
+                            Game.playSound(file: "explosion")
+                        }
                     }
             }
         }
-        .if(numCorrect > gameMode.highScore) { content in
-            content.overlay(ConfettiView())
-        }
+        .if(numCorrect > gameMode.highScore || !trainingMode) { $0.overlay(ConfettiView()) }
     }
 }
 

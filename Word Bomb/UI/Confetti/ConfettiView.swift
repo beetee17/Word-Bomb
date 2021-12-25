@@ -21,6 +21,9 @@ struct ConfettiView: View {
                 .modifier(ParticlesModifier())
                 .offset(x: 60, y : 70)
         }
+        .onAppear() {
+            Game.playSound(file: "confetti")
+        }
     }
 }
 struct ConfettiView_Previews: PreviewProvider {

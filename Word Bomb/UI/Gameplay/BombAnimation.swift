@@ -18,7 +18,7 @@ struct BombView: View {
         Image(updateFrame(numTotalFrames: 24, timeLeft: timeLeft, timeLimit: timeLimit))
             .resizable()
             .scaledToFit()
-  
+        
     }
     
     private func updateFrame(numTotalFrames: Int, timeLeft: Float, timeLimit: Float) -> String {
@@ -32,7 +32,7 @@ struct BombView: View {
             return String(format: "frame_apngframe%02d", frameNumber)
         }
     }
-        
+    
 }
 
 
@@ -40,26 +40,31 @@ struct BombView: View {
 
 struct BombExplosion: View {
     
-    @State var animateExplosion = false
+    @State var animating = false
     @Binding var gameState: GameState
     
     var body: some View {
         
-        AnimatedImage(name: "explosion-2-merge.gif", isAnimating: $animateExplosion)
+        AnimatedImage(name: "explosion-2-merge.gif", isAnimating: $animating)
             .resizable()
             .pausable(false)
             .aspectRatio(contentMode: .fill)
             .frame(width: Game.bombSize, height: Game.bombSize)
-            .opacity(animateExplosion ? 1 : 0)
+            .opacity(animating ? 1 : 0)
             .onChange(of: gameState) { _ in
-                if gameState == .playerTimedOut || gameState == .gameOver {
-                    animateExplosion = true
+                animateIfNeeded()
+                if gameState == .playerTimedOut {
                     Game.playSound(file: "explosion")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + Game.explosionDuration) {
-                        animateExplosion = false
-                    }
                 }
             }
+    }
+    func animateIfNeeded() {
+        if gameState == .playerTimedOut || gameState == .gameOver {
+            animating = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + Game.explosionDuration) {
+                animating = false
+            }
+        }
     }
 }
 
