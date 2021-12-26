@@ -109,8 +109,8 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         case .Exact: gameModel = ExactWordGameModel(wordsDB: mode.wordsDB)
             
         case .Classic:
-            let queries = mode.queriesDB.words.map({ ($0.content, $0.frequency) })
-            gameModel = ContainsWordGameModel(wordsDB: mode.wordsDB, queries: queries)
+//            let queries = mode.queriesDB.words.map({ ($0.content, $0.frequency) })
+            gameModel = ContainsWordGameModel(wordsDB: mode.wordsDB, queriesDB: mode.queriesDB)
             
         case .Reverse:
             gameModel = ReverseWordGameModel(wordsDB: mode.wordsDB)
@@ -120,7 +120,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// Starts a game with the given game mode, not least by initing the appropriate WordGameModel
     /// - Parameter mode: The given game mode
     func startGame(mode: GameMode) {
-        
+        Game.playSoundTrack(file: "Monkeys-Spinning-Monkeys")
         var players = Players()
         
         if trainingMode {
