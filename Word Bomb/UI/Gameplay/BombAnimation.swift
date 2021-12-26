@@ -22,7 +22,8 @@ struct BombView: View {
     }
     
     private func updateFrame(numTotalFrames: Int, timeLeft: Float, timeLimit: Float) -> String {
-        let frameNumber = numTotalFrames - Int(timeLeft / (timeLimit / Float(numTotalFrames))) + 1
+        // Do not somehow exceed the maximum frame number
+        let frameNumber = min(25, numTotalFrames - Int(timeLeft / (timeLimit / Float(numTotalFrames))) + 1)
         
         if frameNumber >= 10 {
             
