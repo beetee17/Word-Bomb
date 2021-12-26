@@ -34,7 +34,8 @@ struct GamePlayView: View {
                 }
                 
                 VStack {
-                    PlayerView(players: $viewModel.model.players, trainingMode: viewModel.trainingMode)
+                    PlayerView()
+//                    PlayerView(players: $viewModel.model.players, trainingMode: viewModel.trainingMode)
                         .padding(.top, Device.height*0.1)
                     Spacer()
                 }
@@ -46,7 +47,7 @@ struct GamePlayView: View {
                 Spacer()
                 if viewModel.model.gameState == .gameOver {
                     GameOverText(
-                        gameMode: viewModel.gameMode!,
+                        gameMode: viewModel.gameMode,
                         numCorrect: viewModel.model.numCorrect,
                         trainingMode: viewModel.trainingMode)
                     
