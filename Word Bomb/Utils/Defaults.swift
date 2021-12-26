@@ -77,6 +77,26 @@ struct Game {
     
     
     static var audioPlayer:AVAudioPlayer?
+    static var soundTrackPlayer:AVAudioPlayer?
+    static func playSoundTrack(file: String) {
+        if let path = Bundle.main.path(forResource: file, ofType: "mp3") {
+            do {
+                Game.soundTrackPlayer?.setVolume(0, fadeDuration: 1)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { }
+                // wait for previous sound track to fade out
+                
+                Game.soundTrackPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: path))
+                Game.soundTrackPlayer?.prepareToPlay()
+                Game.soundTrackPlayer?.play()
+                // Negative value for infinite loop
+                Game.soundTrackPlayer?.numberOfLoops = -1
+
+            } catch let error {
+                print("Error playing audio: \(error.localizedDescription)")
+            }
+        }
+    }
     
     static func playSound(file: String, type: String = "wav") {
         
@@ -86,6 +106,7 @@ struct Game {
                 Game.audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: path))
                 Game.audioPlayer?.prepareToPlay()
                 Game.audioPlayer?.play()
+                Game.audioPlayer?.volume
                 
             } catch let error {
                 print("Error playing audio: \(error.localizedDescription)")
