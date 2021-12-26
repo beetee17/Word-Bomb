@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GameOverText: View {
     
-    var gameMode: GameMode
+    var gameMode: GameMode?
     var numCorrect: Int
     var trainingMode: Bool
     
@@ -19,17 +19,18 @@ struct GameOverText: View {
                 .boldText()
             
             if trainingMode {
-                Text("Previous Best: \(gameMode.highScore)")
+                // If in training mode there better be a Game Mode
+                Text("Previous Best: \(gameMode!.highScore)")
                     .boldText()
                     .onAppear() {
-                        if numCorrect <= gameMode.highScore {
+                        if numCorrect <= gameMode!.highScore {
                             Game.playSound(file: "explosion")
                         }
-                        gameMode.updateHighScore(with: numCorrect)
+                        gameMode!.updateHighScore(with: numCorrect)
                     }
             }
         }
-        .if(numCorrect > gameMode.highScore || !trainingMode) { $0.overlay(ConfettiView()) }
+        .if((numCorrect > gameMode?.highScore ?? Int.max) || !trainingMode) { $0.overlay(ConfettiView()) }
     }
 }
 
