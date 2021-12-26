@@ -26,8 +26,8 @@ struct ContainsWordGameModel: WordGameModel {
     
     init(wordsDB: Database, queries: [(String, Int)]) {
         self.wordsDB = wordsDB
-        self.queries = queries
-        self.queriesCopy = queries
+        self.queries = queries.sorted(by: { $0.1 < $1.1 })
+        self.queriesCopy = self.queries
         self.pivot = queries.bisect(at: Int(syllableDifficulty*100.0))
         totalWords = moc.getUniqueWords(db: wordsDB)
     }
@@ -96,6 +96,7 @@ struct ContainsWordGameModel: WordGameModel {
         if numTurns % numTurnsBeforeDifficultyIncrease == 0 {
             updateSyllableWeights(pivot: pivot)
         }
+        print("QUERY \(query) has updated frequency \(String(describing: queries.first(where: { $0.0 == query })?.1))")
         
         numTurns += 1
         return query
@@ -124,7 +125,8 @@ struct ContainsWordGameModel: WordGameModel {
     }
     
     mutating func updateSyllableWeights(pivot: Int) {
-        
+        // TODO: Make difficulty smoother and customisable if possible
+        // Need to graph this distribution over time to visualise what's happening
         for i in queries.indices {
             switch i == pivot {
             case true: break
