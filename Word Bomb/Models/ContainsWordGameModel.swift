@@ -12,8 +12,8 @@ import CoreData
 struct ContainsWordGameModel: WordGameModel {
     var wordsDB: Database
     
-    var queries: [(String, Int)]
-    var queriesCopy: [(String, Int)]
+    var queries: [(String, Int)] = []
+    var queriesCopy: [(String, Int)] = []
     
     var usedWords = Set<String>()
     var totalWords: Int
@@ -23,13 +23,20 @@ struct ContainsWordGameModel: WordGameModel {
     var numTurnsBeforeDifficultyIncrease = 2
 
     var syllableDifficulty = UserDefaults.standard.double(forKey: "Syllable Difficulty")
-    
-    init(wordsDB: Database, queries: [(String, Int)]) {
+
+    init(wordsDB: Database, queriesDB: Database) {
+        
+        let request = Word.fetchRequest()
+        request.predicate = NSPredicate(format: "databases_ CONTAINS %@", queriesDB)
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Word.frequency_, ascending: true)]
+
         self.wordsDB = wordsDB
-        self.queries = queries.sorted(by: { $0.1 < $1.1 })
+        
+        self.queries = moc.safeFetch(request).map({ ($0.content, $0.frequency) })
         self.queriesCopy = self.queries
+
         self.pivot = queries.bisect(at: Int(syllableDifficulty*100.0))
-        totalWords = moc.getUniqueWords(db: wordsDB)
+        self.totalWords = moc.getUniqueWords(db: wordsDB)
     }
     
     mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, query: String?) {
