@@ -29,7 +29,7 @@ struct Particle: ViewModifier {
                             self.dy = gravity
                             
                         }
-                        withAnimation(.easeIn(duration: duration)) {
+                        withAnimation(.easeInOut(duration: duration)) {
                             self.opacity = 0
                         }
                     }
