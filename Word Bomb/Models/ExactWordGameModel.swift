@@ -10,26 +10,17 @@ import CoreData
 
 /// Implements the mechanism for games of the `.Exact` type
 struct ExactWordGameModel: WordGameModel {
-    var wordsDB: Database
+    
+    var words: [String]
+    var variants: [String : [String]]
     var usedWords = Set<String>()
     var totalWords: Int
     
-    init(wordsDB: Database) {
-        self.wordsDB = wordsDB
-        totalWords = moc.getUniqueWords(db: wordsDB)
-    }
-    
-    mutating func updateUsedWords(input: Word) {
-        let request = Word.fetchRequest()
-        request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND variant_ = %@", wordsDB, "\(input.variant)")
-        
-        let variants = moc.safeFetch(request).map({ $0.content })
-        
-        print("variants of \(input.content): \(variants)")
-        
-        for variant in variants {
-            usedWords.insert(variant)
-        }
+    init(variants: [String: [String]] = [:], totalWords: Int) {
+        self.words = variants.keys.sorted(by: {$0 < $1})
+        self.variants = variants
+        print(variants)
+        self.totalWords = totalWords
     }
     
     mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, query: String?) {
@@ -39,15 +30,12 @@ struct ExactWordGameModel: WordGameModel {
             return (.Used, nil)
         }
         
-        let request: NSFetchRequest<Word> = Word.fetchRequest()
+        let searchResult = words.search(element: input)
         
-        request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND content_ == %@", wordsDB, input)
-        let searchResult = moc.safeFetch(request)
-        
-        if searchResult.count != 0 {
+        if searchResult != -1 {
             print("\(input.uppercased()) IS CORRECT")
             
-            updateUsedWords(input: searchResult.first!)
+            updateUsedWords(for: input)
             
             return (.Correct, nil)
             
@@ -59,9 +47,16 @@ struct ExactWordGameModel: WordGameModel {
         }
     }
     
+    mutating func updateUsedWords(for input: String) {
+        for variant in variants[input, default: []] {
+            usedWords.insert(variant)
+        } 
+    }
+    
     mutating func reset() {
         usedWords = Set<String>()
     }
     mutating func getRandQuery(_ input: String? = nil) -> String { return "" }
 
 }
+

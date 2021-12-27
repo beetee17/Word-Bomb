@@ -30,13 +30,21 @@ struct GameData: Codable {
     var timeLeft: Float?
     var timeLimit: Float?
     var playerLives: [String:Int]?
+    var variants: [String: [String]]?
+    var totalWords: Int?
+    
     
     public func process() {
         if let model = self.model {
             DispatchQueue.main.async {
                 print("Got model from host!")
-                
-                Game.viewModel.setSharedModel(model)
+                if let gameModel = Game.viewModel.model.game {
+                    // do not override the game model if it arrives earlier than the shared model
+                    Game.viewModel.setSharedModel(model)
+                    Game.viewModel.model.game = gameModel
+                } else {
+                    Game.viewModel.setSharedModel(model)
+                }
                 
                 for player in Game.viewModel.model.players.queue {
                     print("\(player.name): \(player.livesLeft) lives")
@@ -80,7 +88,7 @@ struct GameData: Codable {
         }
         else if let input = self.input {
             print("Got data from non-host device ! \(input)")
-            Game.viewModel.processNonHostInput(input)
+            Game.viewModel.model.processNonHostInput(input)
         }
         else if let timeLeft = self.timeLeft {
             print("received updated time left from host \(timeLeft)")
@@ -90,6 +98,10 @@ struct GameData: Codable {
         else if let timeLimit = self.timeLimit {
             print("receive new time limit from host \(timeLimit)")
             Game.viewModel.model.timeKeeper.timeLimit = timeLimit
+        } else if let variants = variants {
+            if let totalWords = totalWords {
+                Game.viewModel.model.setNonHostGameModel(with: (variants, totalWords))
+            }
         }
     }
     

@@ -6,14 +6,19 @@
 //
 
 import Foundation
-
+import GameKit
 /**
  This is the main model in the MVVM structure of the game. It is the source of truth for everything that is independent of the game mode.
  e.g. it does not implement the function that handles processing of user input since that differs depending on game mode
  */
 struct WordBombGame: Codable {
+    private enum CodingKeys: String, CodingKey { case players, timeKeeper, media, gameState, output, query, instruction } //this is usually synthesized, but we have to define it ourselves to exclude `game`
     
     var players: Players
+    var isMyGKTurn: Bool { GKLocalPlayer.local.displayName == players.current.name }
+    
+    /// Responsible with processing user inputs and fetching new queries if necessary
+    var game: WordGameModel? = nil
     
     var timeKeeper = TimeKeeper()
     var media = Media()
@@ -22,9 +27,8 @@ struct WordBombGame: Codable {
     var gameState: GameState = .initial
     
     /// The number of correct answers used in the game. The score should only be set within the model
-    private(set) var numCorrect = 0
+//    private(set) var numCorrect = 0
     
-    private(set) var usedWords = [String]()
     
     /// The output text to be displayed depending on player input
     var output = ""
@@ -37,6 +41,82 @@ struct WordBombGame: Codable {
         didSet {
             print("instruction set to \(instruction)")
         }
+    }
+    
+    /// inits the appropriate WordGameModel for the given game mode
+    /// - Parameter mode: The given game mode
+    mutating func setGameModel(with mode: GameMode) {
+        let (variants, totalWords) = moc.getWords(db: mode.wordsDB)
+        switch mode.gameType {
+        case .Exact:
+            game = ExactWordGameModel(variants: variants, totalWords: totalWords)
+            
+        case .Classic:
+            game = ContainsWordGameModel(variants: variants,
+                                         queries: mode.queriesDB.wordArray.map({ ($0.content, $0.frequency) }),
+                                         totalWords: totalWords)
+            query = game?.getRandQuery(nil)
+        case .Reverse:
+            game = ExactWordGameModel(variants: variants, totalWords: totalWords)
+        }
+        if GameCenter.isHost {
+            Multiplayer.send(GameData(variants: variants, totalWords: totalWords), toHost: false)
+        }
+    }
+    
+    mutating func setNonHostGameModel(with data: ([String:[String]], Int)) {
+        game = ExactWordGameModel(variants: data.0, totalWords: data.1)
+    }
+    
+    /**
+     Processes the user's input to determine if it is correct/wrong, and updates the query if necessary
+     
+     Should be called whenever user commits text in the input textfield
+     */
+    mutating func processInput(_ input: String) {
+       
+        let input = input.lowercased().trim()
+        print("Processing input: \(input)")
+        
+        if !(input == "" || timeKeeper.timeLeft <= 0) {
+            
+            if GameCenter.isHost && isMyGKTurn {
+                // turn for device hosting multiplayer game
+                
+                let response = game!.process(input, query)
+                
+                handleGameState(.playerInput, data: ["input" : input, "response" : response])
+            }
+            
+            else if GameCenter.isNonHost && isMyGKTurn {
+                // turn for device not hosting but in multiplayer game
+                Multiplayer.send(GameData(input: input), toHost: true)
+                
+                print("SENT \(input)")
+                
+            }
+            
+            else if !GameCenter.isOnline{
+                // device not hosting or participating in multiplayer game i.e offline
+                let response = game!.process(input, query)
+                
+                handleGameState(.playerInput, data: ["input" : input, "response" : response])
+            }
+        }
+    }
+    
+    /**
+     Processes the input received from participating players on the host-side
+     
+     Should only be called on the host device
+     */
+    mutating func processNonHostInput(_ input: String) {
+        
+        print("processing \(input)")
+        let response = game!.process(input.lowercased().trim(), query)
+        
+        handleGameState(.playerInput, data: ["input" : input, "response" : response])
+        
     }
     
     /// Updates the time left & time limit and output & query texts depending on the outcome of the user input.
@@ -64,8 +144,7 @@ struct WordBombGame: Codable {
                 }
             }
             _ = players.nextPlayer()
-            numCorrect += 1
-            usedWords.append(input)
+            game?.updateUsedWords(for: input)
             media.resetROOTSound()
             
             if !GameCenter.isOnline {
@@ -108,11 +187,10 @@ struct WordBombGame: Codable {
     
     /// Resets the relevant variables to restart the game
     mutating func restartGame() {
-        usedWords = [String]()
-        numCorrect = 0
         timeKeeper.reset()
         media.reset()
         players.reset()
+        game?.reset()
     }
     
     /// Resets the output, query and instruction texts to empty strings
@@ -134,18 +212,10 @@ struct WordBombGame: Codable {
         case .initial:
             clearUI()
             
-            if let players = data?["players"] as? [Player] {
-                self.players = Players(from: players)
-                
-            }
             restartGame()
             
-            if let query = data?["query"] as? String {
-                self.query = query
-            }
-            if let instruction = data?["instruction"] as? String {
-                self.instruction = instruction
-                print("got instruction \(instruction)")
+            if let mode = data?["mode"] as? GameMode {
+                setGameModel(with: mode)
             }
             
             if GameCenter.isHost {

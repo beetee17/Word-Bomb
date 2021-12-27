@@ -42,6 +42,16 @@ extension Database {
         }
     }
     
+    convenience init(context: NSManagedObjectContext,
+                     name: String, db: Database) {
+        // for duplicating a database
+        self.init(context: context)
+        self.name = name.trim().lowercased()
+        self.type = db.type
+        self.isDefault_ =  false
+        self.addToWords_(db.words_ ?? NSSet())
+    }
+    
     var type: DBType {
         get {
             return DBType(rawValue: type_ ?? DBType.words.rawValue)!
@@ -60,10 +70,16 @@ extension Database {
         }
     }
 
-    var words: [Word] {
-        let set = words_ as? Set<Word> ?? []
+    var words: [String] {
+        let array = words_ as? Set<Word> ?? []
         
-        return set.sorted { $0.content < $1.content }
+        return array.map({ $0.content }).sorted()
+    }
+    
+    var wordArray: [Word] {
+        let array = words_ as? Set<Word> ?? []
+        
+        return array.sorted() { $0.content < $1.content }
     }
     
     func remove(_ words: Set<Word>) {

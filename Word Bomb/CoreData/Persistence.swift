@@ -165,4 +165,34 @@ extension NSManagedObjectContext {
         // moc.count(for: request) counts all values??
         return moc.safeFetch(request).count
     }
+    
+    func getWords(db: Database) -> ([String:[String]], Int) {
+        let request = Word.fetchRequest()
+        request.predicate = NSPredicate(format: "databases_ CONTAINS %@", db)
+    
+        
+        let variations = Dictionary(grouping: try! self.fetch(request)) { (element : Word)  in
+            element.variant
+        }
+        .compactMap({
+            $0.value
+                .map({ $0.content })
+        })
+        
+        var res: [String:[String]] = [:]
+        
+        for variants in variations {
+            if variants.count == 1 {
+                res[variants.first!] = [variants.first!]
+            } else {
+                for i in variants.indices {
+                    let word = variants[i]
+                    res[word] = variants
+                }
+            }
+        }
+        return (res, variations.count)
+
+
+    }
 }

@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct GameOverText: View {
-    
-    var gameMode: GameMode?
-    var numCorrect: Int
-    var usedWords: [String]
-    var trainingMode: Bool
-    
+    @EnvironmentObject var viewModel: WordBombGameViewModel
     @State var showMatchReview = false
-    
+
     var body: some View {
+        let usedWords = viewModel.model.game?.usedWords
+        let numCorrect = usedWords?.count ?? 0
+        let trainingMode = viewModel.trainingMode
+        let gameMode = viewModel.gameMode
+        
         VStack {
             Text("Word Count: \(numCorrect)")
                 .boldText()
@@ -38,7 +38,7 @@ struct GameOverText: View {
         }
         .if((numCorrect > gameMode?.highScore ?? Int.max) || !trainingMode) { $0.overlay(ConfettiView()) }
         .sheet(isPresented: $showMatchReview) {
-            MatchReviewView(mode: gameMode!, usedWords: Set(usedWords))
+            MatchReviewView(words: viewModel.model.game?.words,  usedWords: Set(usedWords ?? []), totalWords: viewModel.model.game!.totalWords)
         }
     }
 }
@@ -46,18 +46,8 @@ struct GameOverText: View {
 struct GameOverText_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            GameOverText(
-                gameMode: .exampleDefault,
-                numCorrect: 10,
-                usedWords: ["Word1"],
-                trainingMode: true
-            )
-            GameOverText(
-                gameMode: .exampleDefault,
-                numCorrect: 10,
-                usedWords: ["Word1"],
-                trainingMode: false
-            )
+            GameOverText().environmentObject(WordBombGameViewModel())
+            GameOverText().environmentObject(WordBombGameViewModel())
         }
     }
 }

@@ -10,7 +10,8 @@ import CoreData
 
 /// Implements the mechanism for games of the `.Classic` type
 struct ContainsWordGameModel: WordGameModel {
-    var wordsDB: Database
+    var words: [String]
+    var variants: [String : [String]] = [:]
     
     var queries: [(String, Int)] = []
     var queriesCopy: [(String, Int)] = []
@@ -23,66 +24,49 @@ struct ContainsWordGameModel: WordGameModel {
     var numTurnsBeforeDifficultyIncrease = 2
 
     var syllableDifficulty = UserDefaults.standard.double(forKey: "Syllable Difficulty")
-
-    init(wordsDB: Database, queriesDB: Database) {
+    
+    init(variants: [String: [String]] = [:], queries: [(String, Int)], totalWords: Int) {
+        self.words = variants.keys.sorted(by: {$0 < $1})
+        self.variants = variants
+        self.totalWords = totalWords
         
-        let request = Word.fetchRequest()
-        request.predicate = NSPredicate(format: "databases_ CONTAINS %@", queriesDB)
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Word.frequency_, ascending: true)]
-
-        self.wordsDB = wordsDB
-        
-        self.queries = moc.safeFetch(request).map({ ($0.content, $0.frequency) })
+        self.queries = queries.sorted() { $0.1 < $1.1 }
         self.queriesCopy = self.queries
 
         self.pivot = queries.bisect(at: Int(syllableDifficulty*100.0))
-        self.totalWords = moc.getUniqueWords(db: wordsDB)
     }
     
     mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, query: String?) {
-        
-        if usedWords.contains(input) {
-            print("\(input.uppercased()) ALREADY USED")
-            return (.Used, nil)
+            let searchResult = words.search(element: input)
+            //        return ("correct", getRandQuery(input))
+            if usedWords.contains(input) {
+                print("\(input.uppercased()) ALREADY USED")
+                return (.Used, nil)
+                
+            }
+            
+            else if (searchResult != -1) && input.contains(query!) {
+                print("\(input.uppercased()) IS CORRECT")
+                usedWords.insert(input)
+                return (.Correct, getRandQuery(input))
+            }
+            
+            else {
+                print("\(input.uppercased()) IS WRONG")
+                return (.Wrong, nil)
+                
+            }
             
         }
-        
-        let request: NSFetchRequest<Word> = Word.fetchRequest()
-        
-        request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND content_ == %@", wordsDB, input)
-        request.fetchLimit = 1
-        let searchResult = moc.safeFetch(request)
-        print(searchResult)
-        
-        if input.contains(query!) && searchResult.count != 0 {
-            print("\(input.uppercased()) IS CORRECT")
-            updateUsedWords(input: searchResult.first!)
-            return (.Correct, getRandQuery(input))
-        }
-        
-        else {
-            print("\(input.uppercased()) IS WRONG")
-            return (.Wrong, nil)
-            
-        }
-        
-    }
     
     mutating func reset() {
         usedWords = Set<String>()
         queries = queriesCopy
         numTurns = 0
     }
-    
-    mutating func updateUsedWords(input: Word) {
-        let request = Word.fetchRequest()
-        request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND variant_ = %@", wordsDB, "\(input.variant)")
-        
-        let variants = moc.safeFetch(request).map({ $0.content })
-        
-        print("variants of \(input.content): \(variants)")
-        
-        for variant in variants {
+    mutating func updateUsedWords(for input: String) {
+        usedWords.insert(input)
+        for variant in variants[input, default: []] {
             usedWords.insert(variant)
         }
     }
@@ -119,12 +103,8 @@ struct ContainsWordGameModel: WordGameModel {
         if atLeastOneUsableAnswer { return true }
         
         // need to check database for one usable answer
-        let request: NSFetchRequest<Word> = Word.fetchRequest()
-        request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND content_ CONTAINS %@", wordsDB, query)
-        let words = moc.safeFetch(request)
-
         for word in words {
-            if !usedWords.contains(word.content) { return true }
+            if word.contains(query) && !usedWords.contains(word) { return true }
         }
         
         return false

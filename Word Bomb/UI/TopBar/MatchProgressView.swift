@@ -12,8 +12,8 @@ struct MatchProgressView: View {
     var usedWords: [String]
     @Binding var showMatchProgress: Bool
     
-    init(usedWords: [String], showMatchProgress: Binding<Bool>) {
-        self.usedWords = usedWords
+    init(usedWords: [String]?, showMatchProgress: Binding<Bool>) {
+        self.usedWords = usedWords ?? []
         _showMatchProgress = showMatchProgress
         
         // the only working way to make background clear

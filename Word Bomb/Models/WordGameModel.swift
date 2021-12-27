@@ -11,8 +11,9 @@ import Foundation
 protocol WordGameModel {
     
     /// `Database` that contains all the valid words for the given mode
-    var wordsDB: Database { get }
-    
+//    var wordsDB: Database { get }
+    var words: [String] { get }
+    var variants: [String: [String]] { get }
     /// Set of words already used in the current game. Prevents players from giving the same answer more than once
     var usedWords: Set<String> { get set }
     
@@ -25,7 +26,8 @@ protocol WordGameModel {
     mutating func process(_ input: String, _ query: String?) -> (status: InputStatus, query: String?)
     
     /// Adds the given input to the set of used words. Should only be called when the input was correct
-    mutating func updateUsedWords(input: Word)
+//    mutating func updateUsedWords(input: Word)
+    mutating func updateUsedWords(for input: String)
     
     /// Resets the model, usually when restarting the game
     mutating func reset()

@@ -35,7 +35,7 @@ class CustomMergePolicy: NSMergePolicy {
                 }
                 if let newDB = conflictingObject as? Database {
                     let existingDB = object as! Database
-                    print("DB CONFLICT \(newDB.name) \nexisting: \(existingDB.words.map({ $0.content })) \nnew:\(newDB.words.map({ $0.content }))")
+                    print("DB CONFLICT \(newDB.name) \nexisting: \(existingDB.words) \nnew:\(newDB.words)")
                     newDB.addToWords_(existingDB.words_ ?? NSSet())
                 }
                 

@@ -100,7 +100,7 @@ struct Word_BombApp: App {
             .environmentObject(GameCenter.loginViewModel)
             .environmentObject(cdViewModel)
             .environmentObject(Game.errorHandler)
-            .environment(\.managedObjectContext, moc)            
+            .environment(\.managedObjectContext, moc)
         }
     }
 }

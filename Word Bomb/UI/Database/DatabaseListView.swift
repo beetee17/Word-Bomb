@@ -88,8 +88,7 @@ struct DatabaseList: View {
     func duplicateDB(_ db: Database) {
         let _ = Database(context: viewContext,
                          name: "\(db.name) Copy",
-                         type: db.type,
-                         items: db.words)
+                         db: db)
         
         viewContext.saveObjects()
     }

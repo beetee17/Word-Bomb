@@ -154,7 +154,7 @@ struct PermanentKeyboardUIView: UIViewRepresentable {
         uiView.text = text
         
         //Makes keyboard permanent
-        if !uiView.isFirstResponder && !forceResignFirstResponder {
+        if !forceResignFirstResponder && !uiView.isFirstResponder  {
             
             uiView.becomeFirstResponder()
         }

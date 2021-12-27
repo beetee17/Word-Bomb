@@ -10,13 +10,25 @@ import SwiftUI
 struct MatchReviewView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
-    var mode: GameMode
+//    var mode: GameMode
+    var words: [String]
     var usedWords: Set<String>
     
-    @State var totalWords: Int = 0
+    var totalWords: Int
     @State private var filter = ""
     @State private var prefix: String?
     @State private var text = ""
+    
+    init(words: [String]?, usedWords: Set<String>?, totalWords: Int) {
+        self.words = words ?? []
+        self.usedWords = usedWords ?? Set()
+        self.totalWords = totalWords
+    }
+    var filteredWords: [String] {
+        prefix != nil
+        ? (filter.trim().count == 0 ? words.filter({ $0.starts(with: prefix!) }) : words.filter({ $0.starts(with: prefix!) && $0.contains(filter.trim().lowercased()) }))
+        : (filter.trim().count == 0 ? words : words.filter({ $0.contains(filter.trim().lowercased()) }))
+    }
     
     var body: some View {
         NavigationView {
@@ -27,22 +39,34 @@ struct MatchReviewView: View {
                 ScrollView {
                     
                     LazyVStack {
-                        
-                        FilteredList(db: mode.wordsDB, filterKey: "content_",
-                                     filterValue: filter,
-                                     prefix: prefix,
-                                     sortDescriptors: [NSSortDescriptor(keyPath: \Word.content_, ascending: true)]) { (word:Word) in
+                        // TODO: starts with prefix if prefix is non-nil
+                        ForEach(filteredWords, id: \.self) { word in
                             VStack {
                                 HStack {
-                                    Text(word.content.capitalized)
+                                    Text(word.capitalized)
                                         .frame(maxWidth: Device.width, maxHeight: 20, alignment:.leading)
                                         .padding(.leading)
-                                        .foregroundColor(usedWords.contains(word.content) ? .green : .white)
+                                        .foregroundColor(usedWords.contains(word) ? .green : .white)
                                     
                                 }
                                 Divider()
                             }
                         }
+//                        FilteredList(db: mode.wordsDB, filterKey: "content_",
+//                                     filterValue: filter,
+//                                     prefix: prefix,
+//                                     sortDescriptors: [NSSortDescriptor(keyPath: \Word.content_, ascending: true)]) { (word:Word) in
+//                            VStack {
+//                                HStack {
+//                                    Text(word.content.capitalized)
+//                                        .frame(maxWidth: Device.width, maxHeight: 20, alignment:.leading)
+//                                        .padding(.leading)
+//                                        .foregroundColor(usedWords.contains(word.content) ? .green : .white)
+//
+//                                }
+//                                Divider()
+//                            }
+//                        }
                     }
                 }
                 .overlay(AlphabetScrollList(filter: $prefix))
@@ -50,9 +74,9 @@ struct MatchReviewView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .ignoresSafeArea(.all)
             }
-            .onAppear() {
-                totalWords = viewContext.getUniqueWords(db: mode.wordsDB)
-            }
+//            .onAppear() {
+//                totalWords = viewContext.getUniqueWords(db: mode.wordsDB)
+//            }
         }
     }
 }
@@ -60,10 +84,10 @@ struct MatchReviewView: View {
 
 
 
-struct MatchReviewView_Previews: PreviewProvider {
-    static var previews: some View {
-        
-        MatchReviewView(mode: .exampleDefault, usedWords: Set(["word2", "word3"]))
-            .environment(\.managedObjectContext, moc_preview)
-    }
-}
+//struct MatchReviewView_Previews: PreviewProvider {
+//    static var previews: some View {
+//
+//        MatchReviewView(mode: .exampleDefault, usedWords: Set(["word2", "word3"]))
+//            .environment(\.managedObjectContext, moc_preview)
+//    }
+//}

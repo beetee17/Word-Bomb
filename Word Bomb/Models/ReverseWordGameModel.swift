@@ -10,59 +10,43 @@ import CoreData
 
 /// Implements the mechanism for games of the `.Reverse` type
 struct ReverseWordGameModel: WordGameModel {
-    
-    var wordsDB: Database
+    var words: [String]
     var usedWords = Set<String>()
     var totalWords: Int
+    var variants: [String: [String]]
     
-    init(wordsDB: Database) {
-        self.wordsDB = wordsDB
-        totalWords = moc.getUniqueWords(db: wordsDB)
+    init(variants: [String: [String]] = [:], totalWords: Int) {
+        self.words = variants.keys.sorted(by: {$0 < $1})
+        self.variants = variants
+        self.totalWords = totalWords
     }
     
     mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, query: String?) {
-  
+        
         if usedWords.contains(input) {
             print("\(input.uppercased()) ALREADY USED")
             return (.Used, nil)
-           
+            
         }
-        if input.first != query?.last {
-            print("\(input.uppercased()) IS WRONG")
-            return (.Wrong, nil)
-        }
-        
-        let request = Word.fetchRequest()
-        
-        request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND content_ == %@", wordsDB, input)
-        request.fetchLimit = 1
-        let searchResult = moc.safeFetch(request)
-        print(searchResult)
-        
-        if searchResult.count != 0 {
+        let searchResult = words.search(element: input)
+        if searchResult != -1 && input.first == query!.last {
             print("\(input.uppercased()) IS CORRECT")
-            updateUsedWords(input: searchResult.first!)
+            
+            updateUsedWords(for: input)
             
             return (.Correct, getRandQuery(input))
- 
+            
         }
-                
+        
         else {
             print("\(input.uppercased()) IS WRONG")
             return (.Wrong, nil)
-          
+            
         }
     }
     
-    mutating func updateUsedWords(input: Word) {
-        let request = Word.fetchRequest()
-        request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND variant_ = %@", wordsDB, "\(input.variant)")
-        
-        let variants = try! moc.fetch(request).map({ $0.content })
-        
-        print("variants of \(input.content): \(variants)")
-        
-        for variant in variants {
+    mutating func updateUsedWords(for input: String) {
+        for variant in variants[input, default: []] {
             usedWords.insert(variant)
         }
     }
@@ -70,27 +54,14 @@ struct ReverseWordGameModel: WordGameModel {
     mutating func reset() {
         usedWords = Set<String>()
     }
-    
     mutating func getRandQuery(_ input: String? = nil) -> String {
         if let input = input {
             return String(input.last!)
             
         }
         else {
-            
-            let request: NSFetchRequest<Word> = Word.fetchRequest()
-            request.predicate = NSPredicate(format: "databases_ CONTAINS %@ AND TRUEPREDICATE", wordsDB)
-            
-            let count = try! moc.count(for: request)
-            precondition(count > 0)
-            
-            request.fetchOffset = Int.random(in: 0..<count)
-            request.fetchLimit = 1
-
-            let res = try! moc.fetch(request)
-            return String(res.first!.content.first!)
+            return String(words.randomElement()!.trim().last!)
         }
     }
-
 }
 

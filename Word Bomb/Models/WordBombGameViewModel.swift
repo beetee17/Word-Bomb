@@ -24,9 +24,6 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// Source of truth for many of the variables that concerns game logic
     @Published var model: WordBombGame = WordBombGame(players: Players())
     
-    /// Responsible with processing user inputs and fetching new queries if necessary
-    @Published private var gameModel: WordGameModel? = nil
-    
     /// Controls the current view shown to the user
     @Published var viewToShow: ViewToShow = .main {
         didSet {
@@ -87,13 +84,13 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     
     /// Updates the high score of the current mode. Should only be called at gameOver state in training mode
     func updateHighScore() {
-        gameMode?.highScore = model.numCorrect
+        gameMode?.highScore = model.game?.usedWords.count ?? 0 
     }
     
     /// Restarts the game with the same game mode
     func restartGame() {
         
-        guard var gameModel = gameModel else {
+        guard var gameModel = model.game else {
             print("mode not found")
             return
         }
@@ -102,20 +99,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         startGame(mode: gameMode!)
         
     }
-    /// inits the appropriate WordGameModel for the given game mode
-    /// - Parameter mode: The given game mode
-    func setGameModel(for mode: GameMode) {
-        switch mode.gameType {
-        case .Exact: gameModel = ExactWordGameModel(wordsDB: mode.wordsDB)
-            
-        case .Classic:
-//            let queries = mode.queriesDB.words.map({ ($0.content, $0.frequency) })
-            gameModel = ContainsWordGameModel(wordsDB: mode.wordsDB, queriesDB: mode.queriesDB)
-            
-        case .Reverse:
-            gameModel = ReverseWordGameModel(wordsDB: mode.wordsDB)
-        }
-    }
+
     
     /// Starts a game with the given game mode, not least by initing the appropriate WordGameModel
     /// - Parameter mode: The given game mode
@@ -134,19 +118,9 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         
         model = WordBombGame(players: players)
         
-        setGameModel(for: mode)
-        
-        if GameCenter.isHost || !GameCenter.isOnline {
-            print("getting query")
-            // should query only if device is hosting a game or not in multiplayer game
-            model.handleGameState(.initial,
-                                  data: ["query" : gameModel!.getRandQuery(nil),
-                                         "instruction" : mode.instruction])
-        }
-        else { model.handleGameState(.initial,
-                                     data: ["instruction" : mode.instruction]) }
-        
-        totalWords = gameModel?.totalWords ?? 0
+        model.handleGameState(.initial,
+                              data: ["mode" : mode])
+
         viewToShow = .game
         gameMode = mode
         startTimer()
@@ -158,36 +132,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
      Should be called whenever user commits text in the input textfield
      */
     func processInput() {
-        
-       
-        input = input.lowercased().trim()
-        print("Processing input: \(input)")
-        
-        if !(input == "" || model.timeKeeper.timeLeft <= 0) {
-            
-            if GameCenter.isHost && isMyGKTurn {
-                // turn for device hosting multiplayer game
-                
-                let response = gameModel!.process(input, model.query)
-                
-                model.handleGameState(.playerInput, data: ["input" : input, "response" : response])
-            }
-            
-            else if GameCenter.isNonHost && isMyGKTurn {
-                // turn for device not hosting but in multiplayer game
-                Multiplayer.send(GameData(input: input), toHost: true)
-                
-                print("SENT \(input)")
-                
-            }
-            
-            else if !GameCenter.isOnline{
-                // device not hosting or participating in multiplayer game i.e offline
-                let response = gameModel!.process(input, model.query)
-                
-                model.handleGameState(.playerInput, data: ["input" : input, "response" : response])
-            }
-        }
+        model.processInput(input)
     }
     
     /// Starts the game timer
@@ -202,7 +147,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                 if !debugging {
                     model.timeKeeper.timeLeft = max(0, model.timeKeeper.timeLeft - 0.1)
                 }
-                print(model.timeKeeper.timeLeft)
+                
                 if GameCenter.isHost {
                     let roundedValue = Int(round(model.timeKeeper.timeLeft * 10))
                     
@@ -273,21 +218,7 @@ extension WordBombGameViewModel {
             // function does not do anything if player is not in queue (e.g. the player lost just before disconnecting)
         }
     }
-    
-    /**
-     Processes the input received from participating players on the host-side
-     
-     Should only be called on the host device
-     */
-    func processNonHostInput(_ input: String) {
-        
-        print("processing \(input)")
-        let response = gameModel!.process(input.lowercased().trim(), model.query)
-        
-        model.handleGameState(.playerInput, data: ["input" : input, "response" : response])
-        
-    }
-    
+   
     /// Returns `Players` object for those participating in the Game Center match
     /// - Parameter gkPlayers: Array of GKPlayer objects participating in the match
     func getOnlinePlayers(_ gkPlayers: [GKPlayer]) -> Players {

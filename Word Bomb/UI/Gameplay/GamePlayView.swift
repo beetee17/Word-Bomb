@@ -45,13 +45,7 @@ struct GamePlayView: View {
             VStack {
                 Spacer()
                 if viewModel.model.gameState == .gameOver {
-                    GameOverText(
-                        gameMode: viewModel.gameMode,
-                        numCorrect: viewModel.model.numCorrect,
-                        usedWords: viewModel.model.usedWords,
-                        trainingMode: viewModel.trainingMode
-                    )
-                    
+                    GameOverText()
                 } else {
                     Text(viewModel.model.instruction ).boldText()
                     Text(viewModel.model.query ?? "").boldText()
@@ -75,7 +69,7 @@ struct GamePlayView: View {
         .blur(radius: showMatchProgress ? 10 : 0, opaque: false)
         .if(showMatchProgress) {
             $0.overlay(
-                MatchProgressView(usedWords: viewModel.model.usedWords, showMatchProgress: $showMatchProgress)
+                MatchProgressView(usedWords: viewModel.model.game?.usedWords.sorted(), showMatchProgress: $showMatchProgress)
             )
         }
         .animation(Game.mainAnimation)
