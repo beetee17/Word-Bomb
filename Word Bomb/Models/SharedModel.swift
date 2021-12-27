@@ -15,19 +15,16 @@ struct WordBombGame: Codable {
     
     var players: Players
     
-    /// The number of lives that each player begins with, as per the host's settings
-    
-    /// The time allowed for each player, as per the host's settings. The limit may decrease with each turn depending on the other relevant settings
-    private(set) var timeLimit = UserDefaults.standard.float(forKey: "Time Limit")
-    
-    /// The amount of time left for the current player.
-    var timeLeft = UserDefaults.standard.float(forKey: "Time Limit")
+    var timeKeeper = TimeKeeper()
+    var media = Media()
     
     /// The current state of the game
     var gameState: GameState = .initial
     
     /// The number of correct answers used in the game. The score should only be set within the model
     private(set) var numCorrect = 0
+    
+    private(set) var usedWords = [String]()
     
     /// The output text to be displayed depending on player input
     var output = ""
@@ -40,21 +37,6 @@ struct WordBombGame: Codable {
         didSet {
             print("instruction set to \(instruction)")
         }
-    }
-    /// Controls when the explosion animation is run. Should be true when a player runs out of time
-    var animateExplosion = false
-    
-    /// Controls the playback of the sound when `timeLeft` is low. Should be set to false after each turn.
-    var playRunningOutOfTimeSound = false
-    
-    /// Updates the time limit based on the the `"Time Multiplier"` and `"Time Constraint"` settings
-    mutating func updateTimeLimit() {
-        // TODO: why do we need this conditional
-        if players.current == players.queue.first! {
-            timeLimit = max(UserDefaults.standard.float(forKey:"Time Constraint"), timeLimit * UserDefaults.standard.float(forKey: "Time Multiplier"))
-            print("time multiplied")
-        }
-        timeLeft = timeLimit
     }
     
     /// Updates the time left & time limit and output & query texts depending on the outcome of the user input.
@@ -83,15 +65,16 @@ struct WordBombGame: Codable {
             }
             _ = players.nextPlayer()
             numCorrect += 1
-            playRunningOutOfTimeSound = false
+            usedWords.append(input)
+            media.resetROOTSound()
             
             if !GameCenter.isOnline {
                 // only if host or offline should update time limit
-                updateTimeLimit()
+                timeKeeper.updateTimeLimit()
             }
             else if GameCenter.isHost{
-                updateTimeLimit()
-                Multiplayer.send(GameData(timeLimit: timeLimit), toHost: false)
+                timeKeeper.updateTimeLimit()
+                Multiplayer.send(GameData(timeLimit: timeKeeper.timeLimit), toHost: false)
             }
         }
     }
@@ -105,7 +88,7 @@ struct WordBombGame: Codable {
     /// Handles the game state when the current player runs out of time
     mutating func currentPlayerRanOutOfTime() {
         
-        playRunningOutOfTimeSound = false
+        media.resetROOTSound()
         
         // We need to keep game state on non-host devices in sync
         if GameCenter.isHost {
@@ -118,17 +101,17 @@ struct WordBombGame: Codable {
         if isGameOver {
             handleGameState(.gameOver)
         } else {
-            animateExplosion = true
-            Game.playSound(file: "explosion")
-            updateTimeLimit()
+            media.playExplosion()
+            timeKeeper.updateTimeLimit()
         }
     }
     
     /// Resets the relevant variables to restart the game
     mutating func restartGame() {
-
-        timeLimit = UserDefaults.standard.float(forKey: "Time Limit")
-        timeLeft = timeLimit
+        usedWords = [String]()
+        numCorrect = 0
+        timeKeeper.reset()
+        media.reset()
         players.reset()
     }
     
@@ -178,11 +161,11 @@ struct WordBombGame: Codable {
             }
             
         case .playerTimedOut:
-            timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
+            timeKeeper.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
             currentPlayerRanOutOfTime()
             
         case .gameOver:
-            timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
+            timeKeeper.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
             Game.stopTimer()
             
         case .paused:

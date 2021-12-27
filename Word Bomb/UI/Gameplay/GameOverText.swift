@@ -11,12 +11,18 @@ struct GameOverText: View {
     
     var gameMode: GameMode?
     var numCorrect: Int
+    var usedWords: [String]
     var trainingMode: Bool
+    
+    @State var showMatchReview = false
     
     var body: some View {
         VStack {
             Text("Word Count: \(numCorrect)")
                 .boldText()
+                .onTapGesture {
+                    showMatchReview = true
+                }
             
             if trainingMode {
                 // If in training mode there better be a Game Mode
@@ -31,14 +37,27 @@ struct GameOverText: View {
             }
         }
         .if((numCorrect > gameMode?.highScore ?? Int.max) || !trainingMode) { $0.overlay(ConfettiView()) }
+        .sheet(isPresented: $showMatchReview) {
+            MatchReviewView(mode: gameMode!, usedWords: Set(usedWords))
+        }
     }
 }
 
 struct GameOverText_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            GameOverText(gameMode: .exampleDefault, numCorrect: 10, trainingMode: true)
-            GameOverText(gameMode: .exampleDefault, numCorrect: 10, trainingMode: false)
+            GameOverText(
+                gameMode: .exampleDefault,
+                numCorrect: 10,
+                usedWords: ["Word1"],
+                trainingMode: true
+            )
+            GameOverText(
+                gameMode: .exampleDefault,
+                numCorrect: 10,
+                usedWords: ["Word1"],
+                trainingMode: false
+            )
         }
     }
 }

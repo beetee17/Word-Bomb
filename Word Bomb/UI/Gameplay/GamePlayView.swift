@@ -11,7 +11,7 @@ import GameKitUI
 
 struct GamePlayView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
-    
+    @State var showMatchProgress = false
     var gkMatch: GKMatch?
     
     var body: some View {
@@ -28,7 +28,7 @@ struct GamePlayView: View {
                 Color.clear
                 
                 VStack {
-                    TopBarView(gkMatch: gkMatch)
+                    TopBarView(showMatchProgress: $showMatchProgress, gkMatch: gkMatch)
                         
                     Spacer()
                 }
@@ -48,12 +48,17 @@ struct GamePlayView: View {
                     GameOverText(
                         gameMode: viewModel.gameMode,
                         numCorrect: viewModel.model.numCorrect,
-                        trainingMode: viewModel.trainingMode)
+                        usedWords: viewModel.model.usedWords,
+                        trainingMode: viewModel.trainingMode
+                    )
                     
                 } else {
                     Text(viewModel.model.instruction ).boldText()
                     Text(viewModel.model.query ?? "").boldText()
-                    PermanentKeyboard(text: $viewModel.input, forceResignFirstResponder: $viewModel.forceHideKeyboard) {
+                    PermanentKeyboard(
+                        text: $viewModel.input,
+                        forceResignFirstResponder: $viewModel.forceHideKeyboard
+                    ) {
                         viewModel.processInput()
                     }
                     .font(Font.system(size: 20))
@@ -67,11 +72,19 @@ struct GamePlayView: View {
             .ignoresSafeArea(.all)
         }
         .blur(radius: .pauseMenu == viewModel.viewToShow ? 10 : 0, opaque: false)
+        .blur(radius: showMatchProgress ? 10 : 0, opaque: false)
+        .if(showMatchProgress) {
+            $0.overlay(
+                MatchProgressView(usedWords: viewModel.model.usedWords, showMatchProgress: $showMatchProgress)
+            )
+        }
+        .animation(Game.mainAnimation)
     }
 }
 
 struct GamePlayView_Previews: PreviewProvider {
     static var previews: some View {
+        
         Group {
             GamePlayView(gkMatch: nil).environmentObject(WordBombGameViewModel.preview(numPlayers: 3))
             

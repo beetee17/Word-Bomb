@@ -11,6 +11,7 @@ import GameKit
 struct TopBarView: View {
     
     @EnvironmentObject var viewModel: WordBombGameViewModel
+    @Binding var showMatchProgress: Bool
     var gkMatch: GKMatch?
     
     var body: some View {
@@ -28,21 +29,24 @@ struct TopBarView: View {
             
             TimerView(
                 players: $viewModel.model.players,
-                timeLeft: $viewModel.model.timeLeft,
-                timeLimit: viewModel.model.timeLimit,
-                animateExplosion: $viewModel.model.animateExplosion,
-                playRunningOutOfTimeSound: $viewModel.model.playRunningOutOfTimeSound
+                timeLeft: $viewModel.model.timeKeeper.timeLeft,
+                timeLimit: viewModel.model.timeKeeper.timeLimit,
+                animateExplosion: $viewModel.model.media.animateExplosion,
+                playRunningOutOfTimeSound: $viewModel.model.media.playRunningOutOfTimeSound
             )
                 .offset(x: gkMatch == nil ? 0 : -20)
             
             Spacer()
             
-            if .gameOver == viewModel.model.gameState { RestartButton() }
-            else if viewModel.totalWords < 1000 {
-                Text("\(viewModel.model.numCorrect)/\(viewModel.totalWords)")
-            } else {
-                Text("\(viewModel.model.numCorrect)")
+            if .gameOver == viewModel.model.gameState {
+                RestartButton()
+            } else if !showMatchProgress {
+                Button("\(viewModel.model.numCorrect)") {
+                    showMatchProgress.toggle()
+                }
+                .foregroundColor(.white)
             }
+            
         }
         .padding(.horizontal, 20)
         // The top bar is smaller when there are less than 3 players due to the bomb explosion animation.
@@ -54,6 +58,6 @@ struct TopBarView: View {
 
 struct TopBarView_Previews: PreviewProvider {
     static var previews: some View {
-        TopBarView().environmentObject(WordBombGameViewModel())
+        TopBarView(showMatchProgress: .constant(false)).environmentObject(WordBombGameViewModel())
     }
 }

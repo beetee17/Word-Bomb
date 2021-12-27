@@ -35,7 +35,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                 gkSelect = false
                 trainingMode = false
             case .game:
-                model.playRunningOutOfTimeSound = false
+//                model.media.resetROOTSound()
                 forceHideKeyboard = false
             default:
                 forceHideKeyboard = true
@@ -163,7 +163,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         input = input.lowercased().trim()
         print("Processing input: \(input)")
         
-        if !(input == "" || model.timeLeft <= 0) {
+        if !(input == "" || model.timeKeeper.timeLeft <= 0) {
             
             if GameCenter.isHost && isMyGKTurn {
                 // turn for device hosting multiplayer game
@@ -200,21 +200,21 @@ class WordBombGameViewModel: NSObject, ObservableObject {
             
             DispatchQueue.main.async {
                 if !debugging {
-                    model.timeLeft = max(0, model.timeLeft - 0.1)
+                    model.timeKeeper.timeLeft = max(0, model.timeKeeper.timeLeft - 0.1)
                 }
-                
+                print(model.timeKeeper.timeLeft)
                 if GameCenter.isHost {
-                    let roundedValue = Int(round(model.timeLeft * 10))
+                    let roundedValue = Int(round(model.timeKeeper.timeLeft * 10))
                     
-                    if roundedValue % 5 == 0 && model.timeLeft > 0.4 {
+                    if roundedValue % 5 == 0 && model.timeKeeper.timeLeft > 0.4 {
                         
                         if GameCenter.isHost {
-                            Multiplayer.send(GameData(timeLeft: model.timeLeft), toHost: false)
+                            Multiplayer.send(GameData(timeLeft: model.timeKeeper.timeLeft), toHost: false)
                             
                         }
                         
                     }
-                    if roundedValue % 10 == 0 && model.timeLeft > 0.1 {
+                    if roundedValue % 10 == 0 && model.timeKeeper.timeLeft > 0.1 {
                         let playerLives = Dictionary(model.players.queue.map { ($0.name, $0.livesLeft) }) { first, _ in first }
                         if GameCenter.isHost {
                             Multiplayer.send(GameData(playerLives: playerLives), toHost: false)
@@ -225,7 +225,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                 }
             }
             
-            if model.timeLeft <= 0 && (GameCenter.isHost || !GameCenter.isOnline) {
+            if model.timeKeeper.timeLeft <= 0 && (GameCenter.isHost || !GameCenter.isOnline) {
                 // only handle time out if host of online match or in offline play 
                 
                 DispatchQueue.main.async {

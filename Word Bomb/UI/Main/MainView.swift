@@ -163,7 +163,8 @@ struct MainMenuView: View {
                     Game.mainButton(label: "TRAINING", systemImageName: "graduationcap") { viewModel.trainingMode() }
                     
                 }
-            } else {
+            }
+            else {
                 
                 VStack(spacing:15) {
                     Game.mainButton(label: "CREATE MODE", systemImageName: "plus.circle") { viewModel.createMode() }
@@ -187,7 +188,12 @@ struct MainMenuView: View {
                 .transition(AnyTransition.offset(x:0, y:200).combined(with: .move(edge: viewModel.showMultiplayerOptions ? .top : .bottom)))
             }
         }
-        
+        .animation(.spring(response: 0.3, dampingFraction: 0.75, blendDuration: 0.2))
+        .onAppear() {
+//            if !(Game.soundTrackPlayer?.isPlaying ?? false) {
+            Game.playSoundTrack(file: "Bicycle", delay: 2.0)
+//            } 
+        }
     }
 }
 struct MainView_Previews: PreviewProvider {
