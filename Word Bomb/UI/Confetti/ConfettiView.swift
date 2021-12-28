@@ -11,10 +11,10 @@ import simd
 struct ConfettiView: View {
     var body: some View {
         ZStack {
-            ForEach(1...200, id: \.self) { index in
+            ForEach(1...100, id: \.self) { index in
             Rectangle()
                 .modifier(Particle())
-                .offset(x: 0, y : 800)
+                .offset(x: 0, y: Device.height*0.8)
             }
         }
         .onAppear() {
