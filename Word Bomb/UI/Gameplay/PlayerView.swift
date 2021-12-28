@@ -22,7 +22,7 @@ struct PlayerView: View {
                     .transition(.scale)
             case 2:
                 TwoPlayerView()
-                    .offset(x: 0, y: Device.height*0.04)
+                    .offset(x: 0, y: Device.height*0.07)
                     .transition(.scale)
             default:
                 MainPlayer(player: viewModel.model.players.current, animatePlayer: .constant(false))
