@@ -35,18 +35,19 @@ struct GamePlayView: View {
                 
                 VStack {
                     PlayerView()
-                        .padding(.top, Device.height*0.1)
+                        .padding(.top, Device.height*0.075)
                     Spacer()
                 }
                 
             }
             .ignoresSafeArea(.keyboard)
             
-            VStack {
+            VStack(spacing:5) {
                 Spacer()
                 if viewModel.model.gameState == .gameOver {
                     GameOverText()
                 } else {
+                    
                     Text(viewModel.model.instruction ).boldText()
                     Text(viewModel.model.query ?? "").boldText()
                     PermanentKeyboard(
@@ -57,12 +58,11 @@ struct GamePlayView: View {
                     }
                     .font(Font.system(size: 20))
                 }
-                
+
                 OutputText(text: $viewModel.model.output)
-                
                 Spacer()
             }
-            .offset(y: Device.height*0.05)
+            .offset(y: Device.height*0.075)
             .ignoresSafeArea(.all)
         }
         .blur(radius: .pauseMenu == viewModel.viewToShow ? 10 : 0, opaque: false)
@@ -72,7 +72,6 @@ struct GamePlayView: View {
                 MatchProgressView(usedWords: viewModel.model.game?.usedWords.sorted(), showMatchProgress: $showMatchProgress)
             )
         }
-        .animation(Game.mainAnimation)
     }
 }
 
