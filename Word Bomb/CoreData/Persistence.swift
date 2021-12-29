@@ -86,7 +86,6 @@ struct PersistenceController {
             print("error resetting the database: \(error.localizedDescription)")
         }
     }
-    
 }
 
 extension NSManagedObjectContext {
@@ -162,8 +161,8 @@ extension NSManagedObjectContext {
         request.resultType = NSFetchRequestResultType.dictionaryResultType
         request.predicate = NSPredicate(format: "databases_ CONTAINS %@", db)
     
-        // moc.count(for: request) counts all values??
-        return moc.safeFetch(request).count
+        // self.count(for: request) counts all values??
+        return self.safeFetch(request).count
     }
     
     func getWords(db: Database) -> ([String:[String]], Int) {
@@ -171,7 +170,7 @@ extension NSManagedObjectContext {
         request.predicate = NSPredicate(format: "databases_ CONTAINS %@", db)
     
         
-        let variations = Dictionary(grouping: try! self.fetch(request)) { (element : Word)  in
+        let variations = Dictionary(grouping: self.safeFetch(request)) { (element : Word)  in
             element.variant
         }
         .compactMap({
@@ -192,7 +191,5 @@ extension NSManagedObjectContext {
             }
         }
         return (res, variations.count)
-
-
     }
 }
