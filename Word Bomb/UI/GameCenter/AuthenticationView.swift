@@ -54,7 +54,7 @@ struct AuthenticationView: View {
                     
                 }
                 Game.backButton {
-                    gameViewModel.viewToShow = .GKMain
+//                    gameViewModel.viewToShow = .GKMain
                 }
             }
             

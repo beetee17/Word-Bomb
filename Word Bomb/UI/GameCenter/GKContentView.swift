@@ -44,7 +44,7 @@ struct GKContentView: View {
                 
                 VStack(alignment: .center, spacing: 32) {
                     Game.mainButton(label: "LOGIN", systemImageName: "lock.fill") {
-                        withAnimation { gameViewModel.viewToShow = .GKLogin }
+//                        withAnimation { gameViewModel.viewToShow = .GKLogin }
                     }
                     
                     Game.mainButton(label: "HOST MATCH", systemImageName: "person.crop.circle.badge.plus") {
