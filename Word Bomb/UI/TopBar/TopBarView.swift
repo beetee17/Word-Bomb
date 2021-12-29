@@ -41,7 +41,7 @@ struct TopBarView: View {
             if .gameOver == viewModel.model.gameState {
                 RestartButton()
             } else if !showMatchProgress {
-                Button("\(viewModel.model.game?.usedWords.count ?? 0)") {
+                Button("\(viewModel.model.numCorrect)") {
                     showMatchProgress.toggle()
                 }
                 .foregroundColor(.white)

@@ -36,10 +36,9 @@ struct GameOverText: View {
                     }
             }
         }
-        .overlay(ConfettiView())
         .if((numCorrect > gameMode?.highScore ?? Int.max) || !trainingMode) { $0.overlay(ConfettiView()) }
         .sheet(isPresented: $showMatchReview) {
-            MatchReviewView(words: viewModel.model.game?.words,  usedWords: Set(usedWords ?? []), totalWords: viewModel.model.game!.totalWords)
+            MatchReviewView(words: viewModel.model.game?.words,  usedWords: Set(usedWords ?? []), numCorrect: viewModel.model.numCorrect, totalWords: viewModel.model.game!.totalWords)
         }
     }
 }
