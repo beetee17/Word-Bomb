@@ -7,20 +7,6 @@
 
 import Foundation
 
-struct Multiplayer {
-    static func send(_ data: GameData, toHost: Bool = false) {
-        let encoder = JSONEncoder()
-        
-        do {
-            let jsonData = try encoder.encode(data)
-            GameCenter.send(jsonData, toHost: toHost)
-        }
-        catch {
-            print(String(describing: error))
-        }
-    }
-}
-
 struct GameData: Codable {
     var state: GameState?
     var model: WordBombGame?
@@ -32,7 +18,7 @@ struct GameData: Codable {
     var playerLives: [String:Int]?
     var variants: [String: [String]]?
     var totalWords: Int?
-    
+    var nonHostIsReady: Bool?
     
     public func process() {
         if let model = self.model {
@@ -45,22 +31,18 @@ struct GameData: Codable {
                 } else {
                     Game.viewModel.setSharedModel(model)
                 }
-                
                 for player in Game.viewModel.model.players.queue {
                     print("\(player.name): \(player.livesLeft) lives")
                 }
-                Game.viewModel.viewToShow = .game
-                Game.viewModel.startTimer()
-                if let match = GameCenter.viewModel.gkMatch {
-                    Game.viewModel.setGKPlayerImages(for: Game.viewModel.model.players.queue, with: match.players)
-                } else { print("No GKMatch found??") }
             }
         }
         else if let gameState = self.state {
             switch gameState {
                 
             case .initial:
-                break
+                Game.viewModel.viewToShow = .game
+                Game.viewModel.startTimer()
+                Game.viewModel.model.game?.reset()
             case .playerInput:
                 print("received input response from host")
                 let nilString: String? = nil
@@ -98,11 +80,20 @@ struct GameData: Codable {
         else if let timeLimit = self.timeLimit {
             print("receive new time limit from host \(timeLimit)")
             Game.viewModel.model.timeKeeper.timeLimit = timeLimit
-        } else if let variants = variants {
+        }
+        else if let variants = variants {
             if let totalWords = totalWords {
-                Game.viewModel.model.setNonHostGameModel(with: (variants, totalWords))
+                print("received all the words from host")
+                WordBombGame.getNonHostGameModel(variants, totalWords: totalWords) { gameModel in
+                    Game.viewModel.model.setGameModel(with: gameModel)
+                    GameCenter.send(GameData(nonHostIsReady: true), toHost: true)
+                    print("set up game model!")
+                }
             }
         }
+        else if nonHostIsReady != nil {
+            Game.viewModel.gkConnectedPlayers += 1
+            print("Received ready notification from non host")
+        }
     }
-    
 }

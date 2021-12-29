@@ -29,8 +29,11 @@ struct GameCenter {
         return []
     }
     
-    static func send(_ data: Data, toHost: Bool) {
+    static func send(_ data: GameData, toHost: Bool) {
         do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(data)
+            
             switch toHost {
             case true:
                 let hostPlayer = GameCenter.getGKHostPlayer()
@@ -38,7 +41,8 @@ struct GameCenter {
             case false:
                 try viewModel.gkMatch?.sendData(toAllPlayers: data, with: .reliable)
             }
-            print("SENT \(data), to host: \(toHost)")
+//            print("SENT data \(data), to host: \(toHost)")
+            print("SENT data, to host: \(toHost)")
         } catch {
             print("could not send GK data")
             print(error.localizedDescription)
