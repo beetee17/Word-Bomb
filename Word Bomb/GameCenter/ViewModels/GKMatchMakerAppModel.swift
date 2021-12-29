@@ -143,23 +143,12 @@ extension GKMatchMakerAppModel: GKMatchDelegate {
     func match(_ match: GKMatch, didReceive data: Data, fromRemotePlayer player: GKPlayer) {
         do {
             let data = try JSONDecoder().decode(GameData.self, from: data)
-            print("got data")
+            print("got GameData")
             data.process()
         }
         catch {
             print(String(describing: error))
-        }
-        
-        do {
-            print(String(data: data, encoding: .utf8) as Any)
-            let data = try JSONDecoder().decode([String : String].self, from: data)
-            if let hostPlayerName = data["Host Name"] {
-                GameCenter.hostPlayerName = hostPlayerName
-                print("Got host name \(hostPlayerName)")
-            }
-        }
-        catch {
-            print(String(describing: error))
+            print("error trying to decode data, maybe this was not GameData")
         }
     }
     
@@ -177,7 +166,7 @@ extension GKMatchMakerAppModel: GKMatchDelegate {
         
         DispatchQueue.main.async {
             self.gkIsConnected[player] = .disconnected == state ? false : true
-            Game.errorHandler.showAlert(title: "Connection Update", message: "\(player.displayName) has \(.disconnected == state ? "disconnected" : "connected")")
+            Game.errorHandler.showBanner(title: "Connection Update", message: "\(player.displayName) has \(.disconnected == state ? "disconnected" : "connected")")
         }
         print("player \(player) connection status changed to \(state)")
         print("players left \(match.players)")
