@@ -43,7 +43,7 @@ struct OutputText: View {
     /// Clears the output text
     /// - Parameter newOutput: The current output text as reflected in the UI. This is needed for concurrency purposes - to check if the output is the same as current to avoid clearing of new outputs
     func clearOutput(_ newOutput: String) {
-        if newOutput == text { text = "" }
+        if newOutput == text.trim().lowercased() { text = "" }
     }
 }
 
