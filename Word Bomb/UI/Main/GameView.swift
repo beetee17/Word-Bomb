@@ -25,8 +25,7 @@ struct GameView: View {
                 GameTypeSelectView(gameType: $viewModel.gameType, viewToShow: $viewModel.viewToShow)
             case .modeSelect:
                 ModeSelectView(gameType: $viewModel.gameType, viewToShow: $viewModel.viewToShow)
-            case .GKMain: GKContentView()
-            case .GKLogin: AuthenticationView()
+            case .waiting: WaitingView()
             case .game, .pauseMenu:
                 ZStack {
                     
