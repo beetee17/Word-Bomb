@@ -84,6 +84,7 @@ struct Word_BombApp: App {
                             errorHandler.showBanner(title: "Invitation Failed", message: String(describing: error)) // change to something more user friendly on release?
                             
                         } started: { (gkMatch) in
+                            Game.viewModel.viewToShow = .waiting
                             gkViewModel.gkMatch = gkMatch
                             
                         }
