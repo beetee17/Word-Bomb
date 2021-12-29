@@ -12,7 +12,9 @@ import GameKit
  e.g. it does not implement the function that handles processing of user input since that differs depending on game mode
  */
 struct WordBombGame: Codable {
-    private enum CodingKeys: String, CodingKey { case players, timeKeeper, media, gameState, output, query, instruction } //this is usually synthesized, but we have to define it ourselves to exclude `game`
+    private enum CodingKeys: String, CodingKey { case players, timeKeeper, output, query, instruction }
+    // this is usually synthesized, but we have to define it ourselves to exclude various properties
+    // `game` is not codable, the others are not needed to sync gameState at initialisation
     
     var players: Players
     var isMyGKTurn: Bool { GKLocalPlayer.local.displayName == players.current.name }
