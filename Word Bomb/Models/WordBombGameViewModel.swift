@@ -31,8 +31,8 @@ class WordBombGameViewModel: NSObject, ObservableObject {
             case .main:
                 gkSelect = false
                 trainingMode = false
+                gkConnectedPlayers = 0
             case .game:
-//                model.media.resetROOTSound()
                 forceHideKeyboard = false
             default:
                 forceHideKeyboard = true
@@ -46,10 +46,9 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// The game mode that the user has currently selected
     @Published var gameMode: GameMode? = nil
     
-    @Published var totalWords = 0
-    
     /// True if the user has selected the `"GAME CENTER"` option under `"START GAME"`
     @Published var gkSelect = false
+    @Published var gkConnectedPlayers = 0
     
     /// True if the user has selected the `"TRAINING MODE"` option under `"START GAME"`
     @Published var trainingMode = false
@@ -87,17 +86,11 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         gameMode?.highScore = model.game?.usedWords.count ?? 0 
     }
     
-    /// Restarts the game with the same game mode
+    /// Restarts the game with the same game mode. Only the host of Game Center match or offline play is allowed to call this function.
     func restartGame() {
-        
-        guard var gameModel = model.game else {
-            print("mode not found")
-            return
-        }
-        
-        gameModel.reset()
-        startGame(mode: gameMode!)
-        
+        model.restartGame()
+        viewToShow = .game
+        startTimer()
     }
 
     
@@ -106,6 +99,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     func startGame(mode: GameMode) {
         Game.playSoundTrack(file: "Monkeys-Spinning-Monkeys")
         var players = Players()
+        gameMode = mode
         
         if trainingMode {
             // Initialise a sharedModel with a single `Player`
@@ -118,12 +112,21 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         
         model = WordBombGame(players: players)
         
-        model.handleGameState(.initial,
-                              data: ["mode" : mode])
-
-        viewToShow = .game
-        gameMode = mode
-        startTimer()
+        viewToShow = .waiting
+        
+        WordBombGame.getGameModel(for: mode) { [self] gameModel in
+            model.setGameModel(with: gameModel)
+            model.handleGameState(
+                .initial,
+                data: ["instruction":mode.instruction,
+                       "query":gameModel.getRandQuery(nil) as Any]
+            )
+            if !GameCenter.isHost && viewToShow == .waiting {
+                print("starting game")
+                viewToShow = .game
+                startTimer()
+            }
+        }
     }
     
     /**
@@ -154,7 +157,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                     if roundedValue % 5 == 0 && model.timeKeeper.timeLeft > 0.4 {
                         
                         if GameCenter.isHost {
-                            Multiplayer.send(GameData(timeLeft: model.timeKeeper.timeLeft), toHost: false)
+                            GameCenter.send(GameData(timeLeft: model.timeKeeper.timeLeft), toHost: false)
                             
                         }
                         
@@ -162,7 +165,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                     if roundedValue % 10 == 0 && model.timeKeeper.timeLeft > 0.1 {
                         let playerLives = Dictionary(model.players.queue.map { ($0.name, $0.livesLeft) }) { first, _ in first }
                         if GameCenter.isHost {
-                            Multiplayer.send(GameData(playerLives: playerLives), toHost: false)
+                            GameCenter.send(GameData(playerLives: playerLives), toHost: false)
                             
                         }
                         

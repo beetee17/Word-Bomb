@@ -27,7 +27,7 @@ struct WordBombGame: Codable {
     var gameState: GameState = .initial
     
     /// The number of correct answers used in the game. The score should only be set within the model
-//    private(set) var numCorrect = 0
+    private(set) var numCorrect = 0
     
     
     /// The output text to be displayed depending on player input
@@ -42,30 +42,61 @@ struct WordBombGame: Codable {
             print("instruction set to \(instruction)")
         }
     }
-    
-    /// inits the appropriate WordGameModel for the given game mode
+    /// Returns the appropriate WordGameModel for the given game mode
     /// - Parameter mode: The given game mode
-    mutating func setGameModel(with mode: GameMode) {
-        let (variants, totalWords) = moc.getWords(db: mode.wordsDB)
-        switch mode.gameType {
-        case .Exact:
-            game = ExactWordGameModel(variants: variants, totalWords: totalWords)
+    static func getGameModel(for mode: GameMode, completion: @escaping (WordGameModel) -> Void) {
+        PersistenceController.shared.container.performBackgroundTask { moc in
             
-        case .Classic:
-            game = ContainsWordGameModel(variants: variants,
-                                         queries: mode.queriesDB.wordArray.map({ ($0.content, $0.frequency) }),
-                                         totalWords: totalWords)
-            query = game?.getRandQuery(nil)
-        case .Reverse:
-            game = ExactWordGameModel(variants: variants, totalWords: totalWords)
-        }
-        if GameCenter.isHost {
-            Multiplayer.send(GameData(variants: variants, totalWords: totalWords), toHost: false)
+            let (variants, totalWords) = moc.getWords(db: mode.wordsDB)
+            var model: WordGameModel
+            
+            switch mode.gameType {
+            case .Exact:
+                model = ExactWordGameModel(variants: variants, totalWords: totalWords)
+                
+            case .Classic:
+                model = ContainsWordGameModel(variants: variants,
+                                             queries: mode.queriesDB.wordArray.map({ ($0.content, $0.frequency) }),
+                                             totalWords: totalWords)
+            case .Reverse:
+                model = ExactWordGameModel(variants: variants, totalWords: totalWords)
+            }
+            if GameCenter.isHost {
+                if mode.wordsDB.name == "words" {
+                    GameCenter.send(GameData(variants: [:], totalWords: -1), toHost: false)
+                } else {
+                    GameCenter.send(GameData(variants: variants, totalWords: totalWords), toHost: false)
+                }
+            }
+            DispatchQueue.main.async {
+                completion(model)
+            }
         }
     }
     
-    mutating func setNonHostGameModel(with data: ([String:[String]], Int)) {
-        game = ExactWordGameModel(variants: data.0, totalWords: data.1)
+    static func getNonHostGameModel(_ variants: [String:[String]], totalWords: Int, completion: @escaping (WordGameModel) -> Void) {
+        PersistenceController.shared.container.performBackgroundTask() { moc in
+            
+            var model: WordGameModel
+            
+            if totalWords == -1 {
+                let request = Database.fetchRequest()
+                request.predicate = NSPredicate(format: "name_ = %@", "words")
+                request.fetchLimit = 1
+                let db = moc.safeFetch(request).first!
+                let (variants, totalWords) = moc.getWords(db: db)
+                model = ContainsWordGameModel(variants: variants, queries: [], totalWords: totalWords)
+            } else {
+                model = ContainsWordGameModel(variants: variants, queries: [], totalWords: totalWords)
+            }
+            
+            DispatchQueue.main.async {
+                completion(model)
+            }
+        }
+    }
+    mutating func setGameModel(with model: WordGameModel) {
+        game = model
     }
     
     /**
@@ -79,27 +110,21 @@ struct WordBombGame: Codable {
         print("Processing input: \(input)")
         
         if !(input == "" || timeKeeper.timeLeft <= 0) {
-            
             if GameCenter.isHost && isMyGKTurn {
                 // turn for device hosting multiplayer game
-                
                 let response = game!.process(input, query)
-                
                 handleGameState(.playerInput, data: ["input" : input, "response" : response])
             }
             
             else if GameCenter.isNonHost && isMyGKTurn {
                 // turn for device not hosting but in multiplayer game
-                Multiplayer.send(GameData(input: input), toHost: true)
-                
+                GameCenter.send(GameData(input: input), toHost: true)
                 print("SENT \(input)")
-                
             }
             
             else if !GameCenter.isOnline{
                 // device not hosting or participating in multiplayer game i.e offline
                 let response = game!.process(input, query)
-                
                 handleGameState(.playerInput, data: ["input" : input, "response" : response])
             }
         }
@@ -111,12 +136,10 @@ struct WordBombGame: Codable {
      Should only be called on the host device
      */
     mutating func processNonHostInput(_ input: String) {
-        
         print("processing \(input)")
         let response = game!.process(input.lowercased().trim(), query)
         
         handleGameState(.playerInput, data: ["input" : input, "response" : response])
-        
     }
     
     /// Updates the time left & time limit and output & query texts depending on the outcome of the user input.
@@ -128,7 +151,7 @@ struct WordBombGame: Codable {
         // reset the time for other player iff answer from prev player was correct
         
         if GameCenter.isHost {
-            Multiplayer.send(GameData(state: .playerInput, input: input, response: response.status), toHost: false)
+            GameCenter.send(GameData(state: .playerInput, input: input, response: response.status), toHost: false)
         }
         
         output = response.status.outputText(input)
@@ -140,11 +163,12 @@ struct WordBombGame: Codable {
                 
                 if GameCenter.isHost {
                     
-                    Multiplayer.send(GameData(query: query), toHost: false)
+                    GameCenter.send(GameData(query: query), toHost: false)
                 }
             }
             _ = players.nextPlayer()
             game?.updateUsedWords(for: input)
+            numCorrect += 1
             media.resetROOTSound()
             
             if !GameCenter.isOnline {
@@ -153,7 +177,7 @@ struct WordBombGame: Codable {
             }
             else if GameCenter.isHost{
                 timeKeeper.updateTimeLimit()
-                Multiplayer.send(GameData(timeLimit: timeKeeper.timeLimit), toHost: false)
+                GameCenter.send(GameData(timeLimit: timeKeeper.timeLimit), toHost: false)
             }
         }
     }
@@ -171,7 +195,7 @@ struct WordBombGame: Codable {
         
         // We need to keep game state on non-host devices in sync
         if GameCenter.isHost {
-            Multiplayer.send(GameData(state: .playerTimedOut), toHost: false)
+            GameCenter.send(GameData(state: .playerTimedOut), toHost: false)
         }
         
         let (output, isGameOver) = players.currentPlayerRanOutOfTime()
@@ -191,13 +215,10 @@ struct WordBombGame: Codable {
         media.reset()
         players.reset()
         game?.reset()
-    }
-    
-    /// Resets the output, query and instruction texts to empty strings
-    mutating func clearUI() {
-        output = ""
-        query = ""
-        instruction = ""
+        
+        query = game?.getRandQuery(nil)
+        handleGameState(.initial)
+        GameCenter.send(GameData(state: .initial), toHost: false)
     }
     
     /// Updates relevant variables depending on the given game state and the data provided
@@ -210,21 +231,19 @@ struct WordBombGame: Codable {
         switch gameState {
             
         case .initial:
-            clearUI()
-            
-            restartGame()
-            
-            if let mode = data?["mode"] as? GameMode {
-                setGameModel(with: mode)
+            if let instruction = data?["instruction"] as? String {
+                self.instruction = instruction
+            }
+            if let query = data?["query"] as? String {
+                self.query = query
             }
             
             if GameCenter.isHost {
-                Multiplayer.send(GameData(model: self), toHost: false)
+                GameCenter.send(GameData(model: self), toHost: false)
             }
             
         case .playerInput:
             if let input = data?["input"] as? String, let response = data?["response"] as? (InputStatus, String?) {
-                
                 process(input, response)
                 print("shared model processing input")
                 print("\(response)")
