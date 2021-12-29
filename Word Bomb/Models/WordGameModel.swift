@@ -35,7 +35,7 @@ protocol WordGameModel {
     /// Returns a random query from `queriesDB` based on the weighted distribution.
     /// Depends on the game mode and the outcome of the user input
     /// - Parameter input: Optional string corresponding to user input that is required in games of `.Reverse` type
-    mutating func getRandQuery(_ input: String?) -> String
+    func getRandQuery(_ input: String?) -> String
 }
 
 

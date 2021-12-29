@@ -19,7 +19,6 @@ struct ExactWordGameModel: WordGameModel {
     init(variants: [String: [String]] = [:], totalWords: Int) {
         self.words = variants.keys.sorted(by: {$0 < $1})
         self.variants = variants
-        print(variants)
         self.totalWords = totalWords
     }
     
@@ -48,6 +47,7 @@ struct ExactWordGameModel: WordGameModel {
     }
     
     mutating func updateUsedWords(for input: String) {
+        usedWords.insert(input)
         for variant in variants[input, default: []] {
             usedWords.insert(variant)
         } 
@@ -56,7 +56,7 @@ struct ExactWordGameModel: WordGameModel {
     mutating func reset() {
         usedWords = Set<String>()
     }
-    mutating func getRandQuery(_ input: String? = nil) -> String { return "" }
+    func getRandQuery(_ input: String? = nil) -> String { return "" }
 
 }
 

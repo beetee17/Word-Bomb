@@ -46,6 +46,7 @@ struct ReverseWordGameModel: WordGameModel {
     }
     
     mutating func updateUsedWords(for input: String) {
+        usedWords.insert(input)
         for variant in variants[input, default: []] {
             usedWords.insert(variant)
         }
@@ -54,7 +55,7 @@ struct ReverseWordGameModel: WordGameModel {
     mutating func reset() {
         usedWords = Set<String>()
     }
-    mutating func getRandQuery(_ input: String? = nil) -> String {
+    func getRandQuery(_ input: String? = nil) -> String {
         if let input = input {
             return String(input.last!)
             

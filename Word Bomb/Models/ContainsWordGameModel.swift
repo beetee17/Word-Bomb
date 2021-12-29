@@ -37,27 +37,34 @@ struct ContainsWordGameModel: WordGameModel {
     }
     
     mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, query: String?) {
-            let searchResult = words.search(element: input)
-            //        return ("correct", getRandQuery(input))
-            if usedWords.contains(input) {
-                print("\(input.uppercased()) ALREADY USED")
-                return (.Used, nil)
-                
-            }
-            
-            else if (searchResult != -1) && input.contains(query!) {
-                print("\(input.uppercased()) IS CORRECT")
-                usedWords.insert(input)
-                return (.Correct, getRandQuery(input))
-            }
-            
-            else {
-                print("\(input.uppercased()) IS WRONG")
-                return (.Wrong, nil)
-                
-            }
+        
+        // pivot at some percentage of max element, defined by syllableDifficulty
+        if numTurns % numTurnsBeforeDifficultyIncrease == 0 {
+            updateSyllableWeights(pivot: pivot)
+        }
+        numTurns += 1
+        
+        let searchResult = words.search(element: input)
+        //        return ("correct", getRandQuery(input))
+        if usedWords.contains(input) {
+            print("\(input.uppercased()) ALREADY USED")
+            return (.Used, nil)
             
         }
+        
+        else if (searchResult != -1) && input.contains(query!) {
+            print("\(input.uppercased()) IS CORRECT")
+            usedWords.insert(input)
+            return (.Correct, getRandQuery(input))
+        }
+        
+        else {
+            print("\(input.uppercased()) IS WRONG")
+            return (.Wrong, nil)
+            
+        }
+        
+    }
     
     mutating func reset() {
         usedWords = Set<String>()
@@ -71,7 +78,7 @@ struct ContainsWordGameModel: WordGameModel {
         }
     }
     
-    mutating func getRandQuery(_ input: String? = nil) -> String {
+    func getRandQuery(_ input: String? = nil) -> String {
         
         var query = weightedRandomElement(items: queries).trim()
         
@@ -82,14 +89,6 @@ struct ContainsWordGameModel: WordGameModel {
         }
         print("GOT RANDOM QUERY \(query) with frequency \(String(describing: queries.first(where: { $0.0 == query })?.1))")
         
-        
-        // pivot at some percentage of max element, defined by syllableDifficulty
-        if numTurns % numTurnsBeforeDifficultyIncrease == 0 {
-            updateSyllableWeights(pivot: pivot)
-        }
-        print("QUERY \(query) has updated frequency \(String(describing: queries.first(where: { $0.0 == query })?.1))")
-        
-        numTurns += 1
         return query
         
     }
