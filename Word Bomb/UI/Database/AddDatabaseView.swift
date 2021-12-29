@@ -34,13 +34,14 @@ struct DatabaseTextEditor: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             let placeholder = "Separate words by new lines, and commas if they should be grouped together!\nFor examaple:\nChina \nAmerica, US, USA"
-            TextEditor(text: Binding($text, replacingNilWith: ""))
-
-                .foregroundColor(Color(.label))
-                .multilineTextAlignment(.leading)
-                .background(Color(.secondarySystemBackground))
+            
+            Color(.secondarySystemBackground)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding(.horizontal)
+            
+            TextEditor(text: Binding($text, replacingNilWith: ""))
                 .padding(.horizontal, 25)
+                .padding(.top, 1)
             
             Text(text ?? placeholder)
             // following line is a hack to create an inset similar to the TextEditor inset...
@@ -50,10 +51,11 @@ struct DatabaseTextEditor: View {
                 .padding(.top, 8)
                 .padding(.trailing, 20)
                 .disabled(true)
-                .allowsHitTesting(false) // does not work :(
-                
+                .allowsHitTesting(false)
         }
         .font(.body)
+        .navigationTitle("Custom Words")
+        .navigationBarTitleDisplayMode(.inline)
     }
         
 }
@@ -108,10 +110,13 @@ struct AddDatabaseView: View {
                 .offset(x: 0, y: -30)
                 .environment(\.editMode, .constant(EditMode.active))
                 
-                SectionHeaderText("Custom Words")
-                
-                DatabaseTextEditor(text: $dbWords)
+                List {
+                    NavigationLink("Add Custom Words") {
+                        DatabaseTextEditor(text: $dbWords)
+                    }
+                }
             }
+            .ignoresSafeArea(.keyboard)
             .navigationTitle("Add Database")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -145,13 +150,26 @@ struct AddDatabaseView: View {
     }
     
     private func createDB() {
-        let newDB = Database(context: viewContext, name: dbName, type: dbType, items: selection?.words)
-        viewContext.saveObjects()
+        var newDB: Database
+        let customWords = dbWords?
+            .lowercased()
+            .components(separatedBy: "\n")
+            .map({ $0.components(separatedBy: ",")})
         
-        if let words = dbWords?.lowercased().components(separatedBy: "\n").map({ $0.components(separatedBy: ", ")}) {
-            cdViewModel.populateDB(context: viewContext, db: newDB, words: words)
+        if let selection = selection {
+            newDB = Database(context: viewContext, name: dbName, db: selection)
+        } else {
+            newDB = Database(context: viewContext, name: dbName, type: dbType)
         }
         
+        if let customWords = customWords {
+            print("Adding: \(customWords)")
+            cdViewModel.populateDB(context: viewContext, db: newDB, words: customWords)
+        }
+        
+        viewContext.saveObjects()
+        
+        // TODO: Add save success alert
         presentationMode.wrappedValue.dismiss()
     }
 }
