@@ -71,7 +71,6 @@ class CoreDataViewModel: ObservableObject {
             let words = Database(context: moc,
                                  name: "words",
                                  type: .words,
-                                 items: Game.dictionary,
                                  isDefault: true)
             self.populateDB(context: moc, db: words, words: Game.dictionary)
             
@@ -102,7 +101,7 @@ class CoreDataViewModel: ObservableObject {
             
         }
     }
-    
+
     /// Adds words to the database
     /// - Parameters:
     ///   - context: `NSManagedObjectContext` to perform this Core Data task
