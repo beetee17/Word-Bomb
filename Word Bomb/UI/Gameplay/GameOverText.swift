@@ -18,9 +18,7 @@ struct GameOverText: View {
         let gameMode = viewModel.gameMode
         
         VStack {
-            Text("Word Count: \(numCorrect)")
-                .boldText()
-                .onTapGesture {
+            Game.MainButton(label: "Word Count: \(numCorrect)", systemImageName: "a.square.fill") {
                     showMatchReview = true
                 }
             
@@ -30,7 +28,7 @@ struct GameOverText: View {
                     .boldText()
                     .onAppear() {
                         if numCorrect <= gameMode!.highScore {
-                            Game.playSound(file: "explosion")
+                            AudioPlayer.playSound(.Explosion)
                         }
                         gameMode!.updateHighScore(with: numCorrect)
                     }
