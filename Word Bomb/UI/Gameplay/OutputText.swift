@@ -30,7 +30,6 @@ struct OutputText: View {
                 .id(output)
                 .onChange(of: output, perform: { newOutput in
                     if isCorrect(newOutput) { AudioPlayer.playSound(.Correct) }
-                    
                     else if isWrong(newOutput) { AudioPlayer.playSound(.Wrong) }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1,
                                                   execute: { self.clearOutput(newOutput) })
