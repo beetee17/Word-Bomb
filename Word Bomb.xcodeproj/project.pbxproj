@@ -77,15 +77,14 @@
 		6CB5BAC42778CF5B00F49E7A /* ConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BAC32778CF5A00F49E7A /* ConfettiView.swift */; };
 		6CB5BAC62778D25A00F49E7A /* MatchReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BAC52778D25A00F49E7A /* MatchReviewView.swift */; };
 		6CB5BAC82778D77600F49E7A /* MatchProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BAC72778D77600F49E7A /* MatchProgressView.swift */; };
-		6CB5BACA27798A7F00F49E7A /* TimeKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BAC927798A7F00F49E7A /* TimeKeeper.swift */; };
-		6CB5BACE27798A9500F49E7A /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BACD27798A9500F49E7A /* Media.swift */; };
+		6CB5BACE27798A9500F49E7A /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BACD27798A9500F49E7A /* Controller.swift */; };
 		6CB5BAD0277A0D0600F49E7A /* WaitingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BACF277A0D0600F49E7A /* WaitingView.swift */; };
 		6CB5BAD2277B369000F49E7A /* LoadingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BAD1277B369000F49E7A /* LoadingText.swift */; };
 		6CB5BAD4277B387C00F49E7A /* SlidingCircles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5BAD3277B387C00F49E7A /* SlidingCircles.swift */; };
 		6CB6F93F268F627300FA9654 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F93E268F627300FA9654 /* GameView.swift */; };
 		6CB6F942268F62C000FA9654 /* PauseMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F941268F62C000FA9654 /* PauseMenuView.swift */; };
 		6CB6F945268F62D800FA9654 /* ModeSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F944268F62D800FA9654 /* ModeSelectView.swift */; };
-		6CB6F948268F633600FA9654 /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F947268F633600FA9654 /* UI.swift */; };
+		6CB6F948268F633600FA9654 /* UIHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F947268F633600FA9654 /* UIHelpers.swift */; };
 		6CB6F94B268F64A300FA9654 /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F94A268F64A300FA9654 /* LogoView.swift */; };
 		6CB6F94F268F7E7D00FA9654 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F94E268F7E7D00FA9654 /* MainView.swift */; };
 		6CD8DA062695D342006A27ED /* CustomModeForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD8DA052695D342006A27ED /* CustomModeForm.swift */; };
@@ -103,6 +102,14 @@
 		6CE00F1B26AB2A64005406FF /* PauseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE00F1A26AB2A64005406FF /* PauseButton.swift */; };
 		6CE00F1D26AB2A7B005406FF /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE00F1C26AB2A7B005406FF /* TimerView.swift */; };
 		6CE00F1F26ABD044005406FF /* BannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE00F1E26ABD043005406FF /* BannerView.swift */; };
+		6CE97A89277D6ADF00948560 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE97A88277D6ADF00948560 /* AudioPlayer.swift */; };
+		6CE97A8B277D6FA100948560 /* UIElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE97A8A277D6FA100948560 /* UIElements.swift */; };
+		6CE97A91277D926400948560 /* PermanentKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE97A90277D926400948560 /* PermanentKeyboard.swift */; };
+		6CE97A93277DA66500948560 /* ScoreCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE97A92277DA66500948560 /* ScoreCounter.swift */; };
+		6CE97A98277DDE2300948560 /* victory.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CE97A95277DDE1D00948560 /* victory.wav */; };
+		6CE97A99277DDE2300948560 /* wrong-1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CE97A97277DDE1D00948560 /* wrong-1.wav */; };
+		6CE97A9A277DDE2300948560 /* wrong-2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CE97A94277DDE1D00948560 /* wrong-2.wav */; };
+		6CE97A9D277DE14C00948560 /* alert.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CE97A9C277DDE6200948560 /* alert.wav */; };
 		6CF953872692A08400D16E60 /* WordGameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF953862692A08400D16E60 /* WordGameModel.swift */; };
 		6CF9538E2692F55000D16E60 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF9538D2692F55000D16E60 /* Extensions.swift */; };
 		6CF953942692F64D00D16E60 /* ExactWordGameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF953932692F64D00D16E60 /* ExactWordGameModel.swift */; };
@@ -184,15 +191,14 @@
 		6CB5BAC32778CF5A00F49E7A /* ConfettiView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfettiView.swift; sourceTree = "<group>"; };
 		6CB5BAC52778D25A00F49E7A /* MatchReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchReviewView.swift; sourceTree = "<group>"; };
 		6CB5BAC72778D77600F49E7A /* MatchProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchProgressView.swift; sourceTree = "<group>"; };
-		6CB5BAC927798A7F00F49E7A /* TimeKeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeKeeper.swift; sourceTree = "<group>"; };
-		6CB5BACD27798A9500F49E7A /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
+		6CB5BACD27798A9500F49E7A /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
 		6CB5BACF277A0D0600F49E7A /* WaitingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingView.swift; sourceTree = "<group>"; };
 		6CB5BAD1277B369000F49E7A /* LoadingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingText.swift; sourceTree = "<group>"; };
 		6CB5BAD3277B387C00F49E7A /* SlidingCircles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingCircles.swift; sourceTree = "<group>"; };
 		6CB6F93E268F627300FA9654 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		6CB6F941268F62C000FA9654 /* PauseMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseMenuView.swift; sourceTree = "<group>"; };
 		6CB6F944268F62D800FA9654 /* ModeSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeSelectView.swift; sourceTree = "<group>"; };
-		6CB6F947268F633600FA9654 /* UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
+		6CB6F947268F633600FA9654 /* UIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelpers.swift; sourceTree = "<group>"; };
 		6CB6F94A268F64A300FA9654 /* LogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		6CB6F94E268F7E7D00FA9654 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		6CD8DA052695D342006A27ED /* CustomModeForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModeForm.swift; sourceTree = "<group>"; };
@@ -209,6 +215,14 @@
 		6CE00F1A26AB2A64005406FF /* PauseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseButton.swift; sourceTree = "<group>"; };
 		6CE00F1C26AB2A7B005406FF /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		6CE00F1E26ABD043005406FF /* BannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerView.swift; sourceTree = "<group>"; };
+		6CE97A88277D6ADF00948560 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
+		6CE97A8A277D6FA100948560 /* UIElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIElements.swift; sourceTree = "<group>"; };
+		6CE97A90277D926400948560 /* PermanentKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermanentKeyboard.swift; sourceTree = "<group>"; };
+		6CE97A92277DA66500948560 /* ScoreCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCounter.swift; sourceTree = "<group>"; };
+		6CE97A94277DDE1D00948560 /* wrong-2.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; path = "wrong-2.wav"; sourceTree = "<group>"; };
+		6CE97A95277DDE1D00948560 /* victory.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; path = victory.wav; sourceTree = "<group>"; };
+		6CE97A97277DDE1D00948560 /* wrong-1.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; path = "wrong-1.wav"; sourceTree = "<group>"; };
+		6CE97A9C277DDE6200948560 /* alert.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; path = alert.wav; sourceTree = "<group>"; };
 		6CF953862692A08400D16E60 /* WordGameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordGameModel.swift; sourceTree = "<group>"; };
 		6CF9538D2692F55000D16E60 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6CF953932692F64D00D16E60 /* ExactWordGameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExactWordGameModel.swift; sourceTree = "<group>"; };
@@ -405,6 +419,10 @@
 				6CB5BAA927734F3000F49E7A /* back.wav */,
 				6CB5BAAB2773524B00F49E7A /* countdown.wav */,
 				6CB5BAC127785C7500F49E7A /* Bicycle.mp3 */,
+				6CE97A95277DDE1D00948560 /* victory.wav */,
+				6CE97A9C277DDE6200948560 /* alert.wav */,
+				6CE97A97277DDE1D00948560 /* wrong-1.wav */,
+				6CE97A94277DDE1D00948560 /* wrong-2.wav */,
 				6CB5BABF27785A4C00F49E7A /* Monkeys-Spinning-Monkeys.mp3 */,
 			);
 			path = Assets;
@@ -473,6 +491,7 @@
 				6CE00F1C26AB2A7B005406FF /* TimerView.swift */,
 				6CB5BAC52778D25A00F49E7A /* MatchReviewView.swift */,
 				6CB5BAC72778D77600F49E7A /* MatchProgressView.swift */,
+				6CE97A92277DA66500948560 /* ScoreCounter.swift */,
 			);
 			path = TopBar;
 			sourceTree = "<group>";
@@ -502,8 +521,7 @@
 				6CF953932692F64D00D16E60 /* ExactWordGameModel.swift */,
 				6C249D472698B31E00B9C002 /* ReverseWordGameModel.swift */,
 				6CF953962692F65700D16E60 /* ContainsWordGameModel.swift */,
-				6CB5BAC927798A7F00F49E7A /* TimeKeeper.swift */,
-				6CB5BACD27798A9500F49E7A /* Media.swift */,
+				6CB5BACD27798A9500F49E7A /* Controller.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -511,16 +529,19 @@
 		6CF9539A2692F67F00D16E60 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				6CB6F947268F633600FA9654 /* UI.swift */,
+				6CB6F947268F633600FA9654 /* UIHelpers.swift */,
 				6C5514C026B1660F0038C25C /* GameHelp.swift */,
 				6CE00F1E26ABD043005406FF /* BannerView.swift */,
 				6CF9538D2692F55000D16E60 /* Extensions.swift */,
 				6C2D67F526A596AD006A0347 /* WeightedRandom.swift */,
 				6CF9539B2692F68E00D16E60 /* Data.swift */,
+				6CE97A90277D926400948560 /* PermanentKeyboard.swift */,
 				6C2D67CB26A2A800006A0347 /* Enums.swift */,
 				6C2D67C926A2A7EA006A0347 /* Defaults.swift */,
 				6C5514BA26B013A70038C25C /* Multiplayer.swift */,
 				6CF9539E2692F6D100D16E60 /* Player.swift */,
+				6CE97A88277D6ADF00948560 /* AudioPlayer.swift */,
+				6CE97A8A277D6FA100948560 /* UIElements.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -592,6 +613,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CE97A9D277DE14C00948560 /* alert.wav in Resources */,
+				6CE97A98277DDE2300948560 /* victory.wav in Resources */,
+				6CE97A99277DDE2300948560 /* wrong-1.wav in Resources */,
+				6CE97A9A277DDE2300948560 /* wrong-2.wav in Resources */,
 				6CB5BABA277714E600F49E7A /* confetti.wav in Resources */,
 				6CB5BAC027785A4C00F49E7A /* Monkeys-Spinning-Monkeys.mp3 in Resources */,
 				6CB5BAAC2773525F00F49E7A /* countdown.wav in Resources */,
@@ -624,7 +649,7 @@
 				6CE00F1B26AB2A64005406FF /* PauseButton.swift in Sources */,
 				6C5514C126B166100038C25C /* GameHelp.swift in Sources */,
 				6C5DBE0C269BA600004A7F71 /* PlayerCarouselView.swift in Sources */,
-				6CB6F948268F633600FA9654 /* UI.swift in Sources */,
+				6CB6F948268F633600FA9654 /* UIHelpers.swift in Sources */,
 				6C7E458E269B249400E24504 /* PlayerEditorView.swift in Sources */,
 				6C86BCBE2773087700E2D25F /* Database+CoreDataProperties.swift in Sources */,
 				6CF953972692F65700D16E60 /* ContainsWordGameModel.swift in Sources */,
@@ -647,6 +672,7 @@
 				6C2E20C4268DD81600CECD3F /* ContentView.swift in Sources */,
 				6CA33FA126BAB91100080CE6 /* WordSearchBar.swift in Sources */,
 				6CF953872692A08400D16E60 /* WordGameModel.swift in Sources */,
+				6CE97A89277D6ADF00948560 /* AudioPlayer.swift in Sources */,
 				6C2E20D5268DEFD700CECD3F /* WordBombGameViewModel.swift in Sources */,
 				6C646E7626ADC9FF003989AB /* GKHostText.swift in Sources */,
 				6CF9539C2692F68E00D16E60 /* Data.swift in Sources */,
@@ -657,11 +683,13 @@
 				6C2D67F626A596AD006A0347 /* WeightedRandom.swift in Sources */,
 				6C37E91E269F287B0079279E /* GamePlayView.swift in Sources */,
 				6CB5BAD4277B387C00F49E7A /* SlidingCircles.swift in Sources */,
+				6CE97A8B277D6FA100948560 /* UIElements.swift in Sources */,
 				6CB5BABC277750D600F49E7A /* MainPlayer.swift in Sources */,
 				6C86BCC02773087700E2D25F /* CustomMergePolicy.swift in Sources */,
-				6CB5BACE27798A9500F49E7A /* Media.swift in Sources */,
+				6CB5BACE27798A9500F49E7A /* Controller.swift in Sources */,
 				6C249D4C2698C1C000B9C002 /* ModeSelectButton.swift in Sources */,
 				6CB5BAC62778D25A00F49E7A /* MatchReviewView.swift in Sources */,
+				6CE97A91277D926400948560 /* PermanentKeyboard.swift in Sources */,
 				6C0CEEA8269458D6007717E1 /* TopBarView.swift in Sources */,
 				6C2D67CC26A2A800006A0347 /* Enums.swift in Sources */,
 				6CE00F1226A9BCF9005406FF /* GKContentView.swift in Sources */,
@@ -694,11 +722,11 @@
 				6C5514BB26B013A70038C25C /* Multiplayer.swift in Sources */,
 				6CE00F0A26A9BBF8005406FF /* GKMatchMakerAppModel.swift in Sources */,
 				6CE00F0126A9BBBB005406FF /* AuthenticationView.swift in Sources */,
+				6CE97A93277DA66500948560 /* ScoreCounter.swift in Sources */,
 				6CF9539F2692F6D100D16E60 /* Player.swift in Sources */,
 				6CE00F1D26AB2A7B005406FF /* TimerView.swift in Sources */,
 				6C5DBE0E269CA6E3004A7F71 /* TwoPlayerView.swift in Sources */,
 				6CB6F945268F62D800FA9654 /* ModeSelectView.swift in Sources */,
-				6CB5BACA27798A7F00F49E7A /* TimeKeeper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -830,7 +858,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Word Bomb/Preview Content\"";
 				DEVELOPMENT_TEAM = M9BZ2GV933;
 				ENABLE_PREVIEWS = YES;
@@ -840,7 +868,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "brandonthio.Word-Bomb";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -855,7 +883,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Word Bomb/Preview Content\"";
 				DEVELOPMENT_TEAM = M9BZ2GV933;
 				ENABLE_PREVIEWS = YES;
@@ -865,7 +893,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "brandonthio.Word-Bomb";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
