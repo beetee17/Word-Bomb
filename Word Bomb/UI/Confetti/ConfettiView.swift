@@ -9,16 +9,17 @@ import SwiftUI
 import simd
 
 struct ConfettiView: View {
+    
     var body: some View {
         ZStack {
             ForEach(1...100, id: \.self) { index in
             Rectangle()
                 .modifier(Particle())
-                .offset(x: 0, y: Device.height*0.8)
+                .offset(x: 0, y: Device.height)
             }
         }
         .onAppear() {
-            Game.playSound(file: "confetti")
+            AudioPlayer.playSound(.Victory)
         }
     }
 }

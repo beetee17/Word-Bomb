@@ -9,8 +9,8 @@ import SwiftUI
 struct FireworkParticlesGeometryEffect : GeometryEffect {
     var time : Double
     var dy: Double
-    var xSpeed = Double.random(in: 100 ... 200)
-    var ySpeed = Double.random(in: 500 ... 1200)
+    var xSpeed = Double.random(in: 50 ... 150)
+    var ySpeed = Double.random(in: 1200 ... 1700)
     var direction = Double.random(in: -0.8*Double.pi ...  -0.3*Double.pi)
     
     var animatableData: AnimatablePair<Double, Double> {
