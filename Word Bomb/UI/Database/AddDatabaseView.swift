@@ -33,7 +33,7 @@ struct DatabaseTextEditor: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            let placeholder = "Separate words by new lines, and commas if they should be grouped together!\nFor examaple:\nChina \nAmerica, US, USA"
+            let placeholder = "Separate words by new lines, and commas if they should be grouped together!\nFor example:\nChina \nAmerica, US, USA"
             
             Color(.secondarySystemBackground)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
