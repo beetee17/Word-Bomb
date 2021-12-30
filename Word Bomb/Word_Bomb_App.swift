@@ -102,6 +102,9 @@ struct Word_BombApp: App {
             .environmentObject(cdViewModel)
             .environmentObject(Game.errorHandler)
             .environment(\.managedObjectContext, moc)
+            .onAppear() {
+                AudioPlayer.playSoundTrack(.BGMusic)
+            }
         }
     }
 }
