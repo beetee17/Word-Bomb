@@ -29,6 +29,7 @@ class ErrorViewModel: NSObject, ObservableObject {
     ///   - title: The title of the notification
     ///   - message: The message of the notification
     func showAlert(title: String, message: String) {
+        AudioPlayer.playSound(.Alert)
         alertTitle = title
         alertMessage = message
         alertIsShown = true
@@ -39,9 +40,9 @@ class ErrorViewModel: NSObject, ObservableObject {
     ///   - title: The title of the notification
     ///   - message: The message of the notification
     func showBanner(title: String, message: String) {
+        AudioPlayer.playSound(.Banner)
         bannerTitle = title
         bannerMessage = message
         bannerIsShown = true
-        Game.playSound(file: "ping")
     }
 }
