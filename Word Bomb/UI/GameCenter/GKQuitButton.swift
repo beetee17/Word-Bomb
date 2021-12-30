@@ -9,11 +9,11 @@ import SwiftUI
 import GameKitUI
 
 struct GKQuitButton: View {
-    
+
     var body: some View {
         // TODO: Add confirmation dialog
         Button(action: {
-            Game.playSound(file: "back")
+            AudioPlayer.playSound(.Cancel)
             GameCenter.viewModel.cancel()
             GameCenter.hostPlayerName = nil
             
@@ -27,6 +27,7 @@ struct GKQuitButton: View {
             .foregroundColor(.white)
             
         }
+        .buttonStyle(ScaleEffect())
     }
 }
 
