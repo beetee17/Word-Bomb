@@ -86,7 +86,7 @@ class AudioPlayer {
     }
     func pause(with fadeDuration: Double = 0, reset: Bool = false) {
         player.setVolume(0, fadeDuration: TimeInterval(fadeDuration))
-        DispatchQueue.main.asyncAfter(deadline: .now() + fadeDuration) {
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + fadeDuration) {
             self.player.pause()
             if reset {
                 self.player.currentTime = 0
@@ -114,7 +114,9 @@ extension AudioPlayer {
         if AudioPlayer.root.isPlaying {
             // Pause the root sound momentarily while the current sound plays
             AudioPlayer.root.pause(reset: true)
-            DispatchQueue.main.asyncAfter(deadline: .now() + AudioPlayer.shared!.duration) {
+            
+            // Updating on the main queue will block the UI!
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + AudioPlayer.shared!.duration) {
                 // The sound can only be played once the previous sound has ended
                 AudioPlayer.root.isReady = true
             }
@@ -125,7 +127,7 @@ extension AudioPlayer {
     
     static func playSoundTrack(_ sound: Sound, delay: Double = 1) {
         AudioPlayer.soundTrack?.pause(with: delay)
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay) {
             AudioPlayer.soundTrack = AudioPlayer(sound: sound, type: "mp3", numLoops: -1)
             AudioPlayer.soundTrack?.play(with: delay)
         }
