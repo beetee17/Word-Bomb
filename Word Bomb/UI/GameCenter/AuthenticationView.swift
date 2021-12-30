@@ -42,18 +42,18 @@ struct AuthenticationView: View {
                     if self.viewModel.isAuthenticated,
                        let player = self.viewModel.player {
                         GKPlayerView(viewModel: GKPlayerViewModel(player))
-                        Game.mainButton(label: "REAUTHENTICATE", systemImageName: "lock.fill") {
+                        Game.MainButton(label: "REAUTHENTICATE", systemImageName: "lock.fill") {
                             self.viewModel.showAuthenticationModal()
                         }
                         .padding(.top, 25)
                     } else {
-                        Game.mainButton(label: "LOGIN", systemImageName: "lock.fill") {
+                        Game.MainButton(label: "LOGIN", systemImageName: "lock.fill") {
                             self.viewModel.showAuthenticationModal()
                         }
                     }
                     
                 }
-                Game.backButton {
+                Game.BackButton {
 //                    gameViewModel.viewToShow = .GKMain
                 }
             }

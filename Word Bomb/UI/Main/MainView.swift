@@ -144,12 +144,12 @@ struct MainMenuView: View {
     var body: some View {
         VStack(spacing:15) {
             
-            Game.mainButton(label: "START GAME", systemImageName: "gamecontroller") { viewModel.startGame() }
+            Game.MainButton(label: "START GAME", systemImageName: "gamecontroller") { viewModel.startGame() }
             
             if viewModel.showMultiplayerOptions {
                 
                 VStack(spacing:15) {
-                    Game.mainButton(label: "GAME CENTER",
+                    Game.MainButton(label: "GAME CENTER",
                                     image: AnyView(Image("GK Icon")
                                                     .resizable()
                                                     .aspectRatio(contentMode: .fit)
@@ -157,31 +157,32 @@ struct MainMenuView: View {
                         viewModel.onlinePlay()
                     }
                     
-                    Game.mainButton(label: "PASS & PLAY", systemImageName: "person.3") { viewModel.passPlay() }
+                    Game.MainButton(label: "PASS & PLAY", systemImageName: "person.3") { viewModel.passPlay() }
                     
                     // testtube.2 or hammer or graduationcap or books.vertical or brain
-                    Game.mainButton(label: "TRAINING", systemImageName: "graduationcap") { viewModel.trainingMode() }
+                    Game.MainButton(label: "TRAINING", systemImageName: "graduationcap") { viewModel.trainingMode() }
                     
                 }
+                .transition(.opacity)
             }
             else {
                 
                 VStack(spacing:15) {
-                    Game.mainButton(label: "CREATE MODE", systemImageName: "plus.circle") { viewModel.createMode() }
+                    Game.MainButton(label: "CREATE MODE", systemImageName: "plus.circle") { viewModel.createMode() }
                     .sheet(isPresented: $viewModel.creatingMode) {
                         CustomModeForm()
                             .environmentObject(errorHandler)
                             .environment(\.managedObjectContext, viewContext)
                     }
                     
-                    Game.mainButton(label: "DATABASE", systemImageName: "magnifyingglass.circle") { viewModel.searchDBs() }
+                    Game.MainButton(label: "DATABASE", systemImageName: "magnifyingglass.circle") { viewModel.searchDBs() }
                     .sheet(isPresented: $viewModel.searchingDatabase) {
                         DatabaseListView()
                             .environment(\.managedObjectContext, viewContext)
                             .environmentObject(errorHandler)
                     }
                     
-                    Game.mainButton(label: "SETTINGS", systemImageName: "gearshape") { viewModel.changeSettings() }
+                    Game.MainButton(label: "SETTINGS", systemImageName: "gearshape") { viewModel.changeSettings() }
                     .sheet(isPresented: $viewModel.changingSettings) { SettingsMenu().environmentObject(gameVM) }
                 }
              
@@ -189,11 +190,6 @@ struct MainMenuView: View {
             }
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.75, blendDuration: 0.2))
-        .onAppear() {
-//            if !(Game.soundTrackPlayer?.isPlaying ?? false) {
-            Game.playSoundTrack(file: "Bicycle", delay: 2.0)
-//            } 
-        }
     }
 }
 struct MainView_Previews: PreviewProvider {

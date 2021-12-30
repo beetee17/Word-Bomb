@@ -43,11 +43,11 @@ struct GKContentView: View {
                 Text("GAME CENTER").font(.largeTitle).bold()
                 
                 VStack(alignment: .center, spacing: 32) {
-                    Game.mainButton(label: "LOGIN", systemImageName: "lock.fill") {
+                    Game.MainButton(label: "LOGIN", systemImageName: "lock.fill") {
 //                        withAnimation { gameViewModel.viewToShow = .GKLogin }
                     }
                     
-                    Game.mainButton(label: "HOST MATCH", systemImageName: "person.crop.circle.badge.plus") {
+                    Game.MainButton(label: "HOST MATCH", systemImageName: "person.crop.circle.badge.plus") {
                         showMatchMakerModal = true
                     }
                     .sheet(isPresented: $showMatchMakerModal) {
@@ -68,7 +68,7 @@ struct GKContentView: View {
                     }
                 }
                 
-                Game.backButton {
+                Game.BackButton {
                     withAnimation { gameViewModel.viewToShow = .main }
                 }
             }
