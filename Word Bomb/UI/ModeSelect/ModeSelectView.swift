@@ -52,7 +52,7 @@ struct ModeSelectView: View {
             .frame(maxHeight: Device.height/2, alignment: .center)
             .frame(width: Device.width)
             
-            Game.backButton {
+            Game.BackButton {
                 withAnimation { viewToShow = .gameTypeSelect }
             }
             .offset(y: 25)

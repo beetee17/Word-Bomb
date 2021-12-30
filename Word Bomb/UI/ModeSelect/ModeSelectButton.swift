@@ -27,13 +27,13 @@ struct ModeSelectButton: View {
             }
             viewContext.delete(self.mode)
             viewContext.saveObjects()
-            Game.playSound(file: "back")
+            AudioPlayer.playSound(.Cancel)
         })
     }
     
     var body: some View {
         
-        Game.mainButton(label: mode.name) {
+        Game.MainButton(label: mode.name) {
             withAnimation{
                 if viewModel.gkSelect {
                     if !GKLocalPlayer.local.isAuthenticated {

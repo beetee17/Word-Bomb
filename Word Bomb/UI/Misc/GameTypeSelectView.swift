@@ -20,7 +20,7 @@ struct GameTypeSelectView: View {
             
             VStack(spacing: 50) {
                 ForEach(GameType.allCases, id: \.self) { type in
-                    Game.mainButton(label: type.rawValue.uppercased()) {
+                    Game.MainButton(label: type.rawValue.uppercased()) {
                         
                         withAnimation {
                             gameType = type
@@ -29,7 +29,7 @@ struct GameTypeSelectView: View {
                     }
                 }
             }
-            Game.backButton {
+            Game.BackButton {
                 withAnimation { viewToShow = .main }
             }
         }
