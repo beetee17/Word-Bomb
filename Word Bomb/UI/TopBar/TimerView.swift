@@ -13,7 +13,6 @@ struct TimerView: View {
     @Binding var timeLeft: Float
     @State var timeLimit: Float
     @Binding var animateExplosion: Bool
-    @Binding var playRunningOutOfTimeSound: Bool
     
     var body: some View {
         ZStack {
@@ -36,43 +35,33 @@ struct TimerView: View {
                     .font(.largeTitle)
             }
         }
-        .onChange(of: timeLeft) { time in
-            if time < 3 && !playRunningOutOfTimeSound{
-                // do not interrupt if explosion sound is playing
-                if !(Game.audioPlayer?.isPlaying ?? false) {
-                    Game.playSound(file: "hissing")
-                    playRunningOutOfTimeSound = true
+    }
+}
+
+
+struct TimerView_Previews: PreviewProvider {
+
+    struct TimerView_Harness: View {
+        var numPlayers: Int
+        @State private var animateExplosion  = false
+        
+        var body: some View {
+            VStack {
+                let players = Players(from: (1...numPlayers).map({"\($0)"}))
+                
+                TimerView(players: .constant(players), timeLeft: .constant(10), timeLimit: 10, animateExplosion: $animateExplosion)
+
+                Button("Test Explosion!") {
+                    animateExplosion = true
+                    AudioPlayer.playSound(.Explosion)
                 }
             }
         }
     }
+    static var previews: some View {
+        Group {
+            TimerView_Harness(numPlayers: 3)
+            TimerView_Harness(numPlayers: 2)
+        }
+    }
 }
-
-//
-//struct TimerView_Previews: PreviewProvider {
-//
-//    struct TimerView_Harness: View {
-//
-//        var numPlayers: Int
-//        @State private var gameState: GameState = .playing
-//
-//        var body: some View {
-//            VStack {
-//                TimerView(players: .constant(Players()), timeLeft: .constant(10), timeLimit: 10, gameState: $gameState, playRunningOutOfTimeSound: .constant(false))
-//
-//                Button("Test Explosion!") {
-//                    gameState = .playerTimedOut
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                        gameState = .playing
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    static var previews: some View {
-//        Group {
-//            TimerView_Harness(numPlayers: 3)
-//            TimerView_Harness(numPlayers: 2)
-//        }
-//    }
-//}
