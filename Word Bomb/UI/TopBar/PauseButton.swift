@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PauseButton: View {
-    @Binding var viewToShow: ViewToShow
+    @Binding var gamePaused: Bool
     
     var body: some View {
         
@@ -25,17 +25,18 @@ struct PauseButton: View {
                 .foregroundColor(.white)
                 .frame(width: 25, height: 25)
         }
+        .buttonStyle(ScaleEffect())
     }
     
     /// Pauses the current game
     func pauseGame() {
-        viewToShow = .pauseMenu
-        Game.playSound(file: "back")
+        gamePaused = true
+        AudioPlayer.playSound(.Cancel)
         Game.stopTimer()
     }
 }
 struct PauseButton_Previews: PreviewProvider {
     static var previews: some View {
-        PauseButton(viewToShow: .constant(.pauseMenu))
+        PauseButton(gamePaused: .constant(false))
     }
 }
