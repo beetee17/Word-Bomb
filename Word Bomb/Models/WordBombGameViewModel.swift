@@ -8,6 +8,7 @@
 import Foundation
 import GameKit
 import GameKitUI
+import SwiftUI
 
 
 /// Main view model that controls most of the game logic
@@ -26,16 +27,21 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     
     /// Controls the current view shown to the user
     @Published var viewToShow: ViewToShow = .main {
+        willSet {
+            if viewToShow == .game && newValue == .main {
+                AudioPlayer.playSoundTrack(.BGMusic)
+            } else if viewToShow == .waiting && newValue == .game {
+                AudioPlayer.playSoundTrack(.GamePlayMusic)
+            }
+        }
         didSet {
             switch viewToShow {
             case .main:
                 gkSelect = false
                 trainingMode = false
                 gkConnectedPlayers = 0
-            case .game:
-                forceHideKeyboard = false
             default:
-                forceHideKeyboard = true
+                break
             }
         }
     }
@@ -55,9 +61,6 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     
     /// The current user input while in a game
     @Published var input = ""
-    
-    /// Used to hide the keyboard when not in an active game
-    @Published var forceHideKeyboard = false
     
     /// Enables developer-only configurations if True
     @Published var debugging = false
@@ -97,7 +100,9 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// Starts a game with the given game mode, not least by initing the appropriate WordGameModel
     /// - Parameter mode: The given game mode
     func startGame(mode: GameMode) {
-        Game.playSoundTrack(file: "Monkeys-Spinning-Monkeys")
+        withAnimation(Game.mainAnimation) {
+            viewToShow = .waiting
+        }
         var players = Players()
         gameMode = mode
         
@@ -112,19 +117,21 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         
         model = WordBombGame(players: players)
         
-        viewToShow = .waiting
-        
-        WordBombGame.getGameModel(for: mode) { [self] gameModel in
-            model.setGameModel(with: gameModel)
-            model.handleGameState(
-                .initial,
-                data: ["instruction":mode.instruction,
-                       "query":gameModel.getRandQuery(nil) as Any]
-            )
-            if !GameCenter.isHost && viewToShow == .waiting {
-                print("starting game")
-                viewToShow = .game
-                startTimer()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+            WordBombGame.getGameModel(for: mode) { [self] gameModel in
+                model.setGameModel(with: gameModel)
+                model.handleGameState(
+                    .initial,
+                    data: ["instruction":mode.instruction,
+                           "query":gameModel.getRandQuery(nil) as Any]
+                )
+                if !GameCenter.isHost && viewToShow == .waiting {
+                    print("starting game")
+                    withAnimation(.easeInOut) {
+                        viewToShow = .game
+                    }
+                    startTimer()
+                }
             }
         }
     }
@@ -145,35 +152,38 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         guard Game.timer == nil else { return }
         Game.timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [self] _ in
             
-            
             DispatchQueue.main.async {
                 if !debugging {
-                    model.timeKeeper.timeLeft = max(0, model.timeKeeper.timeLeft - 0.1)
+                    model.controller.timeLeft = max(0, model.controller.timeLeft - 0.1)
                 }
                 
                 if GameCenter.isHost {
-                    let roundedValue = Int(round(model.timeKeeper.timeLeft * 10))
+                    let roundedValue = Int(round(model.controller.timeLeft * 10))
                     
-                    if roundedValue % 5 == 0 && model.timeKeeper.timeLeft > 0.4 {
+                    if roundedValue % 5 == 0 && model.controller.timeLeft > 0.4 {
                         
                         if GameCenter.isHost {
-                            GameCenter.send(GameData(timeLeft: model.timeKeeper.timeLeft), toHost: false)
+                            GameCenter.send(GameData(timeLeft: model.controller.timeLeft), toHost: false)
                             
                         }
                         
                     }
-                    if roundedValue % 10 == 0 && model.timeKeeper.timeLeft > 0.1 {
+                    if roundedValue % 10 == 0 && model.controller.timeLeft > 0.1 {
                         let playerLives = Dictionary(model.players.queue.map { ($0.name, $0.livesLeft) }) { first, _ in first }
                         if GameCenter.isHost {
                             GameCenter.send(GameData(playerLives: playerLives), toHost: false)
                             
                         }
-                        
                     }
                 }
             }
+
+            if model.controller.timeLeft < 3 {
+                // do not interrupt if explosion sound is playing
+                AudioPlayer.playROOTSound()
+            }
             
-            if model.timeKeeper.timeLeft <= 0 && (GameCenter.isHost || !GameCenter.isOnline) {
+            if model.controller.timeLeft <= 0 && (GameCenter.isHost || !GameCenter.isOnline) {
                 // only handle time out if host of online match or in offline play 
                 
                 DispatchQueue.main.async {
