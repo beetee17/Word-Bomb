@@ -23,7 +23,9 @@ struct BombView: View {
     
     private func updateFrame(numTotalFrames: Int, timeLeft: Float, timeLimit: Float) -> String {
         // Do not somehow exceed the maximum frame number
-        let frameNumber = min(25, numTotalFrames - Int(timeLeft / (timeLimit / Float(numTotalFrames))) + 1)
+        let frameNumber =
+            min(25,
+                numTotalFrames - safeDivideByZero(timeLimit, by: timeLimit/Float(numTotalFrames)) + 1)
         
         if frameNumber >= 10 {
             
@@ -33,7 +35,10 @@ struct BombView: View {
             return String(format: "frame_apngframe%02d", frameNumber)
         }
     }
-    
+    private func safeDivideByZero(_ dividend: Float, by divisor: Float) -> Int {
+        guard divisor.isFinite && dividend.isFinite && divisor != 0 else { return 0 }
+        return Int(dividend/divisor)
+    }
 }
 
 
@@ -51,10 +56,12 @@ struct BombExplosion: View {
             .aspectRatio(contentMode: .fill)
             .frame(width: Game.bombSize, height: Game.bombSize)
             .opacity(animating ? 1 : 0)
-            .onChange(of: animating) { _ in
+            .onChange(of: animating) { output in
                 DispatchQueue.main.asyncAfter(deadline: .now() + Game.explosionDuration) {
-                    animating = false
-                    print("FALSE AGAIN")
+                    if output {
+                        animating = false
+                        print("FALSE AGAIN")
+                    }
                 }
             }
     }
@@ -88,8 +95,8 @@ struct BombExplosion_Preview: PreviewProvider {
         var body: some View {
             VStack {
                 BombExplosion(animating: $animating)
-                Button("Animate!") {
-                    animating.toggle()
+                Button(animating ? "Animating" : "Animate!") {
+                    animating = true
                 }
             }
         }
