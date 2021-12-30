@@ -39,7 +39,7 @@ struct TopBarView: View {
             )
                 .offset(x: gkMatch == nil ? 0 : -20)
                 .frame(width:Device.width*0.5)
-                .offset(x:Device.width*0.025)
+                .offset(x:Device.width*0.05)
             
             Spacer()
                 .overlay(
@@ -48,6 +48,7 @@ struct TopBarView: View {
                             RestartButton()
                         } else if !showMatchProgress {
                             ScoreCounter(score: $viewModel.model.numCorrect) {
+                                AudioPlayer.playSound(.Select)
                                 showMatchProgress.toggle()
                             }
                         }
