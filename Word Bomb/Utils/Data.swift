@@ -9,7 +9,6 @@ import Foundation
 
 
 // Loading of Data
-
 func loadWords(_ filename: String) -> [[String]] {
     
     do {
