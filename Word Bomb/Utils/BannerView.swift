@@ -67,9 +67,11 @@ struct BannerViewModifier: ViewModifier {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                 withAnimation {
                                     self.isPresented = false
-                                    
                                 }
                             }
+                        }
+                        .onTapGesture {
+                            self.isPresented = false
                         }
                     Spacer()
                 }
