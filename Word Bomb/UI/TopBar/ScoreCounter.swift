@@ -44,10 +44,10 @@ struct ScoreCounter: View {
                         withAnimation {
                             animateScore = false
                             animateDashedBorder = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.075) {
+                            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.075) {
                                 animateScore = true
                             }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.5) {
                                 animateDashedBorder = false
                             }
                         }

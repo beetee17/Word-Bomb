@@ -107,6 +107,8 @@ extension AudioPlayer {
     static var shared: AudioPlayer? = nil
     
     static func playSound(_ sound: Sound, type: String = "wav") {
+        AudioPlayer.shared?.pause()
+        AudioPlayer.shared = nil
         
         AudioPlayer.shared = AudioPlayer(sound: sound, type: type)
         AudioPlayer.shared?.play()
@@ -116,8 +118,12 @@ extension AudioPlayer {
             AudioPlayer.root.pause(reset: true)
             
             // Updating on the main queue will block the UI!
-            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + AudioPlayer.shared!.duration) {
-                // The sound can only be played once the previous sound has ended
+            if let audioPlayer = AudioPlayer.shared {
+                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + audioPlayer.duration) {
+                    // The sound can only be played once the previous sound has ended
+                    AudioPlayer.root.isReady = true
+                }
+            } else {
                 AudioPlayer.root.isReady = true
             }
         }
