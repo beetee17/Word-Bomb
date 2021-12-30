@@ -13,6 +13,7 @@ struct WaitingView: View {
     @State var loadStatusText = "Getting Things Ready"
     
     var body: some View {
+       
         let animation = Animation.easeInOut(duration: 0.7).repeatForever(autoreverses: true)
         
         // For Game Center matches
@@ -34,7 +35,7 @@ struct WaitingView: View {
                 Spacer()
                 LogoView()
                     .offset(x: 0, y: animating ? -50 : 0)
-                    .animation(animation)
+                    .animation(animation, value: animating)
                     .onAppear() {
                         animating = true
                     }
@@ -66,6 +67,7 @@ struct WaitingView: View {
                 }
             }
         }
+        .transition(.asymmetric(insertion: AnyTransition.move(edge: .trailing), removal: AnyTransition.move(edge: .leading)))
     }
 }
 

@@ -47,7 +47,6 @@ struct PlayerCarouselView: View {
             }
         }
         .animation(animatePlayers ? .easeInOut(duration: 0.3) : nil)
-
         .onChange(of: viewModel.model.players.queue, perform: { _ in
 
             withAnimation { animatePlayers.toggle() }
