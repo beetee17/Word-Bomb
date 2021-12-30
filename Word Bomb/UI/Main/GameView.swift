@@ -13,8 +13,6 @@ import GameKitUI
 struct GameView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     @EnvironmentObject var gkViewModel: GKMatchMakerAppModel
-    @State var pauseMenu = false
-    
     
     var body: some View {
         ZStack {
@@ -31,14 +29,10 @@ struct GameView: View {
                     
                     GamePlayView(gkMatch: gkViewModel.gkMatch)
                     
-                    PauseMenuView()
-                        .helpButton()
-                        .scaleEffect(viewModel.viewToShow == .pauseMenu ? 1 : 0.01)
-                        .ignoresSafeArea(.all)
                 }
             }
         }
-        .if(![.game, .pauseMenu].contains(viewModel.viewToShow)) { $0.helpButton() }
+        .if(viewModel.viewToShow != .game) { $0.helpButton() }
     }
 }
 

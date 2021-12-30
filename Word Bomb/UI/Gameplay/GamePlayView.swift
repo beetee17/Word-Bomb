@@ -12,6 +12,8 @@ import GameKitUI
 struct GamePlayView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     @State var showMatchProgress = false
+    @State var gamePaused = false
+    @State var forceHideKeyboard = false
     var gkMatch: GKMatch?
     
     var body: some View {
@@ -28,7 +30,7 @@ struct GamePlayView: View {
                 Color.clear
                 
                 VStack {
-                    TopBarView(showMatchProgress: $showMatchProgress, gkMatch: gkMatch)
+                    TopBarView(gamePaused: $gamePaused, showMatchProgress: $showMatchProgress, gkMatch: gkMatch)
                         
                     Spacer()
                 }
@@ -52,7 +54,7 @@ struct GamePlayView: View {
                     Text(viewModel.model.query ?? "").boldText()
                     PermanentKeyboard(
                         text: $viewModel.input,
-                        forceResignFirstResponder: $viewModel.forceHideKeyboard
+                        forceResignFirstResponder: $forceHideKeyboard
                     ) {
                         viewModel.processInput()
                     }
@@ -65,12 +67,16 @@ struct GamePlayView: View {
             .offset(y: Device.height*0.075)
             .ignoresSafeArea(.all)
         }
-        .blur(radius: .pauseMenu == viewModel.viewToShow ? 10 : 0, opaque: false)
-        .blur(radius: showMatchProgress ? 10 : 0, opaque: false)
-        .if(showMatchProgress) {
-            $0.overlay(
-                MatchProgressView(usedWords: viewModel.model.game?.usedWords.sorted(), showMatchProgress: $showMatchProgress)
-            )
+        .blur(radius: gamePaused || showMatchProgress ? 10 : 0, opaque: false)
+        .overlay(
+            MatchProgressView(usedWords: viewModel.model.game?.usedWords.sorted(), showMatchProgress: $showMatchProgress)
+        )
+        .overlay(PauseMenuView(gamePaused: $gamePaused))
+        .onChange(of: gamePaused) { newValue in
+            forceHideKeyboard = newValue
+        }
+        .onChange(of: showMatchProgress) { newValue in
+            forceHideKeyboard = newValue
         }
     }
 }
@@ -85,5 +91,6 @@ struct GamePlayView_Previews: PreviewProvider {
             
             GamePlayView(gkMatch: nil).environmentObject(WordBombGameViewModel.preview(numPlayers: 1))
         }
+        .background(Color("Background").ignoresSafeArea())
     }
 }
