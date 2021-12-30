@@ -32,14 +32,14 @@ struct TwoPlayerView: View {
             let leftPlayerOffset = -frameWidth/2 + Game.playerAvatarSize*0.75
             let rightPlayerOffset = -leftPlayerOffset
             
-            BombView(timeLeft: $viewModel.model.timeKeeper.timeLeft, timeLimit: viewModel.model.timeKeeper.timeLimit)
+            BombView(timeLeft: $viewModel.model.controller.timeLeft, timeLimit: viewModel.model.controller.timeLimit)
                 .frame(width: Game.miniBombSize,
                        height: Game.miniBombSize)
                 .offset(x: viewModel.model.players.current == viewModel.model.players.queue[0] ? leftPlayerOffset : rightPlayerOffset,
                         y: 0)
                 .animation(.easeInOut(duration: 0.3).delay(.playerTimedOut == viewModel.model.gameState ? 0.8 : 0))
                 .overlay (
-                    BombExplosion(animating: $viewModel.model.media.animateExplosion)
+                    BombExplosion(animating: $viewModel.model.controller.animateExplosion)
                         .frame(width: Game.miniBombSize*1.5,
                                height: Game.miniBombSize*1.5)
                         .offset(x: viewModel.model.players.current == viewModel.model.players.queue[0] ? rightPlayerOffset + Game.miniBombExplosionOffset : leftPlayerOffset + Game.miniBombExplosionOffset,
