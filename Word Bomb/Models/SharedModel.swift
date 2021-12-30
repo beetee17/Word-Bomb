@@ -12,7 +12,7 @@ import GameKit
  e.g. it does not implement the function that handles processing of user input since that differs depending on game mode
  */
 struct WordBombGame: Codable {
-    private enum CodingKeys: String, CodingKey { case players, timeKeeper, output, query, instruction }
+    private enum CodingKeys: String, CodingKey { case players, controller, output, query, instruction }
     // this is usually synthesized, but we have to define it ourselves to exclude various properties
     // `game` is not codable, the others are not needed to sync gameState at initialisation
     
@@ -22,15 +22,13 @@ struct WordBombGame: Codable {
     /// Responsible with processing user inputs and fetching new queries if necessary
     var game: WordGameModel? = nil
     
-    var timeKeeper = TimeKeeper()
-    var media = Media()
+    var controller = Controller()
     
     /// The current state of the game
     var gameState: GameState = .initial
     
     /// The number of correct answers used in the game. The score should only be set within the model
-    private(set) var numCorrect = 0
-    
+    var numCorrect = 0
     
     /// The output text to be displayed depending on player input
     var output = ""
@@ -111,7 +109,7 @@ struct WordBombGame: Codable {
         let input = input.lowercased().trim()
         print("Processing input: \(input)")
         
-        if !(input == "" || timeKeeper.timeLeft <= 0) {
+        if !(input == "" || controller.timeLeft <= 0) {
             if GameCenter.isHost && isMyGKTurn {
                 // turn for device hosting multiplayer game
                 let response = game!.process(input, query)
@@ -171,15 +169,14 @@ struct WordBombGame: Codable {
             _ = players.nextPlayer()
             game?.updateUsedWords(for: input)
             numCorrect += 1
-            media.resetROOTSound()
             
             if !GameCenter.isOnline {
                 // only if host or offline should update time limit
-                timeKeeper.updateTimeLimit()
+                controller.updateTimeLimit()
             }
             else if GameCenter.isHost{
-                timeKeeper.updateTimeLimit()
-                GameCenter.send(GameData(timeLimit: timeKeeper.timeLimit), toHost: false)
+                controller.updateTimeLimit()
+                GameCenter.send(GameData(timeLimit: controller.timeLimit), toHost: false)
             }
         }
     }
@@ -193,8 +190,6 @@ struct WordBombGame: Codable {
     /// Handles the game state when the current player runs out of time
     mutating func currentPlayerRanOutOfTime() {
         
-        media.resetROOTSound()
-        
         // We need to keep game state on non-host devices in sync
         if GameCenter.isHost {
             GameCenter.send(GameData(state: .playerTimedOut), toHost: false)
@@ -206,15 +201,16 @@ struct WordBombGame: Codable {
         if isGameOver {
             handleGameState(.gameOver)
         } else {
-            media.playExplosion()
-            timeKeeper.updateTimeLimit()
+            controller.playExplosion()
+            controller.updateTimeLimit()
         }
     }
     
     /// Resets the relevant variables to restart the game
     mutating func restartGame() {
-        timeKeeper.reset()
-        media.reset()
+        numCorrect = 0
+        
+        controller.reset()
         players.reset()
         game?.reset()
         
@@ -252,11 +248,11 @@ struct WordBombGame: Codable {
             }
             
         case .playerTimedOut:
-            timeKeeper.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
+            controller.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
             currentPlayerRanOutOfTime()
             
         case .gameOver:
-            timeKeeper.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
+            controller.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
             Game.stopTimer()
             
         case .paused:
