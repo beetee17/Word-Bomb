@@ -17,11 +17,8 @@ struct TimeKeeper: Codable {
     
     /// Updates the time limit based on the the `"Time Multiplier"` and `"Time Constraint"` settings
     mutating func updateTimeLimit() {
-        // TODO: why do we need this conditional
-//        if players.current == players.queue.first! {
-            timeLimit = max(UserDefaults.standard.float(forKey:"Time Constraint"), timeLimit * UserDefaults.standard.float(forKey: "Time Multiplier"))
-            print("time multiplied")
-//        }
+        timeLimit = max(UserDefaults.standard.float(forKey:"Time Constraint"), timeLimit * UserDefaults.standard.float(forKey: "Time Multiplier"))
+        print("time multiplied")
         timeLeft = timeLimit
     }
     mutating func reset() {
