@@ -25,15 +25,19 @@ struct MatchProgressView: View {
         VStack {
             HStack {
                 Spacer()
+                
                 Text("USED WORDS")
                     .boldText()
+                    
                 Spacer()
-                Image(systemName: "xmark.circle")
-                    .imageScale(.large)
-                    .padding(.trailing)
-                    .onTapGesture {
-                        showMatchProgress.toggle()
-                    }
+                    .overlay(
+                        Image(systemName: "xmark.circle")
+                                .imageScale(.large)
+                                .padding(.trailing)
+                                .onTapGesture {
+                                        showMatchProgress.toggle()
+                                })
+                
             }
             List(usedWords, id: \.self) { word in
                 Text(word.capitalized)
@@ -43,6 +47,9 @@ struct MatchProgressView: View {
             }
             .listStyle(.plain)
         }
+        .scaleEffect(showMatchProgress ? 1 : 0)
+        .opacity(showMatchProgress ? 1 : 0)
+        .animation(.interactiveSpring())
     }
     
 }
