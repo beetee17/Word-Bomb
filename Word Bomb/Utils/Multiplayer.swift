@@ -74,12 +74,12 @@ struct GameData: Codable {
         }
         else if let timeLeft = self.timeLeft {
             print("received updated time left from host \(timeLeft)")
-            Game.viewModel.model.timeKeeper.timeLeft = timeLeft
+            Game.viewModel.model.controller.timeLeft = timeLeft
         }
         
         else if let timeLimit = self.timeLimit {
             print("receive new time limit from host \(timeLimit)")
-            Game.viewModel.model.timeKeeper.timeLimit = timeLimit
+            Game.viewModel.model.controller.timeLimit = timeLimit
         }
         else if let variants = variants {
             if let totalWords = totalWords {
