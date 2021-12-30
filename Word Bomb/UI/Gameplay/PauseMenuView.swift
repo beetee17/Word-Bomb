@@ -10,29 +10,35 @@ import SwiftUI
 
 struct PauseMenuView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
-    
+    @Binding var gamePaused: Bool
     var body: some View {
         
         
         VStack(spacing: 100) {
             // RESUME, RESTART, QUIT buttons
-            Game.mainButton(label: "RESUME", systemImageName: "play") {
+            Game.MainButton(label: "RESUME", systemImageName: "play") {
                 viewModel.resumeGame()
+                gamePaused = false
             }
-            Game.mainButton(label: "RESTART", systemImageName: "gobackward") {
+            Game.MainButton(label: "RESTART", systemImageName: "gobackward") {
                 viewModel.restartGame()
+                gamePaused = false
             }
-            Game.mainButton(label: "QUIT", systemImageName: "flag", sound: "back") {
+            Game.MainButton(label: "QUIT", systemImageName: "flag", sound: .Cancel) {
                 viewModel.viewToShow = .main
             }
         }
+        .if(gamePaused) { $0.helpButton() }
+        .scaleEffect(gamePaused ? 1 : 0)
+        .opacity(gamePaused ? 1 : 0)
+        .ignoresSafeArea(.all)
     }
 }
 
 struct PauseMenuView_Previews: PreviewProvider {
     
     static var previews: some View {
-        PauseMenuView()
+        PauseMenuView(gamePaused: .constant(true))
             .environmentObject(WordBombGameViewModel())
     }
 }
