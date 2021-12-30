@@ -29,7 +29,8 @@ struct OutputText: View {
                 .transition(AnyTransition.scale.animation(.easeInOut(duration:0.3)))
                 .id(output)
                 .onChange(of: output, perform: { newOutput in
-                    if isCorrect(newOutput) { Game.playSound(file: "correct") }
+                    if isCorrect(newOutput) { AudioPlayer.playSound(.Correct) }
+                    else if isWrong(newOutput) { AudioPlayer.playSound(.Wrong) }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1,
                                                   execute: { self.clearOutput(newOutput) })
                 })
@@ -38,6 +39,9 @@ struct OutputText: View {
     
     func isCorrect(_ output: String) -> Bool {
         return output.contains("correct")
+    }
+    func isWrong(_ output: String) -> Bool {
+        return output.contains("wrong") || output.contains("used")
     }
     
     /// Clears the output text
@@ -56,10 +60,11 @@ struct OutputText_Previews: PreviewProvider {
         
         var body: some View {
             VStack {
-                Game.mainButton(label: "Generate Correct Output") {
+                DatePicker("", selection: .constant(Date())).datePickerStyle(.wheel)
+                Game.MainButton(label: "Generate Correct Output") {
                     text = "input is correct!"
                 }
-                Game.mainButton(label: "Generate Wrong Output") {
+                Game.MainButton(label: "Generate Wrong Output") {
                     text = "input is wrong!"
                 }
                 OutputText(text: $text)
