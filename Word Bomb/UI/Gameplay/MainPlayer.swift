@@ -10,6 +10,7 @@ import SwiftUI
 struct MainPlayer:  View {
     var player: Player
     @Binding var animatePlayer: Bool
+    
     var body: some View {
 
         VStack(spacing: 5) {
@@ -44,30 +45,8 @@ struct PlayerName: View {
     }
 }
 
-struct PlayerLives: View {
-    @EnvironmentObject var viewModel: WordBombGameViewModel
-    var player: Player
-    
-    var body: some View {
-        
-        HStack {
-            let totalLives = viewModel.model.players.totalLives
-            
-            // redraws the hearts when player livesLeft changes
-            ForEach(0..<totalLives, id: \.self) { i in
-                // draws player's remaining lives filled with red
-                Image(systemName: i < player.livesLeft ? "heart.fill" : "heart")
-                    .resizable()
-                    // smaller size depending on total number of lives to fit under avatar
-                    .frame(width: totalLives > 4 ? CGFloat(68 / totalLives) : 20.0,
-                           height: totalLives > 4 ? CGFloat(68 / totalLives) : 20.0,
-                           alignment: .center)
-                    .foregroundColor(.red)
-                
-            }
-        }
-    }
-}
+
+
 struct PlayerAvatar: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     var player: Player
@@ -97,7 +76,22 @@ struct PlayerAvatar: View {
 }
 
 struct MainPlayer_Previews: PreviewProvider {
+
     static var previews: some View {
-        MainPlayer(player: Player(name: "Test"), animatePlayer: .constant(false))
+        let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
+        
+        VStack {
+            MainPlayer(
+                player: viewModel.model.players.current,
+                animatePlayer: .constant(false)
+            ).environmentObject(viewModel)
+            
+            Game.MainButton(label: "OUCH") {
+                viewModel.model.currentPlayerRanOutOfTime()
+            }
+            Game.MainButton(label: "RESET") {
+                viewModel.model.players.reset()
+            }
+        }
     }
 }
