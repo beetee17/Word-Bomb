@@ -109,6 +109,7 @@
 		6CE97A99277DDE2300948560 /* wrong-1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CE97A97277DDE1D00948560 /* wrong-1.wav */; };
 		6CE97A9A277DDE2300948560 /* wrong-2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CE97A94277DDE1D00948560 /* wrong-2.wav */; };
 		6CE97A9D277DE14C00948560 /* alert.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CE97A9C277DDE6200948560 /* alert.wav */; };
+		6CE97A9F277EC35B00948560 /* PlayerLives.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE97A9E277EC35B00948560 /* PlayerLives.swift */; };
 		6CF953872692A08400D16E60 /* WordGameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF953862692A08400D16E60 /* WordGameModel.swift */; };
 		6CF9538E2692F55000D16E60 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF9538D2692F55000D16E60 /* Extensions.swift */; };
 		6CF953942692F64D00D16E60 /* ExactWordGameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF953932692F64D00D16E60 /* ExactWordGameModel.swift */; };
@@ -221,6 +222,7 @@
 		6CE97A95277DDE1D00948560 /* victory.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; path = victory.wav; sourceTree = "<group>"; };
 		6CE97A97277DDE1D00948560 /* wrong-1.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; path = "wrong-1.wav"; sourceTree = "<group>"; };
 		6CE97A9C277DDE6200948560 /* alert.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; path = alert.wav; sourceTree = "<group>"; };
+		6CE97A9E277EC35B00948560 /* PlayerLives.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerLives.swift; sourceTree = "<group>"; };
 		6CF953862692A08400D16E60 /* WordGameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordGameModel.swift; sourceTree = "<group>"; };
 		6CF9538D2692F55000D16E60 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		6CF953932692F64D00D16E60 /* ExactWordGameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExactWordGameModel.swift; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 				6C0CEEB02694599C007717E1 /* OutputText.swift */,
 				6CB6F941268F62C000FA9654 /* PauseMenuView.swift */,
 				6CB5BABB277750D600F49E7A /* MainPlayer.swift */,
+				6CE97A9E277EC35B00948560 /* PlayerLives.swift */,
 			);
 			path = Gameplay;
 			sourceTree = "<group>";
@@ -661,6 +664,7 @@
 				6C09D973276F383100D5F3EC /* LoadingView.swift in Sources */,
 				6C5514BF26B146260038C25C /* FirstLaunchInstructionsView.swift in Sources */,
 				6C86BCC52773088000E2D25F /* Word+CoreDataProperties.swift in Sources */,
+				6CE97A9F277EC35B00948560 /* PlayerLives.swift in Sources */,
 				6C5514C326B1B75F0038C25C /* DatabaseView.swift in Sources */,
 				6CAE6C5D276B140500F8BC2C /* PurchaseService.swift in Sources */,
 				6CE00F1F26ABD044005406FF /* BannerView.swift in Sources */,
