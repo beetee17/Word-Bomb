@@ -27,8 +27,8 @@ struct ScoreCounter: View {
                     
                     Text("\(score)")
                         .boldText()
-                        .scaleEffect(animateScore ? 1 : 0)
-                        .animation(.interactiveSpring(response: 0.3, dampingFraction: 0.4, blendDuration: 0.1))
+                        .scaleEffect(animateScore ? 1 : 1.2)
+                        .animation(Game.mainAnimation)
                         .overlay(
                             Circle()
                                 .strokeBorder(style: StrokeStyle(lineWidth: animateDashedBorder ? 0 : 50, lineCap: .butt, dash: [3, 10]))
