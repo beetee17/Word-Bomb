@@ -25,7 +25,7 @@ struct BombView: View {
         // Do not somehow exceed the maximum frame number
         let frameNumber =
             min(25,
-                numTotalFrames - safeDivideByZero(timeLimit, by: timeLimit/Float(numTotalFrames)) + 1)
+                numTotalFrames - safeDivideByZero(timeLeft, by: timeLimit/Float(numTotalFrames)) + 1)
         
         if frameNumber >= 10 {
             
