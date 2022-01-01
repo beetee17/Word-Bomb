@@ -11,7 +11,7 @@ struct GameData: Codable {
     var state: GameState?
     var model: WordBombGame?
     var input: String?
-    var response: InputStatus?
+    var response: Response?
     var query: String?
     var timeLeft: Float?
     var timeLimit: Float?
@@ -45,10 +45,9 @@ struct GameData: Codable {
                 Game.viewModel.model.game?.reset()
             case .playerInput:
                 print("received input response from host")
-                let nilString: String? = nil
                 Game.viewModel.handleGameState(gameState,
                                                data: ["input" : self.input!,
-                                                      "response" : (self.response!, nilString)])
+                                                      "response" : self.response!])
             case .playerTimedOut:
                 Game.viewModel.handleGameState(gameState)
             case .gameOver:

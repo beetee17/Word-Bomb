@@ -27,8 +27,8 @@ struct WordBombGame: Codable {
     /// The current state of the game
     var gameState: GameState = .initial
     
-    /// The number of correct answers used in the game. The score should only be set within the model
-    var numCorrect = 0
+    /// The current score in the game. The score should only be set within the model
+    var score = 0
     
     /// The output text to be displayed depending on player input
     var output = ""
@@ -145,13 +145,13 @@ struct WordBombGame: Codable {
     /// Updates the time left & time limit and output & query texts depending on the outcome of the user input.
     /// - Parameters:
     ///   - input: The user's input
-    ///   - response: The outcome of the user input. Contains a new query depending on the outcome.
-    mutating func process(_ input: String, _ response: (status: InputStatus, newQuery: String?)) {
+    ///   - response: The `Response` object representing the outcome of `input`
+    mutating func process(_ input: String, _ response: Response) {
         print("handling player input")
         // reset the time for other player iff answer from prev player was correct
         
         if GameCenter.isHost {
-            GameCenter.send(GameData(state: .playerInput, input: input, response: response.status), toHost: false)
+            GameCenter.send(GameData(state: .playerInput, input: input, response: response), toHost: false)
         }
         
         output = response.status.outputText(input)
@@ -160,15 +160,11 @@ struct WordBombGame: Codable {
 
             if let newQuery = response.newQuery {
                 self.query = newQuery
-                
-                if GameCenter.isHost {
-                    
-                    GameCenter.send(GameData(query: query), toHost: false)
-                }
             }
+            
             _ = players.nextPlayer()
             game?.updateUsedWords(for: input)
-            numCorrect += 1
+            score += response.score
             
             if !GameCenter.isOnline {
                 // only if host or offline should update time limit
@@ -208,7 +204,7 @@ struct WordBombGame: Codable {
     
     /// Resets the relevant variables to restart the game
     mutating func restartGame() {
-        numCorrect = 0
+        score = 0
         
         controller.reset()
         players.reset()
@@ -241,7 +237,7 @@ struct WordBombGame: Codable {
             }
             
         case .playerInput:
-            if let input = data?["input"] as? String, let response = data?["response"] as? (InputStatus, String?) {
+            if let input = data?["input"] as? String, let response = data?["response"] as? Response {
                 process(input, response)
                 print("shared model processing input")
                 print("\(response)")

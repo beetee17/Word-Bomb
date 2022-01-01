@@ -36,7 +36,7 @@ struct ContainsWordGameModel: WordGameModel {
         self.pivot = queries.bisect(at: Int(syllableDifficulty*100.0))
     }
     
-    mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, score:Int, query: String?) {
+    mutating func process(_ input: String, _ query: String? = nil) -> Response {
         
         // pivot at some percentage of max element, defined by syllableDifficulty
         if numTurns % numTurnsBeforeDifficultyIncrease == 0 {
@@ -48,18 +48,18 @@ struct ContainsWordGameModel: WordGameModel {
         //        return ("correct", getRandQuery(input))
         if usedWords.contains(input) {
             print("\(input.uppercased()) ALREADY USED")
-            return (.Used, 0, nil)
+            return Response(status: .Used)
             
         }
         
         else if (searchResult != -1) && input.contains(query!) {
             print("\(input.uppercased()) IS CORRECT")
-            return (.Correct, getScore(for: input, and: query), getRandQuery(input))
+            return Response(status: .Correct, score: getScore(for: input, and: query), newQuery: getRandQuery(input))
         }
         
         else {
             print("\(input.uppercased()) IS WRONG")
-            return (.Wrong, 0, nil)
+            return Response(status: .Wrong)
             
         }
         

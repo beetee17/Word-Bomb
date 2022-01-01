@@ -22,23 +22,23 @@ struct ExactWordGameModel: WordGameModel {
         self.totalWords = totalWords
     }
     
-    mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, score: Int, query: String?) {
+    mutating func process(_ input: String, _ query: String? = nil) -> Response {
         
         if usedWords.contains(input) {
             print("\(input.uppercased()) ALREADY USED")
-            return (.Used, 0, nil)
+            return Response(status: .Used)
         }
         
         let searchResult = words.search(element: input)
         
         if searchResult != -1 {
             print("\(input.uppercased()) IS CORRECT")
-            return (.Correct, getScore(for: input), nil)
+            return Response(status: .Correct, score: getScore(for: input))
         }
                 
         else {
             print("\(input.uppercased()) IS WRONG")
-            return (.Wrong, 0, nil)
+            return Response(status: .Wrong)
         }
     }
     
