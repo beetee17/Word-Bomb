@@ -54,7 +54,6 @@ struct ContainsWordGameModel: WordGameModel {
         
         else if (searchResult != -1) && input.contains(query!) {
             print("\(input.uppercased()) IS CORRECT")
-            usedWords.insert(input)
             return (.Correct, getRandQuery(input))
         }
         

@@ -31,17 +31,12 @@ struct ReverseWordGameModel: WordGameModel {
         let searchResult = words.search(element: input)
         if searchResult != -1 && input.first == query!.last {
             print("\(input.uppercased()) IS CORRECT")
-            
-            updateUsedWords(for: input)
-            
             return (.Correct, getRandQuery(input))
-            
         }
         
         else {
             print("\(input.uppercased()) IS WRONG")
             return (.Wrong, nil)
-            
         }
     }
     

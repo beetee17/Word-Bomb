@@ -33,11 +33,7 @@ struct ExactWordGameModel: WordGameModel {
         
         if searchResult != -1 {
             print("\(input.uppercased()) IS CORRECT")
-            
-            updateUsedWords(for: input)
-            
             return (.Correct, nil)
-            
         }
                 
         else {
