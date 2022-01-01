@@ -36,7 +36,7 @@ struct ContainsWordGameModel: WordGameModel {
         self.pivot = queries.bisect(at: Int(syllableDifficulty*100.0))
     }
     
-    mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, query: String?) {
+    mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, score:Int, query: String?) {
         
         // pivot at some percentage of max element, defined by syllableDifficulty
         if numTurns % numTurnsBeforeDifficultyIncrease == 0 {
@@ -48,18 +48,18 @@ struct ContainsWordGameModel: WordGameModel {
         //        return ("correct", getRandQuery(input))
         if usedWords.contains(input) {
             print("\(input.uppercased()) ALREADY USED")
-            return (.Used, nil)
+            return (.Used, 0, nil)
             
         }
         
         else if (searchResult != -1) && input.contains(query!) {
             print("\(input.uppercased()) IS CORRECT")
-            return (.Correct, getRandQuery(input))
+            return (.Correct, getScore(for: input, and: query), getRandQuery(input))
         }
         
         else {
             print("\(input.uppercased()) IS WRONG")
-            return (.Wrong, nil)
+            return (.Wrong, 0, nil)
             
         }
         
@@ -91,6 +91,11 @@ struct ContainsWordGameModel: WordGameModel {
         return query
         
     }
+    
+    func getScore(for input: String, and query: String?) -> Int {
+        return 1
+    }
+    
     func checkIfHasAtLeastOneUsableAnswer(_ query: String) -> Bool {
         // first check in used words -> iff there has been no answers used then there must be at least one usable answer
         var atLeastOneUsableAnswer = true

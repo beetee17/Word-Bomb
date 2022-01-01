@@ -23,10 +23,9 @@ protocol WordGameModel {
     /// - Parameter input: The user input
     /// - Parameter query: The current query (if `.Classic` game type)
     /// - Returns: The outcome of the user input
-    mutating func process(_ input: String, _ query: String?) -> (status: InputStatus, query: String?)
+    mutating func process(_ input: String, _ query: String?) -> (status: InputStatus, score: Int, query: String?)
     
     /// Adds the given input to the set of used words. Should only be called when the input was correct
-//    mutating func updateUsedWords(input: Word)
     mutating func updateUsedWords(for input: String)
     
     /// Resets the model, usually when restarting the game
@@ -36,6 +35,8 @@ protocol WordGameModel {
     /// Depends on the game mode and the outcome of the user input
     /// - Parameter input: Optional string corresponding to user input that is required in games of `.Reverse` type
     func getRandQuery(_ input: String?) -> String
+    
+    func getScore(for input: String, and query: String?) -> Int
 }
 
 

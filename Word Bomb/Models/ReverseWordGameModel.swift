@@ -21,22 +21,22 @@ struct ReverseWordGameModel: WordGameModel {
         self.totalWords = totalWords
     }
     
-    mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, query: String?) {
+    mutating func process(_ input: String, _ query: String? = nil) -> (status: InputStatus, score: Int, query: String?) {
         
         if usedWords.contains(input) {
             print("\(input.uppercased()) ALREADY USED")
-            return (.Used, nil)
+            return (.Used, 0, nil)
             
         }
         let searchResult = words.search(element: input)
         if searchResult != -1 && input.first == query!.last {
             print("\(input.uppercased()) IS CORRECT")
-            return (.Correct, getRandQuery(input))
+            return (.Correct, getScore(for: input), getRandQuery(input))
         }
         
         else {
             print("\(input.uppercased()) IS WRONG")
-            return (.Wrong, nil)
+            return (.Wrong, 0, nil)
         }
     }
     
@@ -50,6 +50,7 @@ struct ReverseWordGameModel: WordGameModel {
     mutating func reset() {
         usedWords = Set<String>()
     }
+    
     func getRandQuery(_ input: String? = nil) -> String {
         if let input = input {
             return String(input.last!)
@@ -58,6 +59,10 @@ struct ReverseWordGameModel: WordGameModel {
         else {
             return String(words.randomElement()!.trim().last!)
         }
+    }
+    
+    func getScore(for input: String, and query: String? = nil) -> Int {
+        return 1
     }
 }
 
