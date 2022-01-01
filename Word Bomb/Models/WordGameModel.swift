@@ -10,9 +10,9 @@ import Foundation
 /// Protocol for the structs that implement the game mechanism, mainly the processing of user input and generating random queries if necessary
 protocol WordGameModel {
     
-    /// `Database` that contains all the valid words for the given mode
-//    var wordsDB: Database { get }
+    /// Array that contains all the valid words for the given mode
     var words: [String] { get }
+    /// Mapping from valid word to its variants (they are different accepted spellings of the same word)
     var variants: [String: [String]] { get }
     /// Set of words already used in the current game. Prevents players from giving the same answer more than once
     var usedWords: Set<String> { get set }
