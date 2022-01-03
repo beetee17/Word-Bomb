@@ -9,19 +9,35 @@ import SwiftUI
 
 struct MainPlayer:  View {
     var player: Player
-    @Binding var animatePlayer: Bool
+    var chargeUpBar: Bool
+    @Binding var showScore: Bool
+    @Binding var showName: Bool
+    
     
     var body: some View {
 
         VStack(spacing: 5) {
-
-            PlayerAvatar(player: player)
-            if !animatePlayer {
-                PlayerName(player: player)
-                    .transition(.identity)
+            if showScore {
+                ScoreCounter(score: player.score)
             }
+            HStack(alignment:.center) {
+                
+                if chargeUpBar {
+                    ChargeUpBar(value: player.chargeProgress,
+                                invert: true)
+                        .frame(width: 10, height: 100)
+                }
+                
+                PlayerAvatar(player: player)
+            }
+            if showName {
+                PlayerName(player: player)
+                    .transition(.scale)
+            }
+            
             PlayerLives(player: player)
-
+            
+            
         }
     }
 }
@@ -75,23 +91,23 @@ struct PlayerAvatar: View {
     }
 }
 
-struct MainPlayer_Previews: PreviewProvider {
-
-    static var previews: some View {
-        let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
-        
-        VStack {
-            MainPlayer(
-                player: viewModel.model.players.current,
-                animatePlayer: .constant(false)
-            ).environmentObject(viewModel)
-            
-            Game.MainButton(label: "OUCH") {
-                viewModel.model.currentPlayerRanOutOfTime()
-            }
-            Game.MainButton(label: "RESET") {
-                viewModel.model.players.reset()
-            }
-        }
-    }
-}
+//struct MainPlayer_Previews: PreviewProvider {
+//
+//    static var previews: some View {
+//        let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
+//        
+//        VStack {
+//            MainPlayer(
+//                player: viewModel.model.players.current,
+//                animatePlayer: .constant(false)
+//            ).environmentObject(viewModel)
+//            
+//            Game.MainButton(label: "OUCH") {
+//                viewModel.model.currentPlayerRanOutOfTime()
+//            }
+//            Game.MainButton(label: "RESET") {
+//                viewModel.model.players.reset()
+//            }
+//        }
+//    }
+//}
