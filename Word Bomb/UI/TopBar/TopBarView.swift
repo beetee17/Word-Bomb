@@ -47,10 +47,9 @@ struct TopBarView: View {
                         if .gameOver == viewModel.model.gameState {
                             RestartButton()
                         } else if !showMatchProgress {
-                            ScoreCounter(score: $viewModel.model.numCorrect) {
-                                AudioPlayer.playSound(.Select)
-                                showMatchProgress.toggle()
-                            }
+                            CorrectCounter(
+                                numCorrect: viewModel.model.numCorrect,
+                                action: { showMatchProgress.toggle() })
                         }
                     })
         }
