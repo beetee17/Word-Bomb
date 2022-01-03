@@ -10,16 +10,29 @@ import SwiftUI
 struct TwoPlayerView: View {
     
     @EnvironmentObject var viewModel: WordBombGameViewModel
+    var players: [Player] { viewModel.model.players.playing }
+    
+    var frameWidth: CGFloat
+    var leftPlayerOffset: CGFloat
+    var rightPlayerOffset: CGFloat
+    
+    init() {
+        frameWidth = Device.width*0.85
+        leftPlayerOffset = -frameWidth/2 + Game.playerAvatarSize*0.75
+        rightPlayerOffset = -leftPlayerOffset
+    }
+    
     
     var body: some View {
-
-        let frameWidth = Device.width*0.85
         
         ZStack {
             HStack(spacing: 90) {
-                ForEach(viewModel.model.players.queue) { player in
+                ForEach(players) { player in
                     ZStack {
-                        MainPlayer(player: player, animatePlayer: .constant(false))
+                        MainPlayer(player: player,
+                                   chargeUpBar: true,
+                                   showScore: .constant(true),
+                                   showName: .constant(true))
                             .scaleEffect(viewModel.model.players.current == player ? 1 : 0.9)
                             .animation(.easeInOut)
       
@@ -29,24 +42,32 @@ struct TwoPlayerView: View {
             }
             .frame(minWidth: frameWidth, maxWidth: frameWidth, minHeight: 0, alignment: .top)
             
-            let leftPlayerOffset = -frameWidth/2 + Game.playerAvatarSize*0.75
-            let rightPlayerOffset = -leftPlayerOffset
             
             BombView(timeLeft: $viewModel.model.controller.timeLeft, timeLimit: viewModel.model.controller.timeLimit)
                 .frame(width: Game.miniBombSize,
                        height: Game.miniBombSize)
-                .offset(x: viewModel.model.players.current == viewModel.model.players.queue[0] ? leftPlayerOffset : rightPlayerOffset,
-                        y: 0)
+                .offset(x: getBombOffset())
                 .animation(.easeInOut(duration: 0.3).delay(.playerTimedOut == viewModel.model.gameState ? 0.8 : 0))
                 .overlay (
                     BombExplosion(animating: $viewModel.model.controller.animateExplosion)
                         .frame(width: Game.miniBombSize*1.5,
                                height: Game.miniBombSize*1.5)
-                        .offset(x: viewModel.model.players.current == viewModel.model.players.queue[0] ? rightPlayerOffset + Game.miniBombExplosionOffset : leftPlayerOffset + Game.miniBombExplosionOffset,
+                        .offset(x: getExplosionOffset(),
                                 y: Game.miniBombExplosionOffset)
                 )
  
         }
+    }
+    private func getBombOffset() -> CGFloat {
+        return players.first!.queueNumber == 0
+               ? leftPlayerOffset
+               : rightPlayerOffset
+    }
+    
+    private func getExplosionOffset() -> CGFloat {
+        return players.first!.queueNumber == 0
+               ? rightPlayerOffset + Game.miniBombExplosionOffset
+               : leftPlayerOffset + Game.miniBombExplosionOffset
     }
 }
 

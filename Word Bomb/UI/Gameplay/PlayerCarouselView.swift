@@ -5,95 +5,84 @@
 //
 
 import SwiftUI
-
 struct PlayerCarouselView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
-    @State var animatePlayers = false
-
+    
+    let spacing = CGFloat(5)
+    let playerSize = Game.playerAvatarSize
+    let animationDuration = 0.5
+    
+    var players: [Player] { viewModel.model.players.playing }
+    
     var body: some View {
-        let currentPlayer = viewModel.model.players.queue[0]
-        let nextPlayer = viewModel.model.players.queue[1]
-        let prevPlayer = viewModel.model.players.queue[back: 0]
         
-        let playerSize = Game.playerAvatarSize
-        let spacing = CGFloat(5.0)
-
-        HStack(spacing: spacing) {
-
+        VStack {
             ZStack {
-
-                LeftPlayer(player: animatePlayers ? currentPlayer : nextPlayer, animatePlayer: $animatePlayers)
-                    .offset(x: animatePlayers ? playerSize + spacing : 0, y: animatePlayers ? 50 : 0)
-                    .scaleEffect(animatePlayers ? 1 : 0.9)
-                    .zIndex(2)
-
-                LeftPlayer(player: nextPlayer, animatePlayer: .constant(false))
-                    .scaleEffect(animatePlayers ? 0.9 : 0.01)
-                    .zIndex(0)
-
-            }
-
-
-            MainPlayer(player: animatePlayers ? prevPlayer : currentPlayer, animatePlayer: $animatePlayers)
-                .offset(x: animatePlayers ? (1/0.9)*playerSize + spacing : 0, y: animatePlayers ? 0 : 50)
-                .scaleEffect(animatePlayers ? 0.9 : 1)
-                .zIndex(animatePlayers ? 1 : 2)
-
-            ZStack {
-
-                RightPlayer(player: animatePlayers ? viewModel.model.players.queue[back: 1] : prevPlayer)
-                    .scaleEffect(animatePlayers ? 0.01 : 0.9)
-
+                ForEach(players, id: \.id) { player in
+                    MainPlayer(player: player,
+                               chargeUpBar: true,
+                               showScore: .constant(true),
+                               showName: .constant(getShowName(for: player)))
+                        .scaleEffect(getScale(for: player))
+                        .offset(x: getOffset(for: player).x,
+                                y: getOffset(for: player).y)
+                        .zIndex(getZIndex(for: player))
+                        .animation(.easeInOut(duration: animationDuration))
+                }
             }
         }
-        .animation(animatePlayers ? .easeInOut(duration: 0.3) : nil)
-        .onChange(of: viewModel.model.players.queue, perform: { _ in
-
-            withAnimation { animatePlayers.toggle() }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: { animatePlayers = false })
-
-        })
-
     }
-}
+    
+    private func getZIndex(for player: Player) -> Double {
 
-struct LeftPlayer: View {
-    var player: Player
-    @Binding var animatePlayer: Bool
-
-    var body: some View {
-
-        VStack(spacing: 5) {
-
-            PlayerAvatar(player: player)
-            if animatePlayer {
-                PlayerName(player: player)
-                    .transition(.identity)
-
-            }
-            PlayerLives(player: player)
-
+        if players.isCurrent(player) {
+            // current player should be above all others
+            return Double(players.count)
+        } else if players.isPrev(player) {
+            return Double(players.count - 1)
+        } else {
+            return Double(players.count - player.queueNumber - 1)
         }
     }
-}
-
-
-struct RightPlayer: View {
-    var player: Player
-
-    var body: some View {
-
-        VStack(spacing: 5) {
-
-            PlayerAvatar(player: player)
-            PlayerLives(player: player)
-
+    
+    private func getShowName(for player: Player) -> Bool {
+        players.isCurrent(player)
+    }
+    
+    private func getOffset(for player: Player) -> (x: CGFloat, y: CGFloat) {
+        if players.isCurrent(player) {
+            return (0, 50)
+        } else if players.isPrev(player) {
+            return (playerSize + spacing + 18, 0)
+        } else {
+            return (-(playerSize + spacing + 18), 0)
+        }
+    }
+    private func getScale(for player: Player) -> CGFloat {
+        if players.isCurrent(player) {
+            return 1.0
+        } else if players.isNext(player) || players.isPrev(player) {
+            return 0.9
+        } else {
+            return 0
         }
     }
 }
 
 struct PlayerCarouselView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerCarouselView().environmentObject(WordBombGameViewModel())
+        let viewModel = WordBombGameViewModel.preview(numPlayers: 3)
+        VStack {
+            PlayerCarouselView()
+                .environmentObject(viewModel)
+            Game.MainButton(label: "ANIMATE") {
+                viewModel.model.process("Test",
+                                        Response(status: .Correct,
+                                                 score: Int.random(in: 1...10)))
+            }
+            Game.MainButton(label: "OUCH") {
+                viewModel.model.currentPlayerRanOutOfTime()
+            }
+        }
     }
 }

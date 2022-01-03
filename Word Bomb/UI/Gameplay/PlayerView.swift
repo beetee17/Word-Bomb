@@ -15,7 +15,7 @@ struct PlayerView: View {
     var body: some View {
         
         ZStack {
-            switch viewModel.model.players.queue.count {
+            switch viewModel.model.players.playing.count {
                 
             case 3...Int.max:
                 PlayerCarouselView()
@@ -25,9 +25,22 @@ struct PlayerView: View {
                     .offset(x: 0, y: Device.height*0.07)
                     .transition(.scale)
             default:
-                MainPlayer(player: viewModel.model.players.current, animatePlayer: .constant(false))
-                    .offset(x: 0, y: Device.height*0.1)
-                    .transition(.scale)
+                
+                VStack {
+                    ChargeUpBar(value: viewModel.model.players.current.chargeProgress,
+                                invert: false)
+                        .frame(height: 40)
+                    
+                    MainPlayer(player: viewModel.model.players.current,
+                               chargeUpBar: false,
+                               showScore: .constant(true),
+                               showName: .constant(true))
+                        .transition(.scale)
+                }
+                .onChange(of: viewModel.model.players.current) { new in
+                    print("CURREnt CHANGE TO \(new.name)")
+                }
+                .padding(.top, 20)
                 
             }
         }
