@@ -10,15 +10,16 @@ import SwiftUI
 struct GameOverText: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     @State var showMatchReview = false
-
+    @State var showConfetti = false
+    
     var body: some View {
         let usedWords = viewModel.model.game?.usedWords
-        let numCorrect = usedWords?.count ?? 0
+        let score = viewModel.model.players.current.score
         let trainingMode = viewModel.trainingMode
         let gameMode = viewModel.gameMode
         
         VStack {
-            Game.MainButton(label: "Word Count: \(numCorrect)", systemImageName: "a.square.fill") {
+            Game.MainButton(label: "Match Review", systemImageName: "list.bullet.rectangle.portrait") {
                     showMatchReview = true
                 }
             
@@ -27,16 +28,25 @@ struct GameOverText: View {
                 Text("Previous Best: \(gameMode!.highScore)")
                     .boldText()
                     .onAppear() {
-                        if numCorrect <= gameMode!.highScore {
+                        if score <= gameMode!.highScore {
                             AudioPlayer.playSound(.Explosion)
                         }
-                        gameMode!.updateHighScore(with: numCorrect)
                     }
             }
         }
-        .if((numCorrect > gameMode?.highScore ?? Int.max) || !trainingMode) { $0.overlay(ConfettiView()) }
+        .if(showConfetti) { $0.overlay(ConfettiView()) }
         .sheet(isPresented: $showMatchReview) {
             MatchReviewView(words: viewModel.model.game?.words,  usedWords: Set(usedWords ?? []), numCorrect: viewModel.model.numCorrect, totalWords: viewModel.model.game!.totalWords)
+        }
+        .onAppear() {
+            if (score > gameMode?.highScore ?? Int.max) || !trainingMode {
+                showConfetti = true
+            }
+        }
+        .onDisappear() {
+            if trainingMode {
+                gameMode!.updateHighScore(with: score)
+            }
         }
     }
 }
