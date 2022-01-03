@@ -16,30 +16,32 @@ class Player: Codable, Equatable, Identifiable {
     }
     
     var score = 0
+    var chargeProgress = 0 
     var name:String
     var id = UUID()
+    var queueNumber: Int
     var totalLives = UserDefaults.standard.integer(forKey: "Player Lives")
     var livesLeft = UserDefaults.standard.integer(forKey: "Player Lives")
     var image: Data? = nil
     
-    init(name:String) {
+    init(name:String, queueNumber: Int) {
         self.name = name
+        self.queueNumber = queueNumber
     }
     
-    func setImage(_ image:UIImage?) {
+     func setImage(_ image:UIImage?) {
         self.image = image?.pngData()
     }
     
-    func reset() {
+    func reset(with queueNumber: Int) {
         score = 0
+        chargeProgress = 0
         livesLeft = totalLives
+        self.queueNumber = queueNumber
     }
 }
 
-class Players: Codable, Identifiable {
-    
-    /// Non-mutating array of `Player` objects containing every player in the current game. This allows us to reset the `queue` when restarting the game .
-    var allPlayers: [Player]
+struct Players: Codable {
     
     /**
      Mutating array of `Player` objects that provides information about the current sequence of players.
@@ -49,122 +51,148 @@ class Players: Codable, Identifiable {
      */
     var queue: [Player]
     
+    var playing: [Player] { queue.filter({ $0.livesLeft > 0 })}
+    
     /// The `Player` object representing the current player in the game
     var current: Player
+    
     var totalLives: Int {
         current.totalLives
     }
-    var numTurnsInCurrentRound = 0
-    var numRounds = 1
-    var numCorrect = 0
     
     /// Initialises with an optional array of `Player` objects
     /// - Parameter players: if `players` is nil, fallback to the user settings for the number of players and the names of each player
     init(from players: [Player]? = nil) {
         
         if let players = players, !players.isEmpty {
-            self.allPlayers = players
+            self.queue = players
         }
         else {
-            self.allPlayers = []
+            self.queue = []
             let playerNames = UserDefaults.standard.stringArray(forKey: "Player Names") ?? []
 
             for i in 0..<max(1, UserDefaults.standard.integer(forKey: "Num Players")) {
                 
                 if i >= playerNames.count {
                     // If no name was set by the user for this player, create one with a generic name
-                    self.allPlayers.append(Player(name: "Player \(i+1)"))
+                    self.queue.append(Player(name: "Player \(i+1)", queueNumber: i))
                 }
                 else {
-                    self.allPlayers.append(Player(name: playerNames[i]))
+                    self.queue.append(Player(name: playerNames[i], queueNumber: i))
                 }
             }
             
         }
-        self.queue = self.allPlayers
         self.current = queue.first!
     }
-    convenience init(from playerNames: [String]) {
+    
+    init(from playerNames: [String]) {
         
         var players: [Player] = []
-        for playerName in playerNames {
-            players.append(Player(name: playerName))
+        for i in playerNames.indices {
+            players.append(Player(name: playerNames[i], queueNumber: i))
         }
         self.init(from: players)
     }
     
-    func find(_ player: Player) -> Int? {
-        for i in allPlayers.indices {
-            if allPlayers[i].id == player.id { return i }
+    mutating func updateCurrentPlayer() {
+        if let newCurrent = queue.first(where: ({ $0.queueNumber == 0 })) {
+            print("Current player changed from \(current.name) to \(newCurrent.name)")
+            current = newCurrent
         }
-        return nil
     }
     
     /// Removes `player` from the game. Should be called in multiplayer context if `player` disconnects
     /// - Parameter player: `Player` object to be removed
-    func remove(_ player: Player) {
+    mutating func remove(_ player: Player) {
         guard let index = queue.firstIndex(of: player) else { return }
-        print("Player removed")
+        
+        
         queue.remove(at: index)
+        print("Player removed")
+        
+        for activePlayer in queue {
+            if activePlayer.queueNumber > player.queueNumber {
+                // shift everyone behind the removed player down by one
+                activePlayer.queueNumber -= 1
+            }
+        }
     }
     
     /// Updates `current` and `queue`  when `current` runs out of time
     /// - Returns: Tuple containing the output text to be displayed, and a Boolean corresponding to if the game is over
-    func currentPlayerRanOutOfTime() -> (String, Bool) {
+    mutating func currentPlayerRanOutOfTime() -> (String, Bool) {
         
         var output = ""
-        
-        current.livesLeft -= 1
         
         for player in queue {
             print("\(player.name): \(player.livesLeft) lives")
         }
-            
+        
         switch current.livesLeft == 0 {
         case true:
-            output = "\(current.name) Lost!"
+            output = "\(current.name) Ran Out of Lives!"
         case false:
             output = "\(current.name) Ran Out of Time!"
         }
         
-        guard queue.count != 1 else {
-            // User is playing in training mode
-            return ("You Ran Out of Time!", current.livesLeft == 0)
-        }
-        
         let currPlayer = nextPlayer()
-        if currPlayer.livesLeft == 0 {
-            remove(currPlayer)
-        }
+        currPlayer.livesLeft -= 1
         
-        return (output, queue.count < 2)
+        return (output, playing.count == 0)
+
+    }
+    
+    /// Should only be called when game is over
+    /// Assigns the `current` `Player` to the player that has the highest score
+    /// If multiple players have the same high score, lives left should decide the winner
+    /// What if multiple players have same score and lives left? Just choose first player...
+    mutating func getWinningPlayer() {
+        let winningScore = queue.max(by: { $0.score < $1.score })?.score
+        print("The winning score was \(String(describing: winningScore))")
+        
+        let winningPlayers = queue.filter({ $0.score == winningScore })
+        print("The players with such a score are \(winningPlayers)")
+        
+        if let winningPlayer = winningPlayers.max(by: { $0.livesLeft < $1.livesLeft }) {
+            print("THE WINNING PLAYER IS \(winningPlayer.name)")
+            current = winningPlayer
+        }
     }
     
     /// Goes to the next `Player` in the `queue` and updates `current`; following a carousel-like structure
     /// - Returns: `Player` object corresponding to `current` *before* the update was made
-    func nextPlayer() -> Player {
-        
+    mutating func nextPlayer() -> Player {
+
         let prev = current
         
-        switch queue.count {
+        switch playing.count {
         case 1:
-            current = queue.first!
+            break
         case 2:
-            print("2 player swap")
-            current = current == queue.first! ? queue.last! : queue.first!
+//            print("2 player swap, \(playing.first?.name): \(playing.first?.queueNumber) and \(playing.last?.name): \(playing.last?.queueNumber)")
+            if current == playing.first! {
+                playing.last!.queueNumber = 0
+                playing.first!.queueNumber = 1
+            } else {
+                playing.first!.queueNumber = 0
+                playing.last!.queueNumber = 1
+            }
+//            print("2 player swap complete, \(playing.first?.name): \(playing.first?.queueNumber) and \(playing.last?.name): \(playing.last?.queueNumber)")
         default:
             // cycle current player to back of queue
             print("\(current.name) with \(current.livesLeft) lives left going to back of queue")
-            queue.append(queue.dequeue()!)
-            current = queue.first!
+            
+            for i in playing.indices {
+                if playing[i].queueNumber == 0 {
+                    playing[i].queueNumber = playing.count-1
+                } else {
+                    playing[i].queueNumber -= 1
+                }
+            }
         }
         
-        numTurnsInCurrentRound += 1
-        if numTurnsInCurrentRound >= queue.count {
-            numRounds += 1
-            print("numRounds: \(numRounds)")
-            numTurnsInCurrentRound = 0
-        }
+        updateCurrentPlayer()
         
         return prev
     }
@@ -181,15 +209,10 @@ class Players: Codable, Identifiable {
         }
     }
     
-    func reset() {
-        for player in allPlayers {
-            player.reset()
+    mutating func reset() {
+        for i in queue.indices {
+            queue[i].reset(with: i)
         }
-        queue = allPlayers
-        current = queue.first!
-        
-        numRounds = 1
-        numTurnsInCurrentRound = 0
-        numCorrect = 0
+        updateCurrentPlayer()
     }
 }

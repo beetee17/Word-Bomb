@@ -44,6 +44,18 @@ extension Array where Element: Comparable {
     
 }
 
+extension Array where Element == Player {
+    func isCurrent(_ player: Player) -> Bool {
+        player.queueNumber == 0
+    }
+    func isNext(_ player: Player) -> Bool {
+        player.queueNumber == 1
+    }
+    func isPrev(_ player: Player) -> Bool {
+        player.queueNumber == self.count - 1
+    }
+}
+
 extension Array where Element == (String, Int) {
     
     func bisect(at element: Int) -> Int {
