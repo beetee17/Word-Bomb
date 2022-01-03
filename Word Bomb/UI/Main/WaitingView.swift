@@ -18,7 +18,7 @@ struct WaitingView: View {
         
         // For Game Center matches
         let numConnected = viewModel.gkConnectedPlayers
-        let expectedPlayers = viewModel.model.players.allPlayers.count - 1
+        let expectedPlayers = viewModel.model.players.queue.count - 1
         
         ZStack {
             Color("Background")
