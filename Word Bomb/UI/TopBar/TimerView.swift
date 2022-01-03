@@ -16,7 +16,7 @@ struct TimerView: View {
     
     var body: some View {
         ZStack {
-            if players.queue.count != 2 {
+            if players.playing.count != 2 {
                 ZStack {
                     BombView(timeLeft: $timeLeft, timeLimit: timeLimit)
                         .frame(width: 100, height: 100)
