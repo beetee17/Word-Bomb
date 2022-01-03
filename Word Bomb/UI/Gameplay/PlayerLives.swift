@@ -52,8 +52,7 @@ struct PlayerLive: View {
                 .foregroundColor(.red)
                 .scaleEffect(animate ? 0 : 1)
                 .opacity(animate ? 0 : 1)
-                .modifier(Shake(animatableData: CGFloat(animate ? 1 : 0)))
-                .animation(.spring())
+                .modifier(Shake(animatableData: CGFloat(1)))
             
             Image(systemName: "heart")
                 .resizable()
@@ -62,7 +61,6 @@ struct PlayerLive: View {
                        alignment: .center)
                 .foregroundColor(.red)
                 .modifier(Shake(animatableData: CGFloat(animate ? 1 : 0)))
-                .animation(.spring())
         }
     }
 }
