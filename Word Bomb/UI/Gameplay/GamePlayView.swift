@@ -31,15 +31,17 @@ struct GamePlayView: View {
                 
                 VStack {
                     TopBarView(gamePaused: $gamePaused, showMatchProgress: $showMatchProgress, gkMatch: gkMatch)
-                        
+                    
+    
                     Spacer()
                 }
-                
+
                 VStack {
                     PlayerView()
                         .padding(.top, Device.height*0.075)
                     Spacer()
                 }
+  
                 
             }
             .ignoresSafeArea(.keyboard)
@@ -85,11 +87,40 @@ struct GamePlayView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            GamePlayView(gkMatch: nil).environmentObject(WordBombGameViewModel.preview(numPlayers: 3))
+            VStack {
+                let viewModel = WordBombGameViewModel.preview(numPlayers: 6)
+                
+                GamePlayView(gkMatch: nil).environmentObject(viewModel)
+                Game.MainButton(label: "ANIMATE") {
+                    viewModel.model.process("Test", Response(status: .Correct, score: Int.random(in: 1...10)))
+                }
+                Game.MainButton(label: "OUCH") {
+                    viewModel.model.currentPlayerRanOutOfTime()
+                }
+            }
+            VStack {
+                let viewModel = WordBombGameViewModel.preview(numPlayers: 2)
+                
+                GamePlayView(gkMatch: nil).environmentObject(viewModel)
+                Game.MainButton(label: "ANIMATE") {
+                    viewModel.model.process("Test", Response(status: .Correct, score: Int.random(in: 1...10)))
+                }
+                Game.MainButton(label: "OUCH") {
+                    viewModel.model.currentPlayerRanOutOfTime()
+                }
+            }
+            VStack {
+                let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
+                
+                GamePlayView(gkMatch: nil).environmentObject(viewModel)
+                Game.MainButton(label: "ANIMATE") {
+                    viewModel.model.process("Test", Response(status: .Correct, score: Int.random(in: 1...10)))
+                }
+                Game.MainButton(label: "OUCH") {
+                    viewModel.model.currentPlayerRanOutOfTime()
+                }
+            }
             
-            GamePlayView(gkMatch: nil).environmentObject(WordBombGameViewModel.preview(numPlayers: 2))
-            
-            GamePlayView(gkMatch: nil).environmentObject(WordBombGameViewModel.preview(numPlayers: 1))
         }
         .background(Color("Background").ignoresSafeArea())
     }
