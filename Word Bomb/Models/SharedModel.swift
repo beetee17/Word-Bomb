@@ -27,8 +27,8 @@ struct WordBombGame: Codable {
     /// The current state of the game
     var gameState: GameState = .initial
     
-    /// The current score in the game. The score should only be set within the model
-    var score = 0
+    /// The current correct answers used in the game. Should only be set within the model
+    var numCorrect = 0
     
     /// The output text to be displayed depending on player input
     var output = ""
@@ -151,7 +151,10 @@ struct WordBombGame: Codable {
         // reset the time for other player iff answer from prev player was correct
         
         if GameCenter.isHost {
-            GameCenter.send(GameData(state: .playerInput, input: input, response: response), toHost: false)
+            GameCenter.send(GameData(state: .playerInput,
+                                     input: input,
+                                     response: response),
+                            toHost: false)
         }
         
         output = response.status.outputText(input)
@@ -162,10 +165,13 @@ struct WordBombGame: Codable {
                 self.query = newQuery
             }
             
-            _ = players.nextPlayer()
-            game?.updateUsedWords(for: input)
-            score += response.score
+            players.current.score += response.score
+            players.current.chargeProgress += response.score
             
+            numCorrect += 1
+            game?.updateUsedWords(for: input)
+            _ = players.nextPlayer()
+   
             if !GameCenter.isOnline {
                 // only if host or offline should update time limit
                 controller.updateTimeLimit()
@@ -193,9 +199,11 @@ struct WordBombGame: Codable {
         
         let (output, isGameOver) = players.currentPlayerRanOutOfTime()
         self.output = output
+        players.current.chargeProgress = 0
         
         if isGameOver {
             handleGameState(.gameOver)
+            players.getWinningPlayer()
         } else {
             controller.playExplosion()
             controller.updateTimeLimit()
@@ -204,7 +212,7 @@ struct WordBombGame: Codable {
     
     /// Resets the relevant variables to restart the game
     mutating func restartGame() {
-        score = 0
+        numCorrect = 0
         
         controller.reset()
         players.reset()
@@ -239,8 +247,8 @@ struct WordBombGame: Codable {
         case .playerInput:
             if let input = data?["input"] as? String, let response = data?["response"] as? Response {
                 process(input, response)
-                print("shared model processing input")
-                print("\(response)")
+                print("shared model processing input with response: \(response)")
+                
             }
             
         case .playerTimedOut:
