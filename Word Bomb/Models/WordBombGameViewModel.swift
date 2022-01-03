@@ -16,7 +16,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     
     static func preview(numPlayers: Int = 3) -> WordBombGameViewModel {
         let viewModel = WordBombGameViewModel()
-        let players = Players(from: (1...numPlayers).map({"Player \($0)"}))
+        let players = Players(from: (1...numPlayers).map({"\($0)"}))
         
         viewModel.model = WordBombGame(players: players)
         viewModel.gameType = .Classic
@@ -69,6 +69,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// - Parameter model: shared model to be set
     func setSharedModel(_ model: WordBombGame) {
         self.model = model
+        self.model.players.updateCurrentPlayer()
     }
     
     /// Called when settings menu is dismissed. Resets the shared model to account for any changes.
@@ -109,7 +110,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         if trainingMode {
             // Initialise a sharedModel with a single `Player`
             let playerName = (UserDefaults.standard.stringArray(forKey: "Player Names") ?? ["1"]).first!
-            players = Players(from:[Player(name: playerName)])
+            players = Players(from:[Player(name: playerName, queueNumber: 0)])
             
         } else if GameCenter.viewModel.showMatch {
             players = getOnlinePlayers(GameCenter.viewModel.gkMatch!.players)
@@ -236,10 +237,10 @@ extension WordBombGameViewModel {
     /// - Parameter gkPlayers: Array of GKPlayer objects participating in the match
     func getOnlinePlayers(_ gkPlayers: [GKPlayer]) -> Players {
         
-        var players: [Player] = [Player(name: GKLocalPlayer.local.displayName)]
+        var players: [Player] = [Player(name: GKLocalPlayer.local.displayName, queueNumber: 0)]
         
-        for player in gkPlayers {
-            players.append(Player(name: player.displayName))
+        for i in gkPlayers.indices {
+            players.append(Player(name: gkPlayers[i].displayName, queueNumber: i+1))
         }
         setGKPlayerImages(for: players, with: gkPlayers)
         return Players(from: players)
