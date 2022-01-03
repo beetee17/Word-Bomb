@@ -22,8 +22,8 @@ protocol WordGameModel {
     /// Returns the outcome of the user input
     /// - Parameter input: The user input
     /// - Parameter query: The current query (if `.Classic` game type)
-    /// - Returns: The outcome of the user input
-    mutating func process(_ input: String, _ query: String?) -> (status: InputStatus, score: Int, query: String?)
+    /// - Returns: The `Response` object representing the outcome of the user input
+    mutating func process(_ input: String, _ query: String?) -> Response
     
     /// Adds the given input to the set of used words. Should only be called when the input was correct
     mutating func updateUsedWords(for input: String)
@@ -37,6 +37,18 @@ protocol WordGameModel {
     func getRandQuery(_ input: String?) -> String
     
     func getScore(for input: String, and query: String?) -> Int
+}
+
+struct Response: Codable {
+    var status: InputStatus
+    var score: Int
+    var newQuery: String?
+    
+    init(status: InputStatus, score: Int = 0, newQuery: String? = nil) {
+        self.status = status
+        self.score = score
+        self.newQuery = newQuery
+    }
 }
 
 
