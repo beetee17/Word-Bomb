@@ -62,7 +62,7 @@ struct ReverseWordGameModel: WordGameModel {
     }
     
     func getScore(for input: String, and query: String? = nil) -> Int {
-        return 1
+        return 10
     }
 }
 
