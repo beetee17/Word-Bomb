@@ -82,7 +82,8 @@ struct GamePlayView: View {
         .onChange(of: showMatchProgress) { newValue in
             forceHideKeyboard = newValue
         }
-        .if(viewModel.model.gameState == .TieBreak) {
+        .if(viewModel.model.gameState == .TieBreak && !GameCenter.isNonHost) {
+            // Do not allow non host to resume the tie breaker
             $0.onTapGesture {
                 viewModel.startTimer()
                 viewModel.model.handleGameState(.Playing)
