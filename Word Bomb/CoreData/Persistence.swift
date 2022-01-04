@@ -15,15 +15,15 @@ struct PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         
-        let defaultDB = Database(context: viewContext, name: "default database", type: .words, items: ["word1", "word2", "word3"], isDefault: true)
+        let defaultDB = Database(context: viewContext, name: "default database", type: .Words, items: ["word1", "word2", "word3"], isDefault: true)
         
-        let wordsPreview1 = Database(context: viewContext, name: "non-empty words", type: .words, items: ["word1", "word2", "word3"])
+        let wordsPreview1 = Database(context: viewContext, name: "non-empty words", type: .Words, items: ["word1", "word2", "word3"])
         
-        let wordsPreview2 = Database(context: viewContext, name: "empty words", type: .words)
+        let wordsPreview2 = Database(context: viewContext, name: "empty words", type: .Words)
         
-        let syllablesPreview1 = Database(context: viewContext, name: "non-empty syllables", type: .queries, items: ["syllable1", "syllable2", "syllable3"])
+        let syllablesPreview1 = Database(context: viewContext, name: "non-empty syllables", type: .Queries, items: ["syllable1", "syllable2", "syllable3"])
         
-        let syllablesPreview2 = Database(context: viewContext, name: "empty syllables", type: .queries)
+        let syllablesPreview2 = Database(context: viewContext, name: "empty syllables", type: .Queries)
         
         for type in GameType.allCases {
             

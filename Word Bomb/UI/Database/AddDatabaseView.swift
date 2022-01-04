@@ -70,7 +70,7 @@ struct AddDatabaseView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var dbName = ""
-    @State private var dbType: DBType = .words
+    @State private var dbType: DBType = .Words
     @State private var selection: Database?
     @State private var dbWords: String?
 

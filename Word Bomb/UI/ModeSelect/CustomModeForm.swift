@@ -17,11 +17,11 @@ struct CustomModeForm: View {
     
     @FetchRequest(entity: Database.entity(),
                   sortDescriptors: [NSSortDescriptor(keyPath: \Database.name_, ascending: true)],
-                  predicate: NSPredicate(format: "type_ == %@", DBType.words.rawValue)) var wordsDBs: FetchedResults<Database>
+                  predicate: NSPredicate(format: "type_ == %@", DBType.Words.rawValue)) var wordsDBs: FetchedResults<Database>
     
     @FetchRequest(entity: Database.entity(),
                   sortDescriptors: [NSSortDescriptor(keyPath: \Database.name_, ascending: true)],
-                  predicate: NSPredicate(format: "type_ == %@", DBType.queries.rawValue)) var queriesDBs: FetchedResults<Database>
+                  predicate: NSPredicate(format: "type_ == %@", DBType.Queries.rawValue)) var queriesDBs: FetchedResults<Database>
     
     var body: some View {
         

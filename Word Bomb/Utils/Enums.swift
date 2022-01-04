@@ -8,8 +8,8 @@
 import Foundation
 
 enum DBType: String, CaseIterable {
-    case words = "Words"
-    case queries = "Queries"
+    case Words = "Words"
+    case Queries = "Queries"
 }
 
 enum InputStatus: String, Codable {

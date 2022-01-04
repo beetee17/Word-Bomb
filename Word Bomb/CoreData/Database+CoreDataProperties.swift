@@ -54,7 +54,7 @@ extension Database {
     
     var type: DBType {
         get {
-            return DBType(rawValue: type_ ?? DBType.words.rawValue)!
+            return DBType(rawValue: type_ ?? DBType.Words.rawValue)!
         }
         set {
             type_ = newValue.rawValue
@@ -116,9 +116,9 @@ extension Database : Identifiable {
 
 extension Database {
     static var exampleWords: Database {
-        Database(context: moc_preview, name: "Example Words", type: .words, items: ["word1", "word2", "word3"], isDefault: true)
+        Database(context: moc_preview, name: "Example Words", type: .Words, items: ["word1", "word2", "word3"], isDefault: true)
     }
     static var exampleSyllables: Database {
-        Database(context: moc_preview, name: "Example syllables", type: .queries, items: ["syllable1", "syllable2", "syllable3"])
+        Database(context: moc_preview, name: "Example syllables", type: .Queries, items: ["syllable1", "syllable2", "syllable3"])
     }
 }
