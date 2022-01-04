@@ -23,7 +23,7 @@ class CoreDataViewModel: ObservableObject {
     @Published var progress: Float = 0
     
     /// Message to be displayed to user concerning current status of the set-up process.
-    @Published var status = "Getting things ready for the first time..."
+    @Published var status = "Getting things ready for the first time"
     
     /// Total number of words to be initialised in the set-up process; used to estimate the progress made in creating each word.
     private var totalInitWords = Game.dictionary.count + Game.syllables.count + Game.countries.count
@@ -74,7 +74,7 @@ class CoreDataViewModel: ObservableObject {
                                  isDefault: true)
             self.populateDB(context: moc, db: words, words: Game.dictionary)
             
-            self.updateStatus(text: "Just awhile more...")
+            self.updateStatus(text: "Just awhile more")
 
             let _ = GameMode(context: moc, gameType: .Exact, name: "country", instruction: "NAME A COUNTRY", wordsDB: countries, isDefault: true)
             self.incrementProgress(value: 0.05)
@@ -89,7 +89,7 @@ class CoreDataViewModel: ObservableObject {
             self.incrementProgress(value: 0.05)
 
             moc.saveObjects()
-            self.updateStatus(text: "Almost Done...")
+            self.updateStatus(text: "Almost Done")
             self.incrementProgress(value: 0.3)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {

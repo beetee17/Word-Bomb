@@ -20,7 +20,8 @@ struct LoadingView: View {
                 ProgressBar(value: $viewModel.progress)
                     .frame(height: 40)
                     .padding(.horizontal)
-                Text(viewModel.status)
+                LoadingText(text: viewModel.status)
+                    .font(.bold(.subheadline)())
             }
             .onAppear() {
                 viewModel.initDatabases()
