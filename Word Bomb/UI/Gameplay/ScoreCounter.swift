@@ -41,10 +41,10 @@ struct ScoreCounter: View {
                     }
                         .frame(width: 150, height: 150)
                         .foregroundColor(.green)
-                        .offset(x: 30, y: animateIncrement ? -40 : -20)
+                        .offset(x: 20, y: animateIncrement ? -30 : -20)
                         .animation(.easeIn.speed(0.7))
-                        .opacity(animateIncrement ? 1 : 0)
-                        .animation(.easeInOut.speed(2))
+                        .opacity(animateIncrement ? 0.7 : 0)
+                        .animation(.easeInOut.speed(0.7))
                 )
                 .onChange(of: score) { [score] newValue in
                     if newValue > score {
@@ -60,7 +60,7 @@ struct ScoreCounter: View {
                             DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.075) {
                                 self.animateScore = true
                             }
-                            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.2) {
+                            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.5) {
                                 self.animateIncrement = false
                             }
                         }

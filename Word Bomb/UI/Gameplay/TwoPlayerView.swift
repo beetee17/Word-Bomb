@@ -40,8 +40,6 @@ struct TwoPlayerView: View {
                 }
  
             }
-            .frame(minWidth: frameWidth, maxWidth: frameWidth, minHeight: 0, alignment: .top)
-            
             
             BombView(timeLeft: $viewModel.model.controller.timeLeft, timeLimit: viewModel.model.controller.timeLimit)
                 .frame(width: Game.miniBombSize,

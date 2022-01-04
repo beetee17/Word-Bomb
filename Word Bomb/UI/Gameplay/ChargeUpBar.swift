@@ -122,7 +122,7 @@ struct ChargeUpBar_Previews: PreviewProvider {
                         value: value,
                         multiplier: multiplier,
                         invert: true)
-                        .frame(width: 10, height: 100)
+                        .frame(width: 10, height: Device.height*0.1)
                                         
                     Game.MainButton(label: "CHARGE") {
                         value += 50

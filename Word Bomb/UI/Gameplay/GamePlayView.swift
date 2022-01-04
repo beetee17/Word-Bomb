@@ -31,14 +31,13 @@ struct GamePlayView: View {
                 
                 VStack {
                     TopBarView(gamePaused: $gamePaused, showMatchProgress: $showMatchProgress, gkMatch: gkMatch)
-                    
-                    
                     Spacer()
                 }
+                .zIndex(1)
                 
                 VStack {
                     PlayerView()
-                        .padding(.top, Device.height*0.075)
+                        .padding(.top, Device.height*0.085)
                     Spacer()
                 }
                 
@@ -69,7 +68,7 @@ struct GamePlayView: View {
                 OutputText(text: $viewModel.model.output)
                 Spacer()
             }
-            .offset(y: Device.height*0.075)
+            .offset(y: Device.height*0.03)
             .ignoresSafeArea(.all)
         }
         .blur(radius: gamePaused || showMatchProgress ? 10 : 0, opaque: false)

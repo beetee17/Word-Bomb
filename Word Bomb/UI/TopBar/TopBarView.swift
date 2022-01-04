@@ -30,6 +30,7 @@ struct TopBarView: View {
                     }
                 )
                 .frame(width:Device.width*0.2)
+                .offset(y:Device.height*0.015)
             
             TimerView(
                 players: $viewModel.model.players,
@@ -52,10 +53,11 @@ struct TopBarView: View {
                                 action: { showMatchProgress.toggle() })
                         }
                     })
+                .offset(y:Device.height*0.015)
         }
         // The top bar is smaller when there are less than 3 players due to the bomb explosion animation.
         .frame(height: Game.miniBombSize*1.5)
-        .offset(x: 0,y: -Device.height*0.03)
+        .offset(x: 0,y: -Device.height*0.04)
     }
 }
 

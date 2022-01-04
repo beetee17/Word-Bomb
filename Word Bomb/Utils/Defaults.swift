@@ -24,7 +24,7 @@ struct Game {
     static let dictionary = loadWords("words")
     static let syllables = loadSyllables("syllables_2")
     
-    static let playerAvatarSize = Device.width/3.5
+    static let playerAvatarSize = Device.width/3.7
     
     static let bombSize = Device.width*0.4
     

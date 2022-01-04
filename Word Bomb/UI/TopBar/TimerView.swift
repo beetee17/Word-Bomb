@@ -19,7 +19,7 @@ struct TimerView: View {
             if players.playing.count != 2 {
                 ZStack {
                     BombView(timeLeft: $timeLeft, timeLimit: timeLimit)
-                        .frame(width: 100, height: 100)
+                        .frame(width: Game.miniBombSize*1.25, height: Game.miniBombSize*1.25)
                         .overlay(
                             Text(String(format: "%.1f", timeLeft))
                                 .offset(x: 5, y: 10))

@@ -19,10 +19,11 @@ struct PlayerView: View {
                 
             case 3...Int.max:
                 PlayerCarouselView()
+                    .offset(y: -Device.height*0.012)
                     .transition(.scale)
             case 2:
                 TwoPlayerView()
-                    .offset(x: 0, y: Device.height*0.07)
+                    .offset(y: Device.height*0.02)
                     .transition(.scale)
             default:
                 
@@ -32,7 +33,7 @@ struct PlayerView: View {
                                 value: player.chargeProgress,
                                 multiplier: player.multiplier,
                                 invert: false)
-                        .frame(height: 40)
+                        .frame(height: Device.height*0.035)
                         .padding(.horizontal)
                     
                     MainPlayer(player: viewModel.model.players.current,
@@ -41,7 +42,7 @@ struct PlayerView: View {
                                showName: .constant(true))
                         .transition(.scale)
                 }
-                .padding(.top, 20)
+                .padding(.top, 5)
                 
             }
         }

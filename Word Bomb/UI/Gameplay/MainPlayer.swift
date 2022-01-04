@@ -29,9 +29,8 @@ struct MainPlayer:  View {
                                     value: player.chargeProgress,
                                     multiplier: player.multiplier,
                                     invert: true)
-                            .frame(width: 10, height: 100)
-                            .offset(x: -(Game.playerAvatarSize/2 + 10),
-                                    y: 0)
+                            .frame(width: 10, height: Device.height*0.12)
+                            .offset(x: -(Game.playerAvatarSize/2 + 10))
                     )}
 
             if showName {
@@ -55,12 +54,12 @@ struct PlayerName: View {
         if viewModel.model.gameState == .GameOver && viewModel.model.players.current == player && !viewModel.trainingMode {
             
             Text("\(player.name) WINS!")
-                .font(/*@START_MENU_TOKEN@*/.largeTitle/*@END_MENU_TOKEN@*/)
+                .font(.title)
                 .lineLimit(1).minimumScaleFactor(0.5)
         } else {
             
             Text("\(player.name)")
-                .font(.largeTitle)
+                .font(.title)
                 .lineLimit(1).minimumScaleFactor(0.5)
         }
     }
@@ -87,7 +86,7 @@ struct PlayerAvatar: View {
                 .frame(width: Game.playerAvatarSize, height: Game.playerAvatarSize, alignment: .center)
                 .foregroundColor(.gray)
                 .overlay(Text(text)
-                            .font(.system(size: 60,
+                            .font(.system(size: 50,
                                           weight: .regular,
                                           design: .rounded))
                 )

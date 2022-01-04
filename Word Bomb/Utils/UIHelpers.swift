@@ -82,7 +82,7 @@ struct DonateButtonStyle: ButtonStyle {
 extension Text {
     func boldText() -> some View {
         self
-            .font(.title)
+            .font(.title2)
             .fontWeight(.bold)
             .textCase(.uppercase)
     }
