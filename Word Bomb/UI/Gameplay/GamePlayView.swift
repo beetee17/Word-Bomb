@@ -32,16 +32,16 @@ struct GamePlayView: View {
                 VStack {
                     TopBarView(gamePaused: $gamePaused, showMatchProgress: $showMatchProgress, gkMatch: gkMatch)
                     
-    
+                    
                     Spacer()
                 }
-
+                
                 VStack {
                     PlayerView()
                         .padding(.top, Device.height*0.075)
                     Spacer()
                 }
-  
+                
                 
             }
             .ignoresSafeArea(.keyboard)
@@ -50,6 +50,7 @@ struct GamePlayView: View {
                 Spacer()
                 if viewModel.model.gameState == .gameOver {
                     GameOverText()
+//                        .offset(y: Device.height*0.05)
                 } else {
                     
                     Text(viewModel.model.instruction ).boldText()
@@ -62,7 +63,7 @@ struct GamePlayView: View {
                     }
                     .font(Font.system(size: 20))
                 }
-
+                
                 OutputText(text: $viewModel.model.output)
                 Spacer()
             }
@@ -87,37 +88,49 @@ struct GamePlayView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            VStack {
-                let viewModel = WordBombGameViewModel.preview(numPlayers: 6)
+            ZStack {
+                let viewModel = WordBombGameViewModel.preview(numPlayers: 4)
                 
                 GamePlayView(gkMatch: nil).environmentObject(viewModel)
-                Game.MainButton(label: "ANIMATE") {
-                    viewModel.model.process("Test", Response(status: .Correct, score: Int.random(in: 1...10)))
-                }
-                Game.MainButton(label: "OUCH") {
-                    viewModel.model.currentPlayerRanOutOfTime()
+                
+                VStack {
+                    Spacer()
+                    Game.MainButton(label: "ANIMATE") {
+                        viewModel.model.process("Test", Response(status: .Correct, score: 20))
+                    }
+                    Game.MainButton(label: "OUCH") {
+                        viewModel.model.currentPlayerRanOutOfTime()
+                    }
                 }
             }
-            VStack {
+            ZStack {
                 let viewModel = WordBombGameViewModel.preview(numPlayers: 2)
                 
                 GamePlayView(gkMatch: nil).environmentObject(viewModel)
-                Game.MainButton(label: "ANIMATE") {
-                    viewModel.model.process("Test", Response(status: .Correct, score: Int.random(in: 1...10)))
-                }
-                Game.MainButton(label: "OUCH") {
-                    viewModel.model.currentPlayerRanOutOfTime()
+                
+                VStack {
+                    Spacer()
+                    Game.MainButton(label: "ANIMATE") {
+                        viewModel.model.process("Test", Response(status: .Correct, score: Int.random(in: 1...10)))
+                    }
+                    Game.MainButton(label: "OUCH") {
+                        viewModel.model.currentPlayerRanOutOfTime()
+                    }
                 }
             }
-            VStack {
+            ZStack {
                 let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
                 
                 GamePlayView(gkMatch: nil).environmentObject(viewModel)
-                Game.MainButton(label: "ANIMATE") {
-                    viewModel.model.process("Test", Response(status: .Correct, score: Int.random(in: 1...10)))
-                }
-                Game.MainButton(label: "OUCH") {
-                    viewModel.model.currentPlayerRanOutOfTime()
+                
+                VStack {
+                    Spacer()
+                    Game.MainButton(label: "ANIMATE") {
+                        viewModel.model.process("Test", Response(status: .Correct, score: 5))
+                    }
+                    Game.MainButton(label: "OUCH") {
+                        viewModel.model.currentPlayerRanOutOfTime()
+                    }
                 }
             }
             
