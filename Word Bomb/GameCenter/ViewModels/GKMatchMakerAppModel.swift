@@ -126,7 +126,7 @@ class GKMatchMakerAppModel: NSObject, ObservableObject {
             GKMatchManager.shared.cancel()
             self.gkMatch = nil
             self.showMatch = false
-            Game.viewModel.viewToShow = .main
+            Game.viewModel.viewToShow = .Main
         }
     }
 }

@@ -26,17 +26,17 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     @Published var model: WordBombGame = WordBombGame(players: Players())
     
     /// Controls the current view shown to the user
-    @Published var viewToShow: ViewToShow = .main {
+    @Published var viewToShow: ViewToShow = .Main {
         willSet {
-            if viewToShow == .game && newValue == .main {
+            if viewToShow == .Game && newValue == .Main {
                 AudioPlayer.playSoundTrack(.BGMusic)
-            } else if viewToShow == .waiting && newValue == .game {
+            } else if viewToShow == .Waiting && newValue == .Game {
                 AudioPlayer.playSoundTrack(.GamePlayMusic)
             }
         }
         didSet {
             switch viewToShow {
-            case .main:
+            case .Main:
                 gkSelect = false
                 trainingMode = false
                 gkConnectedPlayers = 0
@@ -79,7 +79,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     
     /// Resumes the current game
     func resumeGame() {
-        viewToShow = .game
+        viewToShow = .Game
         if .GameOver != model.gameState {
             startTimer()
         }
@@ -93,7 +93,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// Restarts the game with the same game mode. Only the host of Game Center match or offline play is allowed to call this function.
     func restartGame() {
         model.restartGame()
-        viewToShow = .game
+        viewToShow = .Game
         startTimer()
     }
 
@@ -102,7 +102,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// - Parameter mode: The given game mode
     func startGame(mode: GameMode) {
         withAnimation(Game.mainAnimation) {
-            viewToShow = .waiting
+            viewToShow = .Waiting
         }
         var players = Players()
         gameMode = mode
@@ -126,10 +126,10 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                     data: ["instruction":mode.instruction,
                            "query":gameModel.getRandQuery(nil) as Any]
                 )
-                if !GameCenter.isHost && viewToShow == .waiting {
+                if !GameCenter.isHost && viewToShow == .Waiting {
                     print("starting game")
                     withAnimation(.easeInOut) {
-                        viewToShow = .game
+                        viewToShow = .Game
                     }
                     startTimer()
                 }

@@ -24,13 +24,13 @@ struct GameTypeSelectView: View {
                         
                         withAnimation {
                             gameType = type
-                            viewToShow = .modeSelect
+                            viewToShow = .ModeSelect
                         }
                     }
                 }
             }
             Game.BackButton {
-                withAnimation { viewToShow = .main }
+                withAnimation { viewToShow = .Main }
             }
         }
         .frame(width: Device.width, height: Device.height)
@@ -55,6 +55,6 @@ struct SelectGameTypeText: View {
 struct GameTypeSelectView_Previews: PreviewProvider {
     
     static var previews: some View {
-        GameTypeSelectView(gameType: .constant(.Classic), viewToShow: .constant(.gameTypeSelect))
+        GameTypeSelectView(gameType: .constant(.Classic), viewToShow: .constant(.GameTypeSelect))
     }
 }

@@ -25,7 +25,7 @@ struct PauseMenuView: View {
                 gamePaused = false
             }
             Game.MainButton(label: "QUIT", systemImageName: "flag", sound: .Cancel) {
-                viewModel.viewToShow = .main
+                viewModel.viewToShow = .Main
             }
         }
         .if(gamePaused) { $0.helpButton() }

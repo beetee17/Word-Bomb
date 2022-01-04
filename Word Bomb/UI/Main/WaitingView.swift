@@ -48,7 +48,7 @@ struct WaitingView: View {
                     // When database is large, non host are not in sync until host restarts (better to find the actual reason why)
                     viewModel.model.restartGame()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        viewModel.viewToShow = .game
+                        viewModel.viewToShow = .Game
                         viewModel.startTimer()
                     }
                 }

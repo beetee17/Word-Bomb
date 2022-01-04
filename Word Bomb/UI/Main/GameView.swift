@@ -18,13 +18,13 @@ struct GameView: View {
         ZStack {
             switch viewModel.viewToShow {
                 
-            case .main: MainView()
-            case .gameTypeSelect:
+            case .Main: MainView()
+            case .GameTypeSelect:
                 GameTypeSelectView(gameType: $viewModel.gameType, viewToShow: $viewModel.viewToShow)
-            case .modeSelect:
+            case .ModeSelect:
                 ModeSelectView(gameType: $viewModel.gameType, viewToShow: $viewModel.viewToShow)
-            case .waiting: WaitingView()
-            case .game, .pauseMenu:
+            case .Waiting: WaitingView()
+            case .Game, .PauseMenu:
                 ZStack {
                     
                     GamePlayView(gkMatch: gkViewModel.gkMatch)
@@ -32,7 +32,7 @@ struct GameView: View {
                 }
             }
         }
-        .if(viewModel.viewToShow != .game) { $0.helpButton() }
+        .if(viewModel.viewToShow != .Game) { $0.helpButton() }
     }
 }
 

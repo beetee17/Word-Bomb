@@ -40,7 +40,7 @@ struct GameData: Codable {
             switch gameState {
                 
             case .Initial:
-                Game.viewModel.viewToShow = .game
+                Game.viewModel.viewToShow = .Game
                 Game.viewModel.startTimer()
                 Game.viewModel.model.game?.reset()
             case .PlayerInput:

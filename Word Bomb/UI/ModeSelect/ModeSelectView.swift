@@ -53,7 +53,7 @@ struct ModeSelectView: View {
             .frame(width: Device.width)
             
             Game.BackButton {
-                withAnimation { viewToShow = .gameTypeSelect }
+                withAnimation { viewToShow = .GameTypeSelect }
             }
             .offset(y: 25)
         }
@@ -77,7 +77,7 @@ struct SelectModeText: View {
 struct ModeSelectView_Previews: PreviewProvider {
     
     static var previews: some View {
-        ModeSelectView(gameType: .constant(.Classic), viewToShow: .constant(.modeSelect))
+        ModeSelectView(gameType: .constant(.Classic), viewToShow: .constant(.ModeSelect))
             .environment(\.managedObjectContext, moc_preview)
     }
 }

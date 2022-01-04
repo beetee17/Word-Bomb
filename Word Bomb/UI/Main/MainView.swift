@@ -63,18 +63,18 @@ class MainViewVM: ObservableObject {
     }
     /// Called when the user selects `"TRAINING MODE`
     func trainingMode() {
-        Game.viewModel.viewToShow = .gameTypeSelect
+        Game.viewModel.viewToShow = .GameTypeSelect
         showMultiplayerOptions = false
         Game.viewModel.trainingMode = true
     }
     /// Called when the user selects `"PASS & PLAY`
     func passPlay() {
-        Game.viewModel.viewToShow = .gameTypeSelect
+        Game.viewModel.viewToShow = .GameTypeSelect
         showMultiplayerOptions = false
     }
     /// Called when the user selects `"GAME CENTER"`
     func onlinePlay() {
-        Game.viewModel.viewToShow = .gameTypeSelect
+        Game.viewModel.viewToShow = .GameTypeSelect
         Game.viewModel.gkSelect = true
         showMultiplayerOptions = false
     }

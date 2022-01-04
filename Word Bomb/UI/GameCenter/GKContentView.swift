@@ -69,7 +69,7 @@ struct GKContentView: View {
                 }
                 
                 Game.BackButton {
-                    withAnimation { gameViewModel.viewToShow = .main }
+                    withAnimation { gameViewModel.viewToShow = .Main }
                 }
             }
             
