@@ -17,6 +17,7 @@ enum Sound {
     case Alert
     case Correct
     case Wrong
+    case Combo
     case Victory
     case BGMusic
     case GamePlayMusic
@@ -39,6 +40,8 @@ enum Sound {
             return ("correct", 0.4)
         case .Wrong:
             return ("wrong-2", 0.4)
+        case .Combo:
+            return ("combo", 0.4)
         case .Victory:
             return ("victory", 0.4)
         case .BGMusic:
