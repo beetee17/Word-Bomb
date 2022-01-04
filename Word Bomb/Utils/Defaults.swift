@@ -34,6 +34,19 @@ struct Game {
     
     static let explosionDuration = 1.3
     
+    static func getMaxCharge(for multiplier: Int) -> Int {
+        switch multiplier {
+        case 1:
+            return 50
+        case 2:
+            return 100
+        case 3:
+            return 200
+        default:
+            return 500
+        }
+    }
+    
     static var timer: Timer? = nil
     
     static func stopTimer() {
