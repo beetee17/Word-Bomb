@@ -56,7 +56,7 @@ struct ExactWordGameModel: WordGameModel {
     func getRandQuery(_ input: String? = nil) -> String { return "" }
     
     func getScore(for input: String, and query: String? = nil) -> Int {
-        return 1
+        return 10
     }
 
 }

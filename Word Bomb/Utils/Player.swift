@@ -14,22 +14,37 @@ class Player: Codable, Equatable, Identifiable {
     static func == (lhs: Player, rhs: Player) -> Bool {
         return lhs.id == rhs.id
     }
-    
-    var score = 0
-    var chargeProgress = 0 
     var name:String
+    var image: Data? = nil
     var id = UUID()
     var queueNumber: Int
+    
+    var score = 0
+    var chargeProgress = 0
+    var multiplier = 1
+    
     var totalLives = UserDefaults.standard.integer(forKey: "Player Lives")
     var livesLeft = UserDefaults.standard.integer(forKey: "Player Lives")
-    var image: Data? = nil
     
     init(name:String, queueNumber: Int) {
         self.name = name
         self.queueNumber = queueNumber
     }
     
-     func setImage(_ image:UIImage?) {
+    func setScore(with score: Int) {
+        
+        let multiplier = self.multiplier
+        
+        self.score += score * multiplier
+        self.chargeProgress += score * multiplier
+        
+        if self.chargeProgress >= Game.getMaxCharge(for: multiplier) {
+            self.multiplier = min(3, multiplier + 1)
+            self.chargeProgress -= Game.getMaxCharge(for: multiplier)
+        }
+    }
+    
+    func setImage(_ image:UIImage?) {
         self.image = image?.pngData()
     }
     

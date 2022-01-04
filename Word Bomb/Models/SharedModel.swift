@@ -165,11 +165,10 @@ struct WordBombGame: Codable {
                 self.query = newQuery
             }
             
-            players.current.score += response.score
-            players.current.chargeProgress += response.score
-            
             numCorrect += 1
             game?.updateUsedWords(for: input)
+            
+            players.current.setScore(with: response.score)
             _ = players.nextPlayer()
    
             if !GameCenter.isOnline {
