@@ -12,31 +12,36 @@ struct MainPlayer:  View {
     var chargeUpBar: Bool
     @Binding var showScore: Bool
     @Binding var showName: Bool
-    
+    @StateObject var imagePicker = StarImagePicker()
     
     var body: some View {
-
+        
         VStack(spacing: 5) {
             if showScore {
-                ScoreCounter(score: player.score)
+                ScoreCounter(score: player.score,
+                             imagePicker: imagePicker)
             }
-            HStack(alignment:.center) {
-                
-                if chargeUpBar {
-                    ChargeUpBar(value: player.chargeProgress,
-                                invert: true)
-                        .frame(width: 10, height: 100)
-                }
-                
-                PlayerAvatar(player: player)
-            }
+            
+            PlayerAvatar(player: player)
+                .if(chargeUpBar) {
+                    $0.overlay(
+                        ChargeUpBar(imagePicker: imagePicker,
+                                    value: player.chargeProgress,
+                                    multiplier: player.multiplier,
+                                    invert: true)
+                            .frame(width: 10, height: 100)
+                            .offset(x: -(Game.playerAvatarSize/2 + 10),
+                                    y: 0)
+                    )}
+
             if showName {
                 PlayerName(player: player)
-                    .transition(.scale)
             }
             
             PlayerLives(player: player)
-            
+                .onChange(of: player.livesLeft) { _ in
+                    imagePicker.getImage(for: .Sad)
+                }
             
         }
     }
@@ -48,7 +53,7 @@ struct PlayerName: View {
     
     var body: some View {
         if viewModel.model.gameState == .gameOver && viewModel.model.players.current == player && !viewModel.trainingMode {
-        
+            
             Text("\(player.name) WINS!")
                 .font(/*@START_MENU_TOKEN@*/.largeTitle/*@END_MENU_TOKEN@*/)
                 .lineLimit(1).minimumScaleFactor(0.5)
@@ -68,7 +73,7 @@ struct PlayerAvatar: View {
     var player: Player
     
     var body: some View {
-
+        
         if let avatar = player.image {
             Image(uiImage: UIImage(data: avatar)!)
                 .resizable()
@@ -85,29 +90,33 @@ struct PlayerAvatar: View {
                             .font(.system(size: 60,
                                           weight: .regular,
                                           design: .rounded))
-                            )
+                )
         }
-            
+        
     }
 }
 
-//struct MainPlayer_Previews: PreviewProvider {
-//
-//    static var previews: some View {
-//        let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
-//        
-//        VStack {
-//            MainPlayer(
-//                player: viewModel.model.players.current,
-//                animatePlayer: .constant(false)
-//            ).environmentObject(viewModel)
-//            
-//            Game.MainButton(label: "OUCH") {
-//                viewModel.model.currentPlayerRanOutOfTime()
-//            }
-//            Game.MainButton(label: "RESET") {
-//                viewModel.model.players.reset()
-//            }
-//        }
-//    }
-//}
+struct MainPlayer_Previews: PreviewProvider {
+
+    static var previews: some View {
+        let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
+        
+        VStack {
+            MainPlayer(player: viewModel.model.players.current,
+                       chargeUpBar: true,
+                       showScore: .constant(true),
+                       showName: .constant(true)
+            ).environmentObject(viewModel)
+            
+            Game.MainButton(label: "YAY") {
+                viewModel.model.process("TEST",
+                                        Response(status: .Correct, score: 10))
+            }
+            
+            Game.MainButton(label: "OUCH") {
+                viewModel.model.currentPlayerRanOutOfTime()
+            }
+            
+        }
+    }
+}
