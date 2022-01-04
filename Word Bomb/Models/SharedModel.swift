@@ -204,8 +204,9 @@ struct WordBombGame: Codable {
             if !players.getWinningPlayer() {
                 handleGameState(.GameOver)
             } else {
-                // tiebreak
+                handleGameState(.TieBreak)
                 controller.updateTimeLimit()
+                Game.stopTimer() // wait for user to ready up
             }
         } else {
             controller.playExplosion()
@@ -262,7 +263,10 @@ struct WordBombGame: Codable {
             controller.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
             Game.stopTimer()
         case .TieBreak:
-            break
+            query = game?.getRandQuery(nil) // get new query for when game restarts
+            if GameCenter.isHost {
+                GameCenter.send(GameData(query: query), toHost: false)
+            }
         case .Playing:
             break
 

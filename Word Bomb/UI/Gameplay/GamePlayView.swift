@@ -48,11 +48,13 @@ struct GamePlayView: View {
             
             VStack(spacing:5) {
                 Spacer()
-                if viewModel.model.gameState == .GameOver {
+                switch viewModel.model.gameState {
+                case .GameOver:
                     GameOverText()
-//                        .offset(y: Device.height*0.05)
-                } else {
-                    
+                case .TieBreak:
+                    Text("TIED!").boldText()
+                    Text("Tap to Continue").boldText()
+                default:
                     Text(viewModel.model.instruction ).boldText()
                     Text(viewModel.model.query ?? "").boldText()
                     PermanentKeyboard(
@@ -80,6 +82,12 @@ struct GamePlayView: View {
         }
         .onChange(of: showMatchProgress) { newValue in
             forceHideKeyboard = newValue
+        }
+        .if(viewModel.model.gameState == .TieBreak) {
+            $0.onTapGesture {
+                viewModel.startTimer()
+                viewModel.model.handleGameState(.Playing)
+            }
         }
     }
 }
