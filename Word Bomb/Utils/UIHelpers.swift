@@ -34,12 +34,8 @@ struct ScaleEffect: ButtonStyle {
 
 struct PulseEffect: ViewModifier {
 
-    @State var isOn: Bool = false
-    var animation: Animation {
-        Animation
-            .easeInOut(duration: 0.7)
-            .repeatForever(autoreverses: true)
-    }
+    @State var isOn = false
+    var animation = Animation.easeInOut(duration: 0.7).repeatForever(autoreverses: true)
     
     func body(content: Content) -> some View {
         content
@@ -48,6 +44,20 @@ struct PulseEffect: ViewModifier {
             .animation(animation)
             .onAppear {
                 self.isOn = true
+            }
+    }
+}
+
+struct BounceEffect: ViewModifier {
+    @State var animating = false
+    var animation = Animation.easeInOut(duration: 0.7).repeatForever(autoreverses: true)
+    
+    func body(content: Content) -> some View {
+        content
+            .offset(x: 0, y: animating ? -50 : 0)
+            .animation(animation, value: animating)
+            .onAppear() {
+                animating = true
             }
     }
 }
@@ -133,6 +143,9 @@ extension View {
     }
     func pulseEffect() -> some View  {
         self.modifier(PulseEffect())
+    }
+    func bounceEffect() -> some View  {
+        self.modifier(BounceEffect())
     }
 }
 

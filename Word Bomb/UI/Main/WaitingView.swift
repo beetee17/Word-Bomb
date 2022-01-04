@@ -13,9 +13,7 @@ struct WaitingView: View {
     @State var loadStatusText = "Getting Things Ready"
     
     var body: some View {
-       
-        let animation = Animation.easeInOut(duration: 0.7).repeatForever(autoreverses: true)
-        
+
         // For Game Center matches
         let numConnected = viewModel.gkConnectedPlayers
         let expectedPlayers = viewModel.model.players.queue.count - 1
@@ -33,12 +31,8 @@ struct WaitingView: View {
                 .padding(.top, Device.height*0.05)
                 
                 Spacer()
-                LogoView()
-                    .offset(x: 0, y: animating ? -50 : 0)
-                    .animation(animation, value: animating)
-                    .onAppear() {
-                        animating = true
-                    }
+                
+                LogoView().bounceEffect()
                 
                 LoadingText(text: loadStatusText)
                     .font(.bold(.subheadline)())

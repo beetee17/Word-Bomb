@@ -16,7 +16,7 @@ struct LoadingView: View {
             Color("Background")
                 .ignoresSafeArea(.all)
             VStack(spacing:50) {
-                LogoView()
+                LogoView().bounceEffect()
                 ProgressBar(value: $viewModel.progress)
                     .frame(height: 40)
                     .padding(.horizontal)
