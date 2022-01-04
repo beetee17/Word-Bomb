@@ -31,6 +31,27 @@ struct ScaleEffect: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 1.2 : 1.0)
     }
 }
+
+struct PulseEffect: ViewModifier {
+
+    @State var isOn: Bool = false
+    var animation: Animation {
+        Animation
+            .easeInOut(duration: 0.7)
+            .repeatForever(autoreverses: true)
+    }
+    
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(self.isOn ? 1 : 0.9)
+            .opacity(self.isOn ? 1 : 0.8)
+            .animation(animation)
+            .onAppear {
+                self.isOn = true
+            }
+    }
+}
+
 struct DonateButtonStyle: ButtonStyle {
     let width = 60.0
     let height = 30.0
@@ -92,12 +113,6 @@ struct ResignKeyboardOnDragGesture: ViewModifier {
 }
 
 extension View {
-    func resignKeyboardOnDragGesture() -> some View {
-        return modifier(ResignKeyboardOnDragGesture())
-    }
-}
-
-extension View {
     func useScrollView(when condition: Bool) -> AnyView {
         if condition {
             print("condition \(condition)")
@@ -113,11 +128,17 @@ extension View {
     func helpButton() -> some View {
         self.modifier(HelpSheet())
     }
-    
+    func resignKeyboardOnDragGesture() -> some View {
+        return modifier(ResignKeyboardOnDragGesture())
+    }
+    func pulseEffect() -> some View  {
+        self.modifier(PulseEffect())
+    }
 }
+
 // Conditional Modifier
 // Text("some Text").if(modifierEnabled) { $0.foregroundColor(.Red) }
-public extension View {
+extension View {
     @ViewBuilder
     func `if`<Content: View>(_ condition: Bool, content: (Self) -> Content) -> some View {
         if condition {
