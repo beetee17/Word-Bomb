@@ -39,22 +39,22 @@ struct GameData: Codable {
         else if let gameState = self.state {
             switch gameState {
                 
-            case .initial:
+            case .Initial:
                 Game.viewModel.viewToShow = .game
                 Game.viewModel.startTimer()
                 Game.viewModel.model.game?.reset()
-            case .playerInput:
+            case .PlayerInput:
                 print("received input response from host")
                 Game.viewModel.handleGameState(gameState,
                                                data: ["input" : self.input!,
                                                       "response" : self.response!])
-            case .playerTimedOut:
+            case .PlayerTimedOut:
                 Game.viewModel.handleGameState(gameState)
-            case .gameOver:
+            case .GameOver:
                 break
-            case .tieBreak:
+            case .TieBreak:
                 break
-            case .playing:
+            case .Playing:
                 Game.viewModel.startTimer()
             }
         }

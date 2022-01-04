@@ -44,7 +44,7 @@ struct TopBarView: View {
             Spacer()
                 .overlay(
                     ZStack {
-                        if .gameOver == viewModel.model.gameState {
+                        if .GameOver == viewModel.model.gameState {
                             RestartButton()
                         } else if !showMatchProgress {
                             CorrectCounter(

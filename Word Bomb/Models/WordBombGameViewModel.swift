@@ -80,7 +80,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// Resumes the current game
     func resumeGame() {
         viewToShow = .game
-        if .gameOver != model.gameState {
+        if .GameOver != model.gameState {
             startTimer()
         }
     }
@@ -122,7 +122,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
             WordBombGame.getGameModel(for: mode) { [self] gameModel in
                 model.setGameModel(with: gameModel)
                 model.handleGameState(
-                    .initial,
+                    .Initial,
                     data: ["instruction":mode.instruction,
                            "query":gameModel.getRandQuery(nil) as Any]
                 )
@@ -188,7 +188,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                 // only handle time out if host of online match or in offline play 
                 
                 DispatchQueue.main.async {
-                    self.model.handleGameState(.playerTimedOut)
+                    self.model.handleGameState(.PlayerTimedOut)
                 }
             }
         }

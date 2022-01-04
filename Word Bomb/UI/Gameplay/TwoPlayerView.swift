@@ -47,7 +47,7 @@ struct TwoPlayerView: View {
                 .frame(width: Game.miniBombSize,
                        height: Game.miniBombSize)
                 .offset(x: getBombOffset())
-                .animation(.easeInOut(duration: 0.3).delay(.playerTimedOut == viewModel.model.gameState ? 0.8 : 0))
+                .animation(.easeInOut(duration: 0.3).delay(.PlayerTimedOut == viewModel.model.gameState ? 0.8 : 0))
                 .overlay (
                     BombExplosion(animating: $viewModel.model.controller.animateExplosion)
                         .frame(width: Game.miniBombSize*1.5,

@@ -25,7 +25,7 @@ struct WordBombGame: Codable {
     var controller = Controller()
     
     /// The current state of the game
-    var gameState: GameState = .initial
+    var gameState: GameState = .Initial
     
     /// The current correct answers used in the game. Should only be set within the model
     var numCorrect = 0
@@ -113,7 +113,7 @@ struct WordBombGame: Codable {
             if GameCenter.isHost && isMyGKTurn {
                 // turn for device hosting multiplayer game
                 let response = game!.process(input, query)
-                handleGameState(.playerInput, data: ["input" : input, "response" : response])
+                handleGameState(.PlayerInput, data: ["input" : input, "response" : response])
             }
             
             else if GameCenter.isNonHost && isMyGKTurn {
@@ -125,7 +125,7 @@ struct WordBombGame: Codable {
             else if !GameCenter.isOnline{
                 // device not hosting or participating in multiplayer game i.e offline
                 let response = game!.process(input, query)
-                handleGameState(.playerInput, data: ["input" : input, "response" : response])
+                handleGameState(.PlayerInput, data: ["input" : input, "response" : response])
             }
         }
     }
@@ -139,7 +139,7 @@ struct WordBombGame: Codable {
         print("processing \(input)")
         let response = game!.process(input.lowercased().trim(), query)
         
-        handleGameState(.playerInput, data: ["input" : input, "response" : response])
+        handleGameState(.PlayerInput, data: ["input" : input, "response" : response])
     }
     
     /// Updates the time left & time limit and output & query texts depending on the outcome of the user input.
@@ -151,7 +151,7 @@ struct WordBombGame: Codable {
         // reset the time for other player iff answer from prev player was correct
         
         if GameCenter.isHost {
-            GameCenter.send(GameData(state: .playerInput,
+            GameCenter.send(GameData(state: .PlayerInput,
                                      input: input,
                                      response: response),
                             toHost: false)
@@ -193,7 +193,7 @@ struct WordBombGame: Codable {
         
         // We need to keep game state on non-host devices in sync
         if GameCenter.isHost {
-            GameCenter.send(GameData(state: .playerTimedOut), toHost: false)
+            GameCenter.send(GameData(state: .PlayerTimedOut), toHost: false)
         }
         
         let (output, isGameOver) = players.currentPlayerRanOutOfTime()
@@ -202,7 +202,7 @@ struct WordBombGame: Codable {
         
         if isGameOver {
             if !players.getWinningPlayer() {
-                handleGameState(.gameOver)
+                handleGameState(.GameOver)
             } else {
                 // tiebreak
                 controller.updateTimeLimit()
@@ -222,8 +222,8 @@ struct WordBombGame: Codable {
         game?.reset()
         
         query = game?.getRandQuery(nil)
-        handleGameState(.initial)
-        GameCenter.send(GameData(state: .initial), toHost: false)
+        handleGameState(.Initial)
+        GameCenter.send(GameData(state: .Initial), toHost: false)
     }
     
     /// Updates relevant variables depending on the given game state and the data provided
@@ -235,7 +235,7 @@ struct WordBombGame: Codable {
         
         switch gameState {
             
-        case .initial:
+        case .Initial:
             if let instruction = data?["instruction"] as? String {
                 self.instruction = instruction
             }
@@ -247,23 +247,23 @@ struct WordBombGame: Codable {
                 GameCenter.send(GameData(model: self), toHost: false)
             }
             
-        case .playerInput:
+        case .PlayerInput:
             if let input = data?["input"] as? String, let response = data?["response"] as? Response {
                 process(input, response)
                 print("shared model processing input with response: \(response)")
                 
             }
             
-        case .playerTimedOut:
+        case .PlayerTimedOut:
             controller.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
             currentPlayerRanOutOfTime()
             
-        case .gameOver:
+        case .GameOver:
             controller.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
             Game.stopTimer()
-        case .tieBreak:
+        case .TieBreak:
             break
-        case .playing:
+        case .Playing:
             break
 
         }

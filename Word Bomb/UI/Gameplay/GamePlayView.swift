@@ -48,7 +48,7 @@ struct GamePlayView: View {
             
             VStack(spacing:5) {
                 Spacer()
-                if viewModel.model.gameState == .gameOver {
+                if viewModel.model.gameState == .GameOver {
                     GameOverText()
 //                        .offset(y: Device.height*0.05)
                 } else {
