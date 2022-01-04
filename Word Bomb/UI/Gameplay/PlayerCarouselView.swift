@@ -51,11 +51,11 @@ struct PlayerCarouselView: View {
     
     private func getOffset(for player: Player) -> (x: CGFloat, y: CGFloat) {
         if players.isCurrent(player) {
-            return (0, 50)
+            return (5, 50)
         } else if players.isPrev(player) {
-            return (playerSize + spacing + 18, 0)
+            return (playerSize + spacing + 15, 0)
         } else {
-            return (-(playerSize + spacing + 18), 0)
+            return (-(playerSize + spacing + 5), 0)
         }
     }
     private func getScale(for player: Player) -> CGFloat {
