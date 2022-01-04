@@ -59,7 +59,7 @@ struct WordBombGame: Codable {
                                              queries: mode.queriesDB.wordArray.map({ ($0.content, $0.frequency) }),
                                              totalWords: totalWords)
             case .Reverse:
-                model = ExactWordGameModel(variants: variants, totalWords: totalWords)
+                model = ReverseWordGameModel(variants: variants, totalWords: totalWords)
             }
             if GameCenter.isHost {
                 if mode.wordsDB.name == "words" {
