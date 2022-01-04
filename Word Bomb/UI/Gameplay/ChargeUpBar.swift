@@ -83,8 +83,6 @@ struct ChargeUpBar: View {
                     RoundedRectangle(cornerRadius: 45)
                         .stroke(lineWidth: 5)
                         .foregroundColor(.black)
-
-                    
                 }
                 .cornerRadius(45)
                 
@@ -104,6 +102,7 @@ struct ChargeUpBar: View {
             .onChange(of: multiplier) { [multiplier] newValue in
                 if newValue > multiplier {
                     imagePicker.getImage(for: .Combo)
+                    AudioPlayer.playSound(.Combo)
                 }
             }
         }
@@ -126,7 +125,7 @@ struct ChargeUpBar_Previews: PreviewProvider {
                         .frame(width: 10, height: 100)
                                         
                     Game.MainButton(label: "CHARGE") {
-                        value += 5
+                        value += 50
                     }
                     Game.MainButton(label: "MULTIPLY") {
                         withAnimation(.easeInOut) {
