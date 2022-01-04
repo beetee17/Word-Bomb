@@ -19,7 +19,7 @@ struct GameOverText: View {
         let gameMode = viewModel.gameMode
         
         VStack {
-            Game.MainButton(label: "Match Review", systemImageName: "list.bullet.rectangle.portrait") {
+            Game.MainButton(label: "Match Review", systemImageName: "doc.text.magnifyingglass") {
                     showMatchReview = true
                 }
             
