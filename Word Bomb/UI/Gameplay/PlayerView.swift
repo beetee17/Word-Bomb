@@ -27,18 +27,19 @@ struct PlayerView: View {
             default:
                 
                 VStack {
-                    ChargeUpBar(value: viewModel.model.players.current.chargeProgress,
+                    let player = viewModel.model.players.current
+                    ChargeUpBar(imagePicker: StarImagePicker(),
+                                value: player.chargeProgress,
+                                multiplier: player.multiplier,
                                 invert: false)
                         .frame(height: 40)
+                        .padding(.horizontal)
                     
                     MainPlayer(player: viewModel.model.players.current,
                                chargeUpBar: false,
                                showScore: .constant(true),
                                showName: .constant(true))
                         .transition(.scale)
-                }
-                .onChange(of: viewModel.model.players.current) { new in
-                    print("CURREnt CHANGE TO \(new.name)")
                 }
                 .padding(.top, 20)
                 
