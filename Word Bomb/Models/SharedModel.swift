@@ -201,8 +201,12 @@ struct WordBombGame: Codable {
         players.current.chargeProgress = 0
         
         if isGameOver {
-            handleGameState(.gameOver)
-            players.getWinningPlayer()
+            if !players.getWinningPlayer() {
+                handleGameState(.gameOver)
+            } else {
+                // tiebreak
+                controller.updateTimeLimit()
+            }
         } else {
             controller.playExplosion()
             controller.updateTimeLimit()

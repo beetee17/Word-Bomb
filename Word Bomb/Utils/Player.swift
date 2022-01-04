@@ -160,18 +160,27 @@ struct Players: Codable {
     
     /// Should only be called when game is over
     /// Assigns the `current` `Player` to the player that has the highest score
-    /// If multiple players have the same high score, lives left should decide the winner
-    /// What if multiple players have same score and lives left? Just choose first player...
-    mutating func getWinningPlayer() {
+    /// If multiple players have the same high score, enter tiebreaker by giving each tied player an additional life
+    /// - Returns: `true` if tiebreaker is needed
+    mutating func getWinningPlayer() -> Bool {
+        // TODO: animation when entering tie break
         let winningScore = queue.max(by: { $0.score < $1.score })?.score
         print("The winning score was \(String(describing: winningScore))")
         
         let winningPlayers = queue.filter({ $0.score == winningScore })
-        print("The players with such a score are \(winningPlayers)")
+        print("The players with such a score are \(winningPlayers.map( { $0.name }))")
         
-        if let winningPlayer = winningPlayers.max(by: { $0.livesLeft < $1.livesLeft }) {
-            print("THE WINNING PLAYER IS \(winningPlayer.name)")
-            current = winningPlayer
+        if winningPlayers.count > 1 {
+            for i in winningPlayers.indices {
+                winningPlayers[i].livesLeft = 1
+                winningPlayers[i].queueNumber = i
+            }
+            current = winningPlayers.first!
+            return true
+        } else {
+            print("THE WINNING PLAYER IS \(winningPlayers.first!.name)")
+            current = winningPlayers.first!
+            return false
         }
     }
     
