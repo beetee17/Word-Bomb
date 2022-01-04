@@ -261,8 +261,7 @@ struct WordBombGame: Codable {
         case .gameOver:
             controller.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
             Game.stopTimer()
-            
-        case .paused:
+        case .tieBreak:
             break
         case .playing:
             break

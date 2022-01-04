@@ -52,6 +52,8 @@ struct GameData: Codable {
                 Game.viewModel.handleGameState(gameState)
             case .gameOver:
                 break
+            case .tieBreak:
+                break
             case .playing:
                 Game.viewModel.startTimer()
             }
