@@ -46,8 +46,7 @@ struct GameData: Codable {
             case .PlayerInput:
                 print("received input response from host")
                 Game.viewModel.handleGameState(gameState,
-                                               data: ["input" : self.input!,
-                                                      "response" : self.response!])
+                                               data: ["response" : self.response!])
             case .PlayerTimedOut:
                 Game.viewModel.handleGameState(gameState)
             case .GameOver:
@@ -57,6 +56,7 @@ struct GameData: Codable {
             case .Playing:
                 Game.viewModel.startTimer()
             }
+            Game.viewModel.model.gameState = gameState
         }
         else if let updatedPlayers = self.playerLives {
             print("Received updated playerQueue from host ")
