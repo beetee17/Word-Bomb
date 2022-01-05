@@ -29,7 +29,9 @@ struct DatabaseView: View {
                 
                 LazyVStack {
                     
-                    NewWordsView(wordsToAdd: $wordsToAdd)
+                    if !db.isDefault_ {
+                        NewWordsView(wordsToAdd: $wordsToAdd)
+                    }
                     
                     
                     FilteredList(db: db, filterKey: "content_",
@@ -84,8 +86,9 @@ struct DatabaseView: View {
     }
     func saveChanges() {
         if db.isDefault_ {
-            Game.errorHandler.showBanner(title: "Action", message: "Cannot modify a default database!")
-            return 
+            // If the user somehow gets here since NewWordsView is hidden
+            Game.errorHandler.showBanner(title: "Action Prohibited", message: "Cannot modify a default database!")
+            return
         }
         for word in wordsToAdd {
             let _ = Word(context: moc, content: word, db: db)
