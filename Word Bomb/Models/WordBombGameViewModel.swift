@@ -207,6 +207,23 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     func handleGameState(_ gameState: GameState, data: [String : Any]? = [:]) {
         model.handleGameState(gameState, data: data)
     }
+                                        
+    func getLifeReward() {
+        let current = model.players.current
+        if current.totalLives == current.livesLeft {
+            current.totalLives += 1
+        }
+        current.livesLeft += 1
+        current.usedLetters = Set<String>()
+        AudioPlayer.playSound(.Combo)
+    }
+    
+    func getTimeReward() {
+        model.controller.timeLimit += 5
+        model.controller.timeLeft = model.controller.timeLimit
+        model.players.current.usedLetters = Set<String>()
+        AudioPlayer.playSound(.Combo)
+    }
     
 }
 
