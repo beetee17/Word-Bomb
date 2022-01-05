@@ -21,51 +21,22 @@ struct GamePlayView: View {
     
     var body: some View {
         ZStack {
-            ZStack {
-                Color.clear
                 
-                VStack {
-                    TopBarView(gamePaused: $gamePaused,
-                               showMatchProgress: $showMatchProgress,
-                               showUsedLetters: $showUsedLetters,
-                               gkMatch: gkMatch)
-                    Spacer()
-                }
-                .zIndex(1)
+            VStack(spacing:0) {
+                TopBarView(gamePaused: $gamePaused,
+                           showMatchProgress: $showMatchProgress,
+                           showUsedLetters: $showUsedLetters,
+                           gkMatch: gkMatch)
+                    .zIndex(1)
                 
-                VStack {
-                    PlayerView()
-                        .padding(.top, Device.height*0.085)
-                    Spacer()
-                }
+                PlayerView()
+                    .offset(y: -Device.height*0.05)
+                
+                GamePlayArea(forceHideKeyboard: $forceHideKeyboard)
+                
+                Spacer()
             }
-            .ignoresSafeArea(.keyboard)
             
-            VStack(spacing:5) {
-                Spacer()
-                switch viewModel.model.gameState {
-                case .GameOver:
-                    GameOverText()
-                case .TieBreak:
-                    Text("TIED!").boldText()
-                    Text("Tap to Continue").boldText()
-                default:
-                    Text(viewModel.model.instruction ).boldText()
-                    Text(viewModel.model.query ?? "").boldText()
-                    PermanentKeyboard(
-                        text: $viewModel.input,
-                        forceResignFirstResponder: $forceHideKeyboard
-                    ) {
-                        viewModel.processInput()
-                    }
-                    .font(Font.system(size: 20))
-                }
-                
-                OutputText(text: $viewModel.model.output)
-                Spacer()
-            }
-            .offset(y: Device.height*0.03)
-            .ignoresSafeArea(.all)
         }
         .blur(radius: gamePaused || showMatchProgress || showUsedLetters ? 10 : 0, opaque: false)
         .overlay(
@@ -85,6 +56,39 @@ struct GamePlayView: View {
                 viewModel.startTimer()
                 viewModel.model.handleGameState(.Playing)
             }
+        }
+    }
+}
+
+
+struct GamePlayArea: View {
+    
+    @EnvironmentObject var viewModel: WordBombGameViewModel
+    @Binding var forceHideKeyboard: Bool
+    
+    var body: some View {
+
+        VStack(spacing:0) {
+            switch viewModel.model.gameState {
+            case .GameOver:
+                GameOverText()
+            case .TieBreak:
+                Text("TIED!").boldText()
+                Text("Tap to Continue").boldText()
+            default:
+                Text(viewModel.model.instruction ).boldText()
+                Text(viewModel.model.query ?? "").boldText()
+                PermanentKeyboard(
+                    text: $viewModel.input,
+                    forceResignFirstResponder: $forceHideKeyboard
+                ) {
+                    viewModel.processInput()
+                }
+                .font(Font.system(size: 20))
+                .ignoresSafeArea(.keyboard)
+            }
+            
+            OutputText(text: $viewModel.model.output)
         }
     }
 }
