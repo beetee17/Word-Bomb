@@ -44,10 +44,11 @@ struct DatabaseView: View {
                                     Image(systemName: wordsToDelete.contains(word) ? "checkmark.circle.fill" : "circle")
                                 }
                                 Text(word.content.capitalized)
-                                    .frame(maxWidth: Device.width, maxHeight: 20, alignment:.leading)
-                                    .padding(.leading)
                                 
                             }
+                            .padding(.leading)
+                            .frame(width: Device.width, height: 25, alignment:.leading)
+                            
                             Divider()
                         }
                         .onTapGesture {
@@ -85,11 +86,6 @@ struct DatabaseView: View {
         }
     }
     func saveChanges() {
-        if db.isDefault_ {
-            // If the user somehow gets here since NewWordsView is hidden
-            Game.errorHandler.showBanner(title: "Action Prohibited", message: "Cannot modify a default database!")
-            return
-        }
         for word in wordsToAdd {
             let _ = Word(context: moc, content: word, db: db)
         }
