@@ -29,23 +29,7 @@ struct ScoreCounter: View {
                 .fixedSize(horizontal: false, vertical: false)
                 .scaleEffect(animateScore ? 1 : 1.2)
                 .animation(Game.mainAnimation)
-                .overlay(
-                    HStack {
-                        Image(systemName: "plus")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .scaledToFit()
-                        Text("\(increment)")
-                            .boldText()
-                            .fixedSize(horizontal: false, vertical: false) // prevents text from getting truncated to ...
-                    }
-                        .frame(width: 150, height: 150)
-                        .foregroundColor(.green)
-                        .offset(x: 20, y: animateIncrement ? -30 : -20)
-                        .animation(.easeIn.speed(0.7))
-                        .opacity(animateIncrement ? 0.7 : 0)
-                        .animation(.easeInOut.speed(0.7))
-                )
+                .animatingIncrement(increment, isAnimating: animateIncrement)
                 .onChange(of: score) { [score] newValue in
                     if newValue > score {
                         if imagePicker.state != .Combo {
