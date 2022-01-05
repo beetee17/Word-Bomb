@@ -24,12 +24,8 @@ struct GameView: View {
             case .ModeSelect:
                 ModeSelectView(gameType: $viewModel.gameType, viewToShow: $viewModel.viewToShow)
             case .Waiting: WaitingView()
-            case .Game, .PauseMenu:
-                ZStack {
-                    
-                    GamePlayView(gkMatch: gkViewModel.gkMatch)
-                    
-                }
+            case .Game
+                GamePlayView(gkMatch: gkViewModel.gkMatch)
             }
         }
         .if(viewModel.viewToShow != .Game) { $0.helpButton() }
