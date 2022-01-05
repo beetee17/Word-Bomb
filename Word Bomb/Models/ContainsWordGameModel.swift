@@ -20,6 +20,7 @@ struct ContainsWordGameModel: WordGameModel {
     var totalWords: Int
     
     var pivot: Int
+    
     var numTurns = 0
     var numTurnsBeforeDifficultyIncrease = 2
     
@@ -96,7 +97,6 @@ struct ContainsWordGameModel: WordGameModel {
     
     func getScore(for input: String, and query: String?) -> Int {
         if let frequency = queriesCopy.first(where: { $0.0 == query })?.1 {
-            print("\(query) frequency \(frequency)")
             switch frequency {
             case 0...25:
                 return 25
@@ -112,7 +112,6 @@ struct ContainsWordGameModel: WordGameModel {
                 return 1
             }
         }
-        print("Query \(query) not found?")
         return 1
     }
     
