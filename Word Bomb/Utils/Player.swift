@@ -26,6 +26,8 @@ class Player: Codable, Equatable, Identifiable {
     var totalLives = UserDefaults.standard.integer(forKey: "Player Lives")
     var livesLeft = UserDefaults.standard.integer(forKey: "Player Lives")
     
+    var usedLetters = Set<String>()
+    
     init(name:String, queueNumber: Int) {
         self.name = name
         self.queueNumber = queueNumber
@@ -71,10 +73,6 @@ struct Players: Codable {
     /// The `Player` object representing the current player in the game
     var current: Player
     
-    var totalLives: Int {
-        current.totalLives
-    }
-    
     /// Initialises with an optional array of `Player` objects
     /// - Parameter players: if `players` is nil, fallback to the user settings for the number of players and the names of each player
     init(from players: [Player]? = nil) {
@@ -110,6 +108,13 @@ struct Players: Codable {
         self.init(from: players)
     }
     
+    mutating func useSettings(_ settings: Game.Settings) {
+        for player in queue {
+            player.livesLeft = settings.playerLives
+            player.totalLives = settings.playerLives
+        }
+    }
+    
     mutating func updateCurrentPlayer() {
         if let newCurrent = queue.first(where: ({ $0.queueNumber == 0 })) {
             print("Current player changed from \(current.name) to \(newCurrent.name)")
@@ -134,11 +139,24 @@ struct Players: Codable {
         }
     }
     
+    mutating func handleInput(_ response: Response) {
+        if response.status == .Correct {
+            current.setScore(with: response.score)
+            for character in response.input {
+                current.usedLetters.insert(character.lowercased())
+            }
+            _ = nextPlayer()
+        }
+    }
+    
     /// Updates `current` and `queue`  when `current` runs out of time
     /// - Returns: Tuple containing the output text to be displayed, and a Boolean corresponding to if the game is over
     mutating func currentPlayerRanOutOfTime() -> (String, Bool) {
         
-        var output = ""
+        var output: String 
+        
+        current.chargeProgress = 0
+        current.multiplier = 1
         
         for player in queue {
             print("\(player.name): \(player.livesLeft) lives")
@@ -153,7 +171,7 @@ struct Players: Codable {
         
         let currPlayer = nextPlayer()
         currPlayer.livesLeft -= 1
-        
+
         return (output, playing.count == 0)
 
     }
