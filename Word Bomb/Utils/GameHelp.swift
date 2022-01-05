@@ -33,17 +33,17 @@ struct HelpButton: View {
                     
                 }
                 .clipShape(Circle().scale(0.8))
+                .if(border) { $0.pulseEffect() }
             }
             Spacer()
         }
-        
     }
 }
 
 struct HelpSheet: ViewModifier {
     
     @State private var showHelpSheet = false
- 
+    var action: () -> Void
     var messages = Game.helpMessages
     
     func body(content: Content) -> some View {
@@ -51,6 +51,7 @@ struct HelpSheet: ViewModifier {
             content
             HelpButton(action: {
                 print("Show Help")
+                action()
                 showHelpSheet = true
             }, border: false)
             .sheet(isPresented: $showHelpSheet) {
