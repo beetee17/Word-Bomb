@@ -22,14 +22,8 @@ struct TopBarView: View {
         HStack {
             Spacer()
                 .overlay(
-                    ZStack {
-                        switch gkMatch == nil {
-                        case true:
-                            PauseButton(gamePaused: $gamePaused)
-                        case false:
-                            GKQuitButton()
-                        }
-                    }
+                    TopLeft(gamePaused: $gamePaused,
+                            gkMatch: gkMatch)
                 )
                 .frame(width:Device.width*0.2)
                 .offset(y:Device.height*0.015)
@@ -46,21 +40,9 @@ struct TopBarView: View {
             
             Spacer()
                 .overlay(
-                    ZStack {
-                        if .GameOver == viewModel.model.gameState {
-                            RestartButton()
-                        } else if !(showMatchProgress || showUsedLetters) {
-                            CorrectCounter(
-                                numCorrect: viewModel.model.numCorrect,
-                                action: {
-                                    if viewModel.trainingMode {
-                                        showUsedLetters.toggle()
-                                    } else {
-                                    showMatchProgress.toggle()
-                                    }
-                                })
-                        }
-                    })
+                    TopRight(showMatchProgress: $showMatchProgress,
+                             showUsedLetters: $showUsedLetters)
+                )
                 .offset(y:Device.height*0.015)
         }
         // The top bar is smaller when there are less than 3 players due to the bomb explosion animation.
@@ -69,6 +51,44 @@ struct TopBarView: View {
     }
 }
 
+
+struct TopLeft: View {
+    @EnvironmentObject var viewModel: WordBombGameViewModel
+    @Binding var gamePaused: Bool
+    var gkMatch: GKMatch?
+    
+    var body: some View {
+        ZStack {
+            switch gkMatch == nil {
+            case true:
+                PauseButton(gamePaused: $gamePaused)
+            case false:
+                GKQuitButton()
+            }
+        }
+    }
+}
+struct TopRight: View {
+    
+    @EnvironmentObject var viewModel: WordBombGameViewModel
+    @Binding var showMatchProgress: Bool
+    @Binding var showUsedLetters: Bool
+    
+    var body: some View {
+        ZStack {
+            if .GameOver == viewModel.model.gameState {
+                RestartButton()
+            } else if !viewModel.trainingMode && !showMatchProgress {
+                CorrectCounter(
+                    numCorrect: viewModel.model.numCorrect,
+                    action: { showMatchProgress.toggle() })
+            } else if viewModel.trainingMode && !showUsedLetters {
+                CorrectCounter(
+                    numCorrect: viewModel.model.players.current.usedLetters.count,
+                    action: { showUsedLetters.toggle() })
+            }
+    }
+}
 
 struct TopBarView_Previews: PreviewProvider {
     
