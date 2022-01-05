@@ -108,8 +108,9 @@ struct MainPlayer_Previews: PreviewProvider {
             ).environmentObject(viewModel)
             
             Game.MainButton(label: "YAY") {
-                viewModel.model.process("TEST",
-                                        Response(status: .Correct, score: 10))
+                viewModel.model.process(Response(input: "Yay",
+                                                 status: .Correct,
+                                                 score: Int.random(in: 1...10)))
             }
             
             Game.MainButton(label: "OUCH") {

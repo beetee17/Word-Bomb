@@ -76,8 +76,8 @@ struct PlayerCarouselView_Previews: PreviewProvider {
             PlayerCarouselView()
                 .environmentObject(viewModel)
             Game.MainButton(label: "ANIMATE") {
-                viewModel.model.process("Test",
-                                        Response(status: .Correct,
+                viewModel.model.process(Response(input: "Test",
+                                                 status: .Correct,
                                                  score: Int.random(in: 1...10)))
             }
             Game.MainButton(label: "OUCH") {
