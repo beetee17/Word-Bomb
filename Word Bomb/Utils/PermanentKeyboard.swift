@@ -75,7 +75,8 @@ struct PermanentKeyboardUIView: UIViewRepresentable {
         textfield.delegate = context.coordinator
         
         // settings
-        textfield.autocorrectionType = .no
+        textfield.autocorrectionType = .no // this does not hide the predictive text toolbar
+        textfield.textContentType = .newPassword // but this does
         textfield.autocapitalizationType = .words
         textfield.font = UIFont.systemFont(ofSize: 20)
         
