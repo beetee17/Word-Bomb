@@ -21,23 +21,29 @@ struct GamePlayView: View {
     
     var body: some View {
         ZStack {
+            ZStack {
+                Color.clear
                 
-            VStack(spacing:0) {
-                TopBarView(gamePaused: $gamePaused,
-                           showMatchProgress: $showMatchProgress,
-                           showUsedLetters: $showUsedLetters,
-                           gkMatch: gkMatch)
-                    .zIndex(1)
-                
-                PlayerView()
-                    .offset(y: -Device.height*0.05)
-                
-                GamePlayArea(forceHideKeyboard: $forceHideKeyboard)
-                
-                Spacer()
+                VStack(spacing:0) {
+                    TopBarView(gamePaused: $gamePaused,
+                               showMatchProgress: $showMatchProgress,
+                               showUsedLetters: $showUsedLetters,
+                               gkMatch: gkMatch)
+                        .zIndex(1)
+                    
+                    PlayerView()
+                        .offset(y: -Device.height*0.05)
+                    
+                    
+                    Spacer()
+                }
             }
-            
+
+            GamePlayArea(forceHideKeyboard: $forceHideKeyboard)
+                .offset(y: Device.height*0.03)
+                .ignoresSafeArea(.all)
         }
+    
         .blur(radius: gamePaused || showMatchProgress || showUsedLetters ? 10 : 0, opaque: false)
         .overlay(
             MatchProgressView(usedWords: viewModel.model.game?.usedWords.sorted(), showMatchProgress: $showMatchProgress)
@@ -48,6 +54,9 @@ struct GamePlayView: View {
             forceHideKeyboard = newValue
         }
         .onChange(of: showMatchProgress) { newValue in
+            forceHideKeyboard = newValue
+        }
+        .onChange(of: showUsedLetters) { newValue in
             forceHideKeyboard = newValue
         }
         .if(viewModel.model.gameState == .TieBreak && !GameCenter.isNonHost) {
@@ -69,6 +78,7 @@ struct GamePlayArea: View {
     var body: some View {
 
         VStack(spacing:0) {
+            Spacer()
             switch viewModel.model.gameState {
             case .GameOver:
                 GameOverText()
@@ -85,10 +95,10 @@ struct GamePlayArea: View {
                     viewModel.processInput()
                 }
                 .font(Font.system(size: 20))
-                .ignoresSafeArea(.keyboard)
             }
             
             OutputText(text: $viewModel.model.output)
+            Spacer()
         }
     }
 }
@@ -99,11 +109,11 @@ struct GamePlayView_Previews: PreviewProvider {
         Group {
             ZStack {
                 let viewModel = WordBombGameViewModel.preview(numPlayers: 4)
-                
+                Color("Background").ignoresSafeArea(.all)
                 GamePlayView(gkMatch: nil).environmentObject(viewModel)
                 
                 VStack {
-                    Spacer()
+                    
                     Game.MainButton(label: "ANIMATE") {
                         viewModel.model.process(Response(input:
                                                             "Test",
@@ -121,7 +131,7 @@ struct GamePlayView_Previews: PreviewProvider {
                 GamePlayView(gkMatch: nil).environmentObject(viewModel)
                 
                 VStack {
-                    Spacer()
+                    
                     Game.MainButton(label: "ANIMATE") {
                         viewModel.model.process(Response(input:
                                                             "Test",
@@ -136,10 +146,12 @@ struct GamePlayView_Previews: PreviewProvider {
             ZStack {
                 let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
                 
-                GamePlayView(gkMatch: nil).environmentObject(viewModel)
+                GamePlayView(gkMatch: nil)
+                    .environmentObject(viewModel)
+                    .onAppear { viewModel.trainingMode = true }
                 
                 VStack {
-                    Spacer()
+                    
                     Game.MainButton(label: "ANIMATE") {
                         viewModel.model.process(Response(input:
                                                             "Test",
