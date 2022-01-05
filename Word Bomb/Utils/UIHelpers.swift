@@ -32,6 +32,41 @@ struct ScaleEffect: ButtonStyle {
     }
 }
 
+struct AnimatingIncrement: ViewModifier {
+    var increment: Int
+    var isAnimating: Bool
+    var xOffset: Float
+    
+    func body(content: Content) -> some View {
+         
+        
+            content
+                .overlay(
+                    HStack {
+                        Image(systemName: "plus")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .scaledToFit()
+                        Text("\(increment)")
+                            .boldText()
+                            .fixedSize(horizontal: false, vertical: false) // prevents text from getting truncated to ...
+                    }
+                        .frame(width: 150, height: 150)
+                        .foregroundColor(.green)
+                        .offset(x: CGFloat(xOffset), y: isAnimating ? -30 : -20)
+                        .animation(.easeIn.speed(0.7))
+                        .opacity(isAnimating ? 0.7 : 0)
+                        .animation(.easeInOut.speed(0.7))
+            )
+
+    }
+}
+extension View {
+    func animatingIncrement(_ increment: Int, isAnimating: Bool, xOffset: Float = 20) -> some View {
+        self.modifier(AnimatingIncrement(increment: increment, isAnimating: isAnimating, xOffset: xOffset))
+    }
+}
+
 struct PulseEffect: ViewModifier {
 
     @State var isOn = false
@@ -41,7 +76,7 @@ struct PulseEffect: ViewModifier {
         content
             .scaleEffect(self.isOn ? 1 : 0.9)
             .opacity(self.isOn ? 1 : 0.8)
-            .animation(animation)
+            .animation(animation, value: isOn)
             .onAppear {
                 self.isOn = true
             }
@@ -135,8 +170,8 @@ extension View {
             return AnyView(self)
         }
     }
-    func helpButton() -> some View {
-        self.modifier(HelpSheet())
+    func helpButton(action: @escaping () -> Void = {}) -> some View {
+        self.modifier(HelpSheet(action: action))
     }
     func resignKeyboardOnDragGesture() -> some View {
         return modifier(ResignKeyboardOnDragGesture())
