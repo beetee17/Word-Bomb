@@ -61,6 +61,7 @@ struct Players: Codable {
         for player in queue {
             player.livesLeft = settings.playerLives
             player.totalLives = settings.playerLives
+            player.originalTotalLives = settings.playerLives
         }
     }
     
@@ -75,7 +76,6 @@ struct Players: Codable {
     /// - Parameter player: `Player` object to be removed
     mutating func remove(_ player: Player) {
         guard let index = queue.firstIndex(of: player) else { return }
-        
         
         queue.remove(at: index)
         print("Player removed")

@@ -23,14 +23,20 @@ class Player: Codable, Equatable, Identifiable {
     var chargeProgress = 0
     var multiplier = 1
     
-    var totalLives = UserDefaults.standard.integer(forKey: "Player Lives")
-    var livesLeft = UserDefaults.standard.integer(forKey: "Player Lives")
+    var originalTotalLives: Int
+    var totalLives: Int
+    var livesLeft: Int
     
     var usedLetters = Set<String>()
     
     init(name:String, queueNumber: Int) {
         self.name = name
         self.queueNumber = queueNumber
+        
+        let settings = Game.Settings()
+        originalTotalLives = settings.playerLives
+        totalLives = settings.playerLives
+        livesLeft = settings.playerLives
     }
     
     func setScore(with score: Int) {
@@ -53,7 +59,8 @@ class Player: Codable, Equatable, Identifiable {
     func reset(with queueNumber: Int) {
         score = 0
         chargeProgress = 0
-        livesLeft = totalLives
+        livesLeft = originalTotalLives
+        totalLives = originalTotalLives
         self.queueNumber = queueNumber
     }
 }
