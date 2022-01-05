@@ -15,7 +15,6 @@ struct FirstLaunchInstructionsView: View {
                 .ignoresSafeArea()
                 
             HelpButton(action: { }, border: true)
-                
                 .ignoresSafeArea()
  
             VStack(spacing: 50) {
@@ -23,7 +22,7 @@ struct FirstLaunchInstructionsView: View {
                     .font(.system(.title, design: .monospaced).bold())
                     .textCase(.uppercase)
                 
-                Text("Click on the help button at the top right whenever you need it!\n\nTap anywhere to dismiss.")
+                Text("The help button is located at the top right whenever you need it!\n\nPlease select it to continue.")
                     .font(.system(.title3, design: .monospaced))
                     .multilineTextAlignment(.center)
             }
