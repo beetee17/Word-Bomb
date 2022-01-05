@@ -55,3 +55,13 @@ struct Game {
         print("Timer stopped")
     }
 }
+
+
+extension Game {
+    struct Settings: Codable {
+        var timeLimit = UserDefaults.standard.float(forKey: "Time Limit")
+        var timeConstraint = UserDefaults.standard.float(forKey:"Time Constraint")
+        var timeMultiplier = UserDefaults.standard.float(forKey: "Time Multiplier")
+        var playerLives = UserDefaults.standard.integer(forKey: "Player Lives")
+    }
+}

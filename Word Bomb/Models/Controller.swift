@@ -11,16 +11,27 @@ struct Controller: Codable {
     /// Controls when the explosion animation is run. Should be true when a player runs out of time
     var animateExplosion = false
     
+    /// The amount of time left for the current player.
+    var timeLeft: Float
     
     // The time allowed for each player, as per the host's settings. The limit may decrease with each turn depending on the other relevant settings
-    var timeLimit = UserDefaults.standard.float(forKey: "Time Limit")
+    var timeLimit: Float
+    var originalTimeLimit: Float
     
-    /// The amount of time left for the current player.
-    var timeLeft = UserDefaults.standard.float(forKey: "Time Limit")
+    var timeMultiplier: Float
     
+    var timeConstraint: Float
+    
+    init(settings: Game.Settings = Game.Settings()) {
+        timeLeft = settings.timeLimit
+        timeLimit = settings.timeLimit
+        originalTimeLimit = settings.timeLimit
+        timeMultiplier = settings.timeMultiplier
+        timeConstraint = settings.timeConstraint
+    }
     /// Updates the time limit based on the the `"Time Multiplier"` and `"Time Constraint"` settings
     mutating func updateTimeLimit() {
-        timeLimit = max(UserDefaults.standard.float(forKey:"Time Constraint"), timeLimit * UserDefaults.standard.float(forKey: "Time Multiplier"))
+        timeLimit = max(timeConstraint, timeLimit * timeMultiplier)
         print("time multiplied")
         timeLeft = timeLimit
     }
@@ -31,8 +42,8 @@ struct Controller: Codable {
     }
     
     mutating func reset() {
-        timeLimit = UserDefaults.standard.float(forKey: "Time Limit")
-        timeLeft = timeLimit
+        timeLeft = originalTimeLimit
+        timeLimit = originalTimeLimit
         animateExplosion = false
     }
 }

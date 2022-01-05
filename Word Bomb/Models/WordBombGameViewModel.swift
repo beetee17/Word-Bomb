@@ -18,12 +18,12 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         let viewModel = WordBombGameViewModel()
         let players = Players(from: (1...numPlayers).map({"\($0)"}))
         
-        viewModel.model = WordBombGame(players: players)
+        viewModel.model = WordBombGame(players: players, settings: Game.Settings())
         viewModel.gameType = .Classic
         return viewModel
     }
     /// Source of truth for many of the variables that concerns game logic
-    @Published var model: WordBombGame = WordBombGame(players: Players())
+    @Published var model: WordBombGame = WordBombGame(players: Players(), settings: Game.Settings())
     
     /// Controls the current view shown to the user
     @Published var viewToShow: ViewToShow = .Main {
@@ -74,7 +74,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     
     /// Called when settings menu is dismissed. Resets the shared model to account for any changes.
     func updateGameSettings() {
-        model = WordBombGame(players: Players())
+        model = WordBombGame(players: Players(), settings: Game.Settings())
     }
     
     /// Resumes the current game
@@ -108,16 +108,20 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         gameMode = mode
         
         if trainingMode {
-            // Initialise a sharedModel with a single `Player`
+            // Initialise a sharedModel with a single `Player` object
             let playerName = (UserDefaults.standard.stringArray(forKey: "Player Names") ?? ["1"]).first!
-            players = Players(from:[Player(name: playerName, queueNumber: 0)])
+            let settings = Game.Settings(timeLimit: 20, timeConstraint: 15, timeMultiplier: 0.98, playerLives: 3)
+            model = WordBombGame(players: Players(from: [playerName]), settings: settings)
             
-        } else if GameCenter.viewModel.showMatch {
+        } else if GameCenter.viewModel.showMatch && GameCenter.isHost {
+            // Always use the host settings
             players = getOnlinePlayers(GameCenter.viewModel.gkMatch!.players)
+            model = WordBombGame(players: players, settings: Game.Settings())
+        } else {
+            // Pass and Play mode
+            model = WordBombGame(players: players, settings: Game.Settings())
         }
-        
-        model = WordBombGame(players: players)
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
             WordBombGame.getGameModel(for: mode) { [self] gameModel in
                 model.setGameModel(with: gameModel)
@@ -169,13 +173,15 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                         }
                         
                     }
-                    if roundedValue % 10 == 0 && model.controller.timeLeft > 0.1 {
-                        let playerLives = Dictionary(model.players.queue.map { ($0.name, $0.livesLeft) }) { first, _ in first }
-                        if GameCenter.isHost {
-                            GameCenter.send(GameData(playerLives: playerLives), toHost: false)
-                            
-                        }
-                    }
+//                    if roundedValue % 20 == 0 && model.controller.timeLeft > 0.1 {
+//                        // to keep in sync? Not really necessary unless something happens
+//                        // may cause lag or decreased performance...
+//                        let playerLives = Dictionary(model.players.queue.map { ($0.name, $0.livesLeft) }) { first, _ in first }
+//                        if GameCenter.isHost {
+//                            GameCenter.send(GameData(playerLives: playerLives), toHost: false)
+//
+//                        }
+//                    }
                 }
             }
 
@@ -216,7 +222,7 @@ extension WordBombGameViewModel {
      Should be called when a multiplayer game has ended either due to lack of players, lost of connection or the game has ended
      */
     func resetGameModel() {
-        model = .init(players: Players())
+        model = .init(players: Players(), settings: Game.Settings())
         Game.stopTimer()
     }
     
@@ -235,12 +241,15 @@ extension WordBombGameViewModel {
    
     /// Returns `Players` object for those participating in the Game Center match
     /// - Parameter gkPlayers: Array of GKPlayer objects participating in the match
+    /// Only the host player should require this function
     func getOnlinePlayers(_ gkPlayers: [GKPlayer]) -> Players {
         
-        var players: [Player] = [Player(name: GKLocalPlayer.local.displayName, queueNumber: 0)]
+        var players: [Player] = [Player(name: GKLocalPlayer.local.displayName,
+                                        queueNumber: 0)]
         
         for i in gkPlayers.indices {
-            players.append(Player(name: gkPlayers[i].displayName, queueNumber: i+1))
+            players.append(Player(name: gkPlayers[i].displayName,
+                                  queueNumber: i+1))
         }
         setGKPlayerImages(for: players, with: gkPlayers)
         return Players(from: players)

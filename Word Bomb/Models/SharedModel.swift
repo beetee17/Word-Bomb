@@ -12,17 +12,18 @@ import GameKit
  e.g. it does not implement the function that handles processing of user input since that differs depending on game mode
  */
 struct WordBombGame: Codable {
-    private enum CodingKeys: String, CodingKey { case players, controller, output, query, instruction }
+    private enum CodingKeys: String, CodingKey { case players, controller, settings, output, query, instruction }
     // this is usually synthesized, but we have to define it ourselves to exclude various properties
     // `game` is not codable, the others are not needed to sync gameState at initialisation
     
     var players: Players
+    
     var isMyGKTurn: Bool { GKLocalPlayer.local.displayName == players.current.name }
     
     /// Responsible with processing user inputs and fetching new queries if necessary
     var game: WordGameModel? = nil
     
-    var controller = Controller()
+    var controller: Controller
     
     /// The current state of the game
     var gameState: GameState = .Initial
@@ -42,6 +43,16 @@ struct WordBombGame: Codable {
             print("instruction set to \(instruction)")
         }
     }
+    
+    var settings: Game.Settings
+    
+    init(players: Players, settings: Game.Settings) {
+        self.settings = settings
+        self.players = players
+        self.players.useSettings(settings)
+        self.controller = Controller(settings: settings)
+    }
+    
     /// Returns the appropriate WordGameModel for the given game mode
     /// - Parameter mode: The given game mode
     static func getGameModel(for mode: GameMode, completion: @escaping (WordGameModel) -> Void) {
@@ -146,18 +157,19 @@ struct WordBombGame: Codable {
     /// - Parameters:
     ///   - input: The user's input
     ///   - response: The `Response` object representing the outcome of `input`
-    mutating func process(_ input: String, _ response: Response) {
+    mutating func process(_ response: Response) {
         print("handling player input")
         // reset the time for other player iff answer from prev player was correct
         
         if GameCenter.isHost {
             GameCenter.send(GameData(state: .PlayerInput,
-                                     input: input,
                                      response: response),
                             toHost: false)
         }
         
-        output = response.status.outputText(input)
+        output = response.output
+        
+        players.handleInput(response)
         
         if response.status == .Correct {
 
@@ -166,11 +178,8 @@ struct WordBombGame: Codable {
             }
             
             numCorrect += 1
-            game?.updateUsedWords(for: input)
+            game?.updateUsedWords(for: response.input)
             
-            players.current.setScore(with: response.score)
-            _ = players.nextPlayer()
-   
             if !GameCenter.isOnline {
                 // only if host or offline should update time limit
                 controller.updateTimeLimit()
@@ -198,7 +207,7 @@ struct WordBombGame: Codable {
         
         let (output, isGameOver) = players.currentPlayerRanOutOfTime()
         self.output = output
-        players.current.chargeProgress = 0
+        
         
         if isGameOver {
             if !players.getWinningPlayer() {
@@ -249,12 +258,12 @@ struct WordBombGame: Codable {
             }
             
         case .PlayerInput:
-            if let input = data?["input"] as? String, let response = data?["response"] as? Response {
-                process(input, response)
+            if let response = data?["response"] as? Response {
+                process(response)
                 print("shared model processing input with response: \(response)")
                 
             }
-            
+        
         case .PlayerTimedOut:
             controller.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
             currentPlayerRanOutOfTime()
@@ -262,14 +271,18 @@ struct WordBombGame: Codable {
         case .GameOver:
             controller.timeLeft = 0.0 // for multiplayer games if non-host is lagging behind in their timer
             Game.stopTimer()
-        case .TieBreak:
-            query = game?.getRandQuery(nil) // get new query for when game restarts
             if GameCenter.isHost {
-                GameCenter.send(GameData(query: query), toHost: false)
+                GameCenter.send(GameData(state: .GameOver), toHost: false)
+            }
+        case .TieBreak:
+            if !GameCenter.isNonHost {
+                query = game?.getRandQuery(nil) // get new query for when game restarts
+                GameCenter.send(GameData(state: .TieBreak, query: query), toHost: false)
             }
         case .Playing:
-            break
-
+            if GameCenter.isHost {
+                GameCenter.send(GameData(state: .Playing), toHost: false)
+            }
         }
     }
 }
