@@ -14,7 +14,7 @@ struct PlayerLives: View {
     var body: some View {
         
         HStack {
-            let totalLives = viewModel.model.players.totalLives
+            let totalLives = viewModel.model.settings.playerLives
             
             // redraws the hearts when player livesLeft changes
             ForEach(1...totalLives, id: \.self) { i in
