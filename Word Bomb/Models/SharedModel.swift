@@ -31,6 +31,9 @@ struct WordBombGame: Codable {
     /// The current correct answers used in the game. Should only be set within the model
     var numCorrect = 0
     
+    var numTurnsWithoutCorrectAnswer = 0
+    var numTurnsBeforeNewQuery = 2
+    
     /// The output text to be displayed depending on player input
     var output = ""
     
@@ -168,15 +171,12 @@ struct WordBombGame: Codable {
         }
         
         output = response.output
+        query = response.newQuery
         
         players.handleInput(response)
         
         if response.status == .Correct {
 
-            if let newQuery = response.newQuery {
-                self.query = newQuery
-            }
-            
             numCorrect += 1
             game?.updateUsedWords(for: response.input)
             
@@ -199,6 +199,12 @@ struct WordBombGame: Codable {
     
     /// Handles the game state when the current player runs out of time
     mutating func currentPlayerRanOutOfTime() {
+        
+        numTurnsWithoutCorrectAnswer += 1
+        if numTurnsWithoutCorrectAnswer >= numTurnsBeforeNewQuery {
+            query = game?.getRandQuery(nil)
+            numTurnsWithoutCorrectAnswer = 0
+        }
         
         // We need to keep game state on non-host devices in sync
         if GameCenter.isHost {
