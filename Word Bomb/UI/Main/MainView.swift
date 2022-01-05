@@ -12,6 +12,8 @@ import GameKitUI
 /// Source of truth for `MainView`. Handles programmatic navigation throughout `MainView`and controls the flow of the launch animation.
 class MainViewVM: ObservableObject {
     
+    static var shared = MainViewVM()
+    
     /// `true` when the logo has finished animating. Used for delay purposes; it is toggled after a small amount of time after `animatingLogo` is `true`
     @Published var logoAnimationCompleted = false
     /// `true` if the logo is currently animating.
@@ -94,7 +96,7 @@ class MainViewVM: ObservableObject {
 
 struct MainView: View {
     
-    @StateObject var viewModel = MainViewVM()
+    @ObservedObject var viewModel = MainViewVM.shared
     @Namespace var mainView
     
     var body: some View {
@@ -105,7 +107,7 @@ struct MainView: View {
             
             VStack(spacing:1) {
                 if viewModel.animatingLogo {
-                    LogoView()
+                    RotatingBomb(isRotating: $viewModel.logoAnimationCompleted)
                         .matchedGeometryEffect(id: "logo", in: mainView, isSource: false)
                 }
                 
@@ -116,21 +118,25 @@ struct MainView: View {
             .blur(radius: viewModel.showTutorial ? 2 : 0)
             
             if viewModel.beforeAnimating {
-                LogoView()
+                RotatingBomb(isRotating: $viewModel.logoAnimationCompleted)
                     .matchedGeometryEffect(id: "logo", in: mainView, isSource: true)
                     .frame(width: Device.width, height: Device.height, alignment: .center)
                     .onAppear() { viewModel.beginAnimation() }
             }
             
             if viewModel.showTutorial {
-                FirstLaunchInstructionsView().onTapGesture { viewModel.dismissTutorial() }
+                FirstLaunchInstructionsView()
             }
             
         }
         .transition(.asymmetric(insertion: AnyTransition.move(edge: .leading), removal: AnyTransition.move(edge: .trailing)))
         .animation(Game.mainAnimation)
-        .zIndex(/*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/) // transition does not work with zIndex set to 0
-        
+        .zIndex(1) // transition does not work with zIndex set to 0
+        .onDisappear {
+            // for logo animation to be performed
+            viewModel.animatingLogo = false
+            viewModel.logoAnimationCompleted = false
+        }
     }
 }
 
@@ -186,7 +192,10 @@ struct MainMenuView: View {
                     .sheet(isPresented: $viewModel.changingSettings) { SettingsMenu().environmentObject(gameVM) }
                 }
              
-                .transition(AnyTransition.offset(x:0, y:200).combined(with: .move(edge: viewModel.showMultiplayerOptions ? .top : .bottom)))
+                .transition(AnyTransition
+                                .offset(x:0, y:200)
+                                .combined(with: .move(edge: viewModel.showMultiplayerOptions ? .top : .bottom)
+                                .combined(with: .opacity)))
             }
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.75, blendDuration: 0.2))
