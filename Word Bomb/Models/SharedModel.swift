@@ -203,6 +203,9 @@ struct WordBombGame: Codable {
         numTurnsWithoutCorrectAnswer += 1
         if numTurnsWithoutCorrectAnswer >= numTurnsBeforeNewQuery {
             query = game?.getRandQuery(nil)
+            if GameCenter.isHost {
+                GameCenter.send(GameData(query: query), toHost: false)
+            }
             numTurnsWithoutCorrectAnswer = 0
         }
         
