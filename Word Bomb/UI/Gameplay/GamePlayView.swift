@@ -11,26 +11,24 @@ import GameKitUI
 
 struct GamePlayView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
+    
     @State var showMatchProgress = false
+    @State var showUsedLetters = false
     @State var gamePaused = false
     @State var forceHideKeyboard = false
+    
     var gkMatch: GKMatch?
     
     var body: some View {
         ZStack {
-            
-            // for debugging preview
-            //                ZStack {
-            //                    Button("ANIMATE") {
-            //                        viewModel.animate.toggle()
-            //                    }
-            //                }
-            //                .padding(.top,200)
             ZStack {
                 Color.clear
                 
                 VStack {
-                    TopBarView(gamePaused: $gamePaused, showMatchProgress: $showMatchProgress, gkMatch: gkMatch)
+                    TopBarView(gamePaused: $gamePaused,
+                               showMatchProgress: $showMatchProgress,
+                               showUsedLetters: $showUsedLetters,
+                               gkMatch: gkMatch)
                     Spacer()
                 }
                 .zIndex(1)
@@ -40,8 +38,6 @@ struct GamePlayView: View {
                         .padding(.top, Device.height*0.085)
                     Spacer()
                 }
-                
-                
             }
             .ignoresSafeArea(.keyboard)
             
@@ -71,11 +67,12 @@ struct GamePlayView: View {
             .offset(y: Device.height*0.03)
             .ignoresSafeArea(.all)
         }
-        .blur(radius: gamePaused || showMatchProgress ? 10 : 0, opaque: false)
+        .blur(radius: gamePaused || showMatchProgress || showUsedLetters ? 10 : 0, opaque: false)
         .overlay(
             MatchProgressView(usedWords: viewModel.model.game?.usedWords.sorted(), showMatchProgress: $showMatchProgress)
         )
         .overlay(PauseMenuView(gamePaused: $gamePaused))
+        .overlay(AlphabetTracker(usedLetters: viewModel.model.players.current.usedLetters, isShowing: $showUsedLetters))
         .onChange(of: gamePaused) { newValue in
             forceHideKeyboard = newValue
         }
@@ -104,7 +101,10 @@ struct GamePlayView_Previews: PreviewProvider {
                 VStack {
                     Spacer()
                     Game.MainButton(label: "ANIMATE") {
-                        viewModel.model.process("Test", Response(status: .Correct, score: 20))
+                        viewModel.model.process(Response(input:
+                                                            "Test",
+                                                         status: .Correct,
+                                                         score: 20))
                     }
                     Game.MainButton(label: "OUCH") {
                         viewModel.model.currentPlayerRanOutOfTime()
@@ -119,7 +119,10 @@ struct GamePlayView_Previews: PreviewProvider {
                 VStack {
                     Spacer()
                     Game.MainButton(label: "ANIMATE") {
-                        viewModel.model.process("Test", Response(status: .Correct, score: Int.random(in: 1...10)))
+                        viewModel.model.process(Response(input:
+                                                            "Test",
+                                                         status: .Correct,
+                                                         score: Int.random(in: 1...10)))
                     }
                     Game.MainButton(label: "OUCH") {
                         viewModel.model.currentPlayerRanOutOfTime()
@@ -134,7 +137,10 @@ struct GamePlayView_Previews: PreviewProvider {
                 VStack {
                     Spacer()
                     Game.MainButton(label: "ANIMATE") {
-                        viewModel.model.process("Test", Response(status: .Correct, score: 5))
+                        viewModel.model.process(Response(input:
+                                                            "Test",
+                                                         status: .Correct,
+                                                         score: 20))
                     }
                     Game.MainButton(label: "OUCH") {
                         viewModel.model.currentPlayerRanOutOfTime()

@@ -13,6 +13,8 @@ struct TopBarView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     @Binding var gamePaused: Bool
     @Binding var showMatchProgress: Bool
+    @Binding var showUsedLetters: Bool
+    
     var gkMatch: GKMatch?
     
     var body: some View {
@@ -47,10 +49,16 @@ struct TopBarView: View {
                     ZStack {
                         if .GameOver == viewModel.model.gameState {
                             RestartButton()
-                        } else if !showMatchProgress {
+                        } else if !(showMatchProgress || showUsedLetters) {
                             CorrectCounter(
                                 numCorrect: viewModel.model.numCorrect,
-                                action: { showMatchProgress.toggle() })
+                                action: {
+                                    if viewModel.trainingMode {
+                                        showUsedLetters.toggle()
+                                    } else {
+                                    showMatchProgress.toggle()
+                                    }
+                                })
                         }
                     })
                 .offset(y:Device.height*0.015)
@@ -69,7 +77,9 @@ struct TopBarView_Previews: PreviewProvider {
         
         var body: some View {
             VStack {
-                TopBarView(gamePaused: .constant(false), showMatchProgress: .constant(false))
+                TopBarView(gamePaused: .constant(false),
+                           showMatchProgress: .constant(false),
+                           showUsedLetters: .constant(false))
                     .environmentObject(viewModel)
                 Game.MainButton(label: "1", systemImageName: "plus.circle") {
                     viewModel.model.numCorrect += 1
