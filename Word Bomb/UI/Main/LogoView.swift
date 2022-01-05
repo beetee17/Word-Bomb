@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct LogoView: View {
-    
     var body: some View {
-        
         Image("logo-bomb-no-shadow")
             .resizable()
             .aspectRatio(contentMode: .fill)
