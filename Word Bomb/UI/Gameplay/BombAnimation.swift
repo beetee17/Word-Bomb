@@ -11,7 +11,7 @@ import SDWebImageSwiftUI
 struct BombView: View {
     
     @Binding var timeLeft: Float
-    @State var timeLimit: Float
+    var timeLimit: Float
     
     var body: some View {
         
