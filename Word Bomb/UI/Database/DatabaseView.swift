@@ -63,7 +63,7 @@ struct DatabaseView: View {
                     Button(action: {
                         withAnimation {
                             if db.isDefault_ {
-                                Game.errorHandler.showBanner(title: "Deletion Prohibited", message: "Cannot modify a default database!")
+                                Game.errorHandler.showBanner(title: "Action Prohibited", message: "Cannot modify a default database!")
                             } else {
                                 db.remove(wordsToDelete)
                             }
@@ -83,6 +83,10 @@ struct DatabaseView: View {
         }
     }
     func saveChanges() {
+        if db.isDefault_ {
+            Game.errorHandler.showBanner(title: "Action", message: "Cannot modify a default database!")
+            return 
+        }
         for word in wordsToAdd {
             let _ = Word(context: moc, content: word, db: db)
         }
