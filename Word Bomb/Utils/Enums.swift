@@ -13,21 +13,9 @@ enum DBType: String, CaseIterable {
 }
 
 enum InputStatus: String, Codable {
-    case Correct
-    case Wrong
-    case Used
-    
-    func outputText(_ input: String) -> String {
-        switch self {
-        
-        case .Correct:
-            return "\(input) is Correct"
-        case .Wrong:
-            return "\(input) is Wrong"
-        case .Used:
-            return "Already used \(input)"
-        }
-    }
+    case Correct = " is Correct"
+    case Wrong = " is Wrong"
+    case Used = " Already Used"
 }
 
 enum GameType: String, CaseIterable, Codable {

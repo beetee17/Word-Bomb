@@ -45,18 +45,23 @@ struct ContainsWordGameModel: WordGameModel {
         let searchResult = words.search(element: input)
         if usedWords.contains(input) {
             print("\(input.uppercased()) ALREADY USED")
-            return Response(status: .Used)
+            return Response(input: input,
+                            status: .Used)
             
         }
         
         else if (searchResult != -1) && input.contains(query!) {
             print("\(input.uppercased()) IS CORRECT")
-            return Response(status: .Correct, score: getScore(for: input, and: query), newQuery: getRandQuery(input))
+            return Response(input: input,
+                            status: .Correct,
+                            score: getScore(for: input, and: query),
+                            newQuery: getRandQuery(input))
         }
         
         else {
             print("\(input.uppercased()) IS WRONG")
-            return Response(status: .Wrong)
+            return Response(input: input,
+                            status: .Wrong)
             
         }
         

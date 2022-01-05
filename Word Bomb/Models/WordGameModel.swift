@@ -40,15 +40,19 @@ protocol WordGameModel {
 }
 
 struct Response: Codable {
+    var input: String
     var status: InputStatus
     var score: Int
     var newQuery: String?
     
-    init(status: InputStatus, score: Int = 0, newQuery: String? = nil) {
+    init(input: String, status: InputStatus, score: Int = 0, newQuery: String? = nil) {
+        self.input = input
         self.status = status
         self.score = score
         self.newQuery = newQuery
     }
+     
+    var output: String { input + status.rawValue }
 }
 
 

@@ -26,19 +26,22 @@ struct ExactWordGameModel: WordGameModel {
         
         if usedWords.contains(input) {
             print("\(input.uppercased()) ALREADY USED")
-            return Response(status: .Used)
+            return Response(input: input, status: .Used)
         }
         
         let searchResult = words.search(element: input)
         
         if searchResult != -1 {
             print("\(input.uppercased()) IS CORRECT")
-            return Response(status: .Correct, score: getScore(for: input))
+            return Response(input: input,
+                            status: .Correct,
+                            score: getScore(for: input))
         }
                 
         else {
             print("\(input.uppercased()) IS WRONG")
-            return Response(status: .Wrong)
+            return Response(input: input,
+                            status: .Wrong)
         }
     }
     
