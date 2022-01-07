@@ -11,6 +11,7 @@ struct GameOverText: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     @State var showMatchReview = false
     @State var showConfetti = false
+    @State var prevBest: Int
     
     var body: some View {
         let usedWords = viewModel.model.game?.usedWords
@@ -25,12 +26,13 @@ struct GameOverText: View {
             
             if trainingMode {
                 // If in training mode there better be a Game Mode
-                Text("Previous Best: \(gameMode!.highScore)")
+                Text("Previous Best: \(prevBest)")
                     .boldText()
                     .onAppear() {
-                        if score <= gameMode!.highScore {
+                        if score <= prevBest {
                             AudioPlayer.playSound(.Explosion)
                         }
+                        gameMode!.updateHighScore(with: score)
                     }
             }
         }
@@ -39,13 +41,8 @@ struct GameOverText: View {
             MatchReviewView(words: viewModel.model.game?.words,  usedWords: Set(usedWords ?? []), numCorrect: viewModel.model.numCorrect, totalWords: viewModel.model.game!.totalWords)
         }
         .onAppear() {
-            if (score > gameMode?.highScore ?? Int.max) || !trainingMode {
+            if (score > prevBest) || !trainingMode {
                 showConfetti = true
-            }
-        }
-        .onDisappear() {
-            if trainingMode {
-                gameMode!.updateHighScore(with: score)
             }
         }
     }
@@ -54,8 +51,8 @@ struct GameOverText: View {
 struct GameOverText_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            GameOverText().environmentObject(WordBombGameViewModel())
-            GameOverText().environmentObject(WordBombGameViewModel())
+            GameOverText(prevBest: 0).environmentObject(WordBombGameViewModel())
+            GameOverText(prevBest: 0).environmentObject(WordBombGameViewModel())
         }
     }
 }
