@@ -47,10 +47,10 @@ class Player: Codable, Equatable, Identifiable {
         self.score += score * multiplier
         self.chargeProgress += score * multiplier
         
-        if self.chargeProgress >= Game.getMaxCharge(for: multiplier) {
+        if self.chargeProgress >= Game.getMaxCharge(for: self.multiplier) {
+            self.chargeProgress = self.chargeProgress - Game.getMaxCharge(for: self.multiplier)
             self.multiplier += 1
-            if self.multiplier > 3 { numTickets += 1}
-            self.chargeProgress -= Game.getMaxCharge(for: multiplier)
+            if self.multiplier > 3 { numTickets += 1 }
         }
     }
     
