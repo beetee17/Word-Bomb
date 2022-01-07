@@ -22,6 +22,7 @@ class Player: Codable, Equatable, Identifiable {
     var score = 0
     var chargeProgress = 0
     var multiplier = 1
+    var numTickets = 1
     
     var originalTotalLives: Int
     var totalLives: Int
@@ -41,13 +42,14 @@ class Player: Codable, Equatable, Identifiable {
     
     func setScore(with score: Int) {
         
-        let multiplier = self.multiplier
+        let multiplier = min(3, self.multiplier)
         
         self.score += score * multiplier
         self.chargeProgress += score * multiplier
         
         if self.chargeProgress >= Game.getMaxCharge(for: multiplier) {
-            self.multiplier = min(3, multiplier + 1)
+            self.multiplier += 1
+            if self.multiplier > 3 { numTickets += 1}
             self.chargeProgress -= Game.getMaxCharge(for: multiplier)
         }
     }
