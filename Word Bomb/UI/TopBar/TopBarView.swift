@@ -31,13 +31,13 @@ struct TopBarView: View {
             TimerView(
                 players: $viewModel.model.players,
                 timeLeft: $viewModel.model.controller.timeLeft,
-                timeLimit: viewModel.model.controller.timeLimit,
+                timeLimit: $viewModel.model.controller.timeLimit,
                 animateExplosion: $viewModel.model.controller.animateExplosion
             )
                 .offset(x: gkMatch == nil ? 0 : -20)
                 .frame(width:Device.width*0.5)
                 .offset(x:Device.width*0.05)
-            
+             
             Spacer()
                 .overlay(
                     TopRight(showMatchProgress: $showMatchProgress,
@@ -73,6 +73,7 @@ struct TopRight: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     @Binding var showMatchProgress: Bool
     @Binding var showUsedLetters: Bool
+    @State private var showRewards = false
     
     var body: some View {
         ZStack {
@@ -83,13 +84,38 @@ struct TopRight: View {
                     numCorrect: viewModel.model.numCorrect,
                     action: { showMatchProgress.toggle() })
             } else if viewModel.trainingMode && !showUsedLetters {
+                let currPlayer = viewModel.model.players.current
+                
                 CorrectCounter(
-                    numCorrect: viewModel.model.players.current.usedLetters.count,
+                    numCorrect: currPlayer.usedLetters.count,
                     action: { showUsedLetters.toggle() })
+                    .onChange(of: currPlayer.usedLetters.count) { newValue in
+                        if newValue >= 26 { // 26 letters in the alphabet
+                            withAnimation(.easeInOut) { showRewards = true }
+                        }
+                    }
+                    .overlay(
+                        RewardOptions(isShowing: showRewards,
+                                      addLifeAction: {
+                                          withAnimation(.easeInOut) {
+                                              viewModel.getLifeReward()
+                                              showRewards.toggle()
+                                          }
+                                      },
+                                      addTimeAction: {
+                                          withAnimation(.easeInOut) {
+                                              viewModel.getTimeReward()
+                                              showRewards.toggle()
+                                          }
+                                      })
+                    )
             }
+        }
     }
 }
 
+    
+    
 struct TopBarView_Previews: PreviewProvider {
     
     struct TopBarView_Harness: View {

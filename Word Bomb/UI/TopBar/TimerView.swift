@@ -11,8 +11,9 @@ struct TimerView: View {
     // TODO: why are bindings needed
     @Binding var players: Players
     @Binding var timeLeft: Float
-    @State var timeLimit: Float
+    @Binding var timeLimit: Float
     @Binding var animateExplosion: Bool
+    @State private var animateIncrement = false
     
     var body: some View {
         ZStack {
@@ -35,6 +36,16 @@ struct TimerView: View {
                     .font(.largeTitle)
             }
         }
+        .animatingIncrement(5, isAnimating: animateIncrement, xOffset: 40.0)
+        .onChange(of: timeLimit) { [timeLimit] newValue in
+            if Int(newValue - timeLimit) == 5 {
+                // TODO: get rid of this hack
+                animateIncrement = true
+                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.5) {
+                    animateIncrement = false
+                }
+            }
+        }
     }
 }
 
@@ -49,7 +60,7 @@ struct TimerView_Previews: PreviewProvider {
             VStack {
                 let players = Players(from: (1...numPlayers).map({"\($0)"}))
                 
-                TimerView(players: .constant(players), timeLeft: .constant(10), timeLimit: 10, animateExplosion: $animateExplosion)
+                TimerView(players: .constant(players), timeLeft: .constant(10), timeLimit: .constant(10), animateExplosion: $animateExplosion)
 
                 Button("Test Explosion!") {
                     animateExplosion = true
