@@ -51,6 +51,7 @@ struct WordBombGame: Codable {
     
     init(players: Players, settings: Game.Settings) {
         self.settings = settings
+        self.numTurnsBeforeNewQuery = settings.numTurnsBeforeNewQuery
         self.players = players
         self.players.useSettings(settings)
         self.controller = Controller(settings: settings)
