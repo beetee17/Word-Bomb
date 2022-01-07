@@ -29,7 +29,7 @@ struct MainPlayer:  View {
                                     value: player.chargeProgress,
                                     multiplier: player.multiplier,
                                     invert: true)
-                            .frame(width: 10, height: Device.height*0.12)
+                            .frame(width: 8, height: Device.height*0.12)
                             .offset(x: -(Game.playerAvatarSize/2 + 10))
                     )}
 
@@ -39,9 +39,12 @@ struct MainPlayer:  View {
             
             PlayerLives(player: player)
                 .onChange(of: player.livesLeft) { _ in
-                    imagePicker.getImage(for: .Sad)
+                    if player.totalLives == player.livesLeft {
+                        imagePicker.getImage(for: .Combo)
+                    } else {
+                        imagePicker.getImage(for: .Sad)
+                    }
                 }
-            
         }
     }
 }
