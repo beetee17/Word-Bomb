@@ -109,9 +109,21 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         
         if trainingMode {
             // Initialise a sharedModel with a single `Player` object
-            let playerName = (UserDefaults.standard.stringArray(forKey: "Player Names") ?? ["1"]).first!
-            let settings = Game.Settings(timeLimit: 20, timeConstraint: 15, timeMultiplier: 0.98, playerLives: 3)
-            model = WordBombGame(players: Players(from: [playerName]), settings: settings)
+            var player: Player
+            if GKLocalPlayer.local.isAuthenticated {
+                player = Player(name: GKLocalPlayer.local.displayName, queueNumber: 0)
+                GKLocalPlayer.local.loadPhoto(for: GKPlayer.PhotoSize.normal) { image, error in
+                    print("got image for player \(player.name) with error \(String(describing: error))")
+                    player.setImage(image)
+                }
+            } else {
+                let playerName = (UserDefaults.standard.stringArray(forKey: "Player Names") ?? ["1"]).first!
+                player = Player(name: playerName, queueNumber: 0)
+            }
+            
+            let settings = Game.Settings(timeLimit: 15, timeConstraint: 8, timeMultiplier: 0.98, playerLives: 3)
+            model = WordBombGame(players: Players(from: [player]),
+                                 settings: settings)
             
         } else if GameCenter.viewModel.showMatch && GameCenter.isHost {
             // Always use the host settings
