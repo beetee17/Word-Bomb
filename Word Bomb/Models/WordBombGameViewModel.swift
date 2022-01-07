@@ -121,7 +121,11 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                 player = Player(name: playerName, queueNumber: 0)
             }
             
-            let settings = Game.Settings(timeLimit: 15, timeConstraint: 8, timeMultiplier: 0.98, playerLives: 3)
+            let settings = Game.Settings(timeLimit: 15,
+                                         timeConstraint: 8,
+                                         timeMultiplier: 0.98,
+                                         playerLives: 3,
+                                         numTurnsBeforeNewQuery: 1)
             model = WordBombGame(players: Players(from: [player]),
                                  settings: settings)
             
@@ -237,6 +241,14 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         AudioPlayer.playSound(.Combo)
     }
     
+    func claimTicket(for player: Player) {
+        if player.queueNumber == 0 && trainingMode {
+            player.numTickets -= 1
+            model.query = model.game?.getRandQuery(nil)
+            _ = model.players.nextPlayer()
+            AudioPlayer.playSound(.Combo)
+        }
+    }
 }
 
 // MARK: - MULTIPLAYER SECTION
