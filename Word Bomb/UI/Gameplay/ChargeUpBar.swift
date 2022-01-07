@@ -6,32 +6,6 @@
 //
 
 import SwiftUI
-struct Shimmer: View {
-    var delay: Double
-    @State var show = false
-    @Binding var width: CGFloat
-    @Binding var height: CGFloat
-    
-    var body: some View {
-        Rectangle()
-            .frame(width: width, height: height)
-            .foregroundColor(.yellow)
-            .mask(
-                Capsule()
-                    .fill(LinearGradient(gradient: .init(colors: [.clear, .white, .clear]), startPoint: .top, endPoint: .bottom))
-                    .frame(width: width, height: height)
-                    .opacity(0.5)
-                    .rotationEffect(Angle(degrees: 15))
-                    .offset(x: show ? width : -2*width)
-            )
-            .onAppear {
-                withAnimation(.easeInOut(duration: 3).delay(delay).repeatForever(autoreverses: false)) {
-                    show.toggle()
-                    print("SHIMMERING")
-                }
-            }
-    }
-}
 
 struct ChargeUpBar: View {
     
@@ -57,15 +31,6 @@ struct ChargeUpBar: View {
                 ? min(CGFloat(val) * geometry.size.height, geometry.size.height)
                 : geometry.size.height
                 
-                let widthBinding = Binding(
-                    get: { width },
-                    set: {_ in }
-                )
-                let heightBinding = Binding(
-                    get: { height },
-                    set: {_ in }
-                )
-                
                 ZStack(alignment: invert ? .bottom : .leading) {
                     RoundedRectangle(cornerRadius: 45)
                         .frame(width: geometry.size.width , height: geometry.size.height)
@@ -77,12 +42,6 @@ struct ChargeUpBar: View {
                         .frame(width: width, height: height)
                         .overlay(LinearGradient(colors: [.orange, .yellow], startPoint: .bottom, endPoint: .top))
                         .animation(.linear)
-                    
-                    Shimmer(delay: 0, width: widthBinding, height: heightBinding)
-                    
-                    RoundedRectangle(cornerRadius: 45)
-                        .stroke(lineWidth: 5)
-                        .foregroundColor(.black)
                 }
                 .cornerRadius(45)
                 
