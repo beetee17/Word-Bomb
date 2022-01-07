@@ -80,8 +80,8 @@ struct ChargeUpBar_Previews: PreviewProvider {
                         imagePicker: StarImagePicker(),
                         value: value,
                         multiplier: multiplier,
-                        invert: true)
-                        .frame(width: 10, height: Device.height*0.1)
+                        invert: false)
+                        .frame(width: 400, height: 40)
                                         
                     Game.MainButton(label: "CHARGE") {
                         value += 50
