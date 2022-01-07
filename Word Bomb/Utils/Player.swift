@@ -22,7 +22,7 @@ class Player: Codable, Equatable, Identifiable {
     var score = 0
     var chargeProgress = 0
     var multiplier = 1
-    var numTickets = 1
+    var numTickets = 0
     
     var originalTotalLives: Int
     var totalLives: Int
@@ -50,7 +50,7 @@ class Player: Codable, Equatable, Identifiable {
         if self.chargeProgress >= Game.getMaxCharge(for: self.multiplier) {
             self.chargeProgress = self.chargeProgress - Game.getMaxCharge(for: self.multiplier)
             self.multiplier += 1
-            if self.multiplier > 3 { numTickets += 1 }
+            numTickets += 1
         }
     }
     
