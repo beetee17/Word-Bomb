@@ -43,7 +43,7 @@ struct ModeSelectButton: View {
                         showMatchMakerModal.toggle()
                     }
                 } else {
-                    viewModel.startGame(mode: mode)
+                    viewModel.startGame()
                 }
             }
         }
@@ -70,7 +70,7 @@ struct ModeSelectButton: View {
                 Game.errorHandler.showBanner(title: "Match Making Failed", message: error.localizedDescription)
             } started: { (match) in
                 showMatchMakerModal = false
-                viewModel.startGame(mode: mode)
+                viewModel.startGame()
                 
             }
         }

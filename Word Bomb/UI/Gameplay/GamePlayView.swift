@@ -148,7 +148,7 @@ struct GamePlayView_Previews: PreviewProvider {
                 
                 GamePlayView(gkMatch: nil)
                     .environmentObject(viewModel)
-                    .onAppear { viewModel.trainingMode = true }
+                    .onAppear { viewModel.arcadeMode = true }
                 
                 VStack {
                     

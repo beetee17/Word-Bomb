@@ -18,7 +18,7 @@ struct Controller: Codable {
     var timeLimit: Float
     var originalTimeLimit: Float
     
-    var timeMultiplier: Float
+    var timeMultiplier: Float?
     
     var timeConstraint: Float
     
@@ -31,9 +31,12 @@ struct Controller: Codable {
     }
     /// Updates the time limit based on the the `"Time Multiplier"` and `"Time Constraint"` settings
     mutating func updateTimeLimit() {
-        timeLimit = max(timeConstraint, timeLimit * timeMultiplier)
-        print("time multiplied")
-        timeLeft = timeLimit
+        if let timeMultiplier = timeMultiplier {
+            timeLimit = max(timeConstraint, timeLimit * timeMultiplier)
+            print("time multiplied")
+            timeLeft = timeLimit
+        }
+        // if we are in frenzy mode, we do not reset the time left
     }
     
     mutating func playExplosion() {

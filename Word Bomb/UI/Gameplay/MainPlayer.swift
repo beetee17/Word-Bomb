@@ -54,7 +54,7 @@ struct PlayerName: View {
     var player: Player
     
     var body: some View {
-        if viewModel.model.gameState == .GameOver && viewModel.model.players.current == player && !viewModel.trainingMode {
+        if viewModel.model.gameState == .GameOver && viewModel.model.players.current == player && !viewModel.arcadeMode {
             
             Text("\(player.name) WINS!")
                 .font(.title)

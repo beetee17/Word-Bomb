@@ -79,11 +79,11 @@ struct TopRight: View {
         ZStack {
             if .GameOver == viewModel.model.gameState {
                 RestartButton()
-            } else if !viewModel.trainingMode && !showMatchProgress {
+            } else if !viewModel.arcadeMode && !showMatchProgress {
                 CorrectCounter(
                     numCorrect: viewModel.model.numCorrect,
                     action: { showMatchProgress.toggle() })
-            } else if viewModel.trainingMode && !showUsedLetters {
+            } else if viewModel.arcadeMode && !showUsedLetters {
                 let currPlayer = viewModel.model.players.current
                 
                 CorrectCounter(

@@ -16,7 +16,7 @@ struct GameOverText: View {
     var body: some View {
         let usedWords = viewModel.model.game?.usedWords
         let score = viewModel.model.players.current.score
-        let trainingMode = viewModel.trainingMode
+        let trainingMode = viewModel.arcadeMode
         let gameMode = viewModel.gameMode
         
         VStack {

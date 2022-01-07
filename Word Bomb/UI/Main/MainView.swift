@@ -39,7 +39,10 @@ class MainViewVM: ObservableObject {
     /// `true` if user has selected `"SETTINGS"`
     @Published var changingSettings = false
     /// Toggled when user selects `"START GAME"`
-    @Published var showMultiplayerOptions = false
+    @Published var showPlayOptions = false
+    /// Toggled when user selects `"MULTIPLAYER"`
+    @Published var showMatchMakerModal = false
+    
     /// `true` if user has selected `"DATABASE"`
     @Published var searchingDatabase = false
     
@@ -61,24 +64,25 @@ class MainViewVM: ObservableObject {
     }
     /// Called when the user selects `"START GAME"`
     func startGame() {
-        showMultiplayerOptions.toggle()
+        showPlayOptions.toggle()
     }
-    /// Called when the user selects `"TRAINING MODE`
-    func trainingMode() {
-        Game.viewModel.viewToShow = .GameTypeSelect
-        showMultiplayerOptions = false
-        Game.viewModel.trainingMode = true
+    /// Called when the user selects `"ARCADE MODE`
+    func arcadeMode() {
+        Game.viewModel.arcadeMode = true
+        showPlayOptions = false
+        Game.viewModel.startGame()
     }
-    /// Called when the user selects `"PASS & PLAY`
-    func passPlay() {
-        Game.viewModel.viewToShow = .GameTypeSelect
-        showMultiplayerOptions = false
+    /// Called when the user selects `"FRENZY MODE`
+    func frenzyMode() {
+        Game.viewModel.frenzyMode = true
+        showPlayOptions = false
+        Game.viewModel.startGame()
     }
-    /// Called when the user selects `"GAME CENTER"`
+    /// Called when the user selects `"MULTIPLAYER"`
     func onlinePlay() {
-        Game.viewModel.viewToShow = .GameTypeSelect
         Game.viewModel.gkSelect = true
-        showMultiplayerOptions = false
+        showPlayOptions = false
+        showMatchMakerModal = true
     }
     /// Called when the user selects `"SETTINGS"`
     func changeSettings() {
@@ -152,27 +156,31 @@ struct MainMenuView: View {
             
             Game.MainButton(label: "START GAME", systemImageName: "gamecontroller") { viewModel.startGame() }
             
-            if viewModel.showMultiplayerOptions {
+            if viewModel.showPlayOptions {
                 
                 VStack(spacing:15) {
                     
-                    // testtube.2 or hammer or graduationcap or books.vertical or brain
-                    Game.MainButton(label: "SINGLE PLAYER", image: AnyView(Image("brain")
-                                                                            .resizable()
-                                                                            .scaledToFit()
-                                                                            .frame(width:30))) { viewModel.trainingMode() }
+                    Game.MainButton(label: "ARCADE MODE",
+                                    image: AnyView(Image("brain")
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width:30))) {
+                        viewModel.arcadeMode()
+                        
+                    }
+                    Game.MainButton(label: "FRENZY MODE",
+                                    systemImageName: "bolt.fill") {
+                        viewModel.frenzyMode()
+                        
+                    }
                     
-                    Game.MainButton(label: "GAME CENTER",
+                    Game.MainButton(label: "MULTIPLAYER",
                                     image: AnyView(Image("GK Icon")
                                                     .resizable()
                                                     .aspectRatio(contentMode: .fit)
                                                     .frame(height: 23))) {
                         viewModel.onlinePlay()
                     }
-                    
-                    Game.MainButton(label: "PASS & PLAY", systemImageName: "person.3") { viewModel.passPlay() }
-                    
-                    
                     
                 }
                 .transition(.opacity)
@@ -200,11 +208,29 @@ struct MainMenuView: View {
              
                 .transition(AnyTransition
                                 .offset(x:0, y:200)
-                                .combined(with: .move(edge: viewModel.showMultiplayerOptions ? .top : .bottom)
+                                .combined(with: .move(edge: viewModel.showPlayOptions ? .top : .bottom)
                                 .combined(with: .opacity)))
             }
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.75, blendDuration: 0.2))
+        .sheet(isPresented: $viewModel.showMatchMakerModal) {
+            // From Apple Docs: The maximum number of players for the GKMatchType.peerToPeer, GKMatchType.hosted, and GKMatchType.turnBased types is 16.
+            GKMatchmakerView(
+                minPlayers: 2,
+                maxPlayers: 10,
+                inviteMessage: "Let us play together!"
+            ) {
+                viewModel.showMatchMakerModal = false
+                
+            } failed: { (error) in
+                viewModel.showMatchMakerModal = false
+                Game.errorHandler.showBanner(title: "Match Making Failed", message: error.localizedDescription)
+            } started: { (match) in
+                viewModel.showMatchMakerModal = false
+                viewModel.startGame()
+                
+            }
+        }
     }
 }
 struct MainView_Previews: PreviewProvider {

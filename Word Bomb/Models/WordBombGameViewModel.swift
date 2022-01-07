@@ -38,7 +38,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
             switch viewToShow {
             case .Main:
                 gkSelect = false
-                trainingMode = false
+                arcadeMode = false
                 gkConnectedPlayers = 0
             default:
                 break
@@ -56,8 +56,11 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     @Published var gkSelect = false
     @Published var gkConnectedPlayers = 0
     
-    /// True if the user has selected the `"TRAINING MODE"` option under `"START GAME"`
-    @Published var trainingMode = false
+    /// True if the user has selected the `"ARCADE"` option under `"START GAME"`
+    @Published var arcadeMode = false
+    
+    /// True if the user has selected the `"FRENZY"` option under `"START GAME"`
+    @Published var frenzyMode = false
     
     /// The current user input while in a game
     @Published var input = ""
@@ -97,29 +100,40 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         startTimer()
     }
 
+    func getSinglePlayer() -> Player {
+        var player: Player
+        if GKLocalPlayer.local.isAuthenticated {
+            player = Player(name: GKLocalPlayer.local.displayName, queueNumber: 0)
+            GKLocalPlayer.local.loadPhoto(for: GKPlayer.PhotoSize.normal) { image, error in
+                print("got image for player \(player.name) with error \(String(describing: error))")
+                player.setImage(image)
+            }
+        } else {
+            let playerName = (UserDefaults.standard.stringArray(forKey: "Player Names") ?? ["1"]).first!
+            player = Player(name: playerName, queueNumber: 0)
+        }
+        return player
+    }
     
     /// Starts a game with the given game mode, not least by initing the appropriate WordGameModel
     /// - Parameter mode: The given game mode
-    func startGame(mode: GameMode) {
+    func startGame() {
+       
+        let request = GameMode.fetchRequest()
+        request.predicate = NSPredicate(format: "name_ == %@", "words")
+        request.fetchLimit = 1
+        let mode = moc.safeFetch(request).first!
+        
         withAnimation(Game.mainAnimation) {
             viewToShow = .Waiting
         }
+        
         var players = Players()
         gameMode = mode
         
-        if trainingMode {
+        if arcadeMode {
             // Initialise a sharedModel with a single `Player` object
-            var player: Player
-            if GKLocalPlayer.local.isAuthenticated {
-                player = Player(name: GKLocalPlayer.local.displayName, queueNumber: 0)
-                GKLocalPlayer.local.loadPhoto(for: GKPlayer.PhotoSize.normal) { image, error in
-                    print("got image for player \(player.name) with error \(String(describing: error))")
-                    player.setImage(image)
-                }
-            } else {
-                let playerName = (UserDefaults.standard.stringArray(forKey: "Player Names") ?? ["1"]).first!
-                player = Player(name: playerName, queueNumber: 0)
-            }
+            let player = getSinglePlayer()
             
             let settings = Game.Settings(timeLimit: 15,
                                          timeConstraint: 8,
@@ -134,8 +148,16 @@ class WordBombGameViewModel: NSObject, ObservableObject {
             players = getOnlinePlayers(GameCenter.viewModel.gkMatch!.players)
             model = WordBombGame(players: players, settings: Game.Settings())
         } else {
-            // Pass and Play mode
-            model = WordBombGame(players: players, settings: Game.Settings())
+            // Initialise a sharedModel with a single `Player` object
+            let player = getSinglePlayer()
+            
+            let settings = Game.Settings(timeLimit: 90,
+                                         timeConstraint: 0,
+                                         timeMultiplier: nil,
+                                         playerLives: 1,
+                                         numTurnsBeforeNewQuery: 1)
+            model = WordBombGame(players: Players(from: [player]),
+                                 settings: settings)
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
@@ -242,7 +264,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     }
     
     func claimTicket(for player: Player) {
-        if player.queueNumber == 0 && trainingMode {
+        if player.queueNumber == 0 && arcadeMode {
             player.numTickets -= 1
             model.query = model.game?.getRandQuery(nil)
             _ = model.players.nextPlayer()
