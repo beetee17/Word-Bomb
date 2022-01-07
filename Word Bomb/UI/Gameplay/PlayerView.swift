@@ -41,6 +41,13 @@ struct PlayerView: View {
                                showScore: .constant(true),
                                showName: .constant(true))
                         .transition(.scale)
+                        .if(viewModel.trainingMode) {
+                            $0.overlay(
+                                GoldenTickets(numTickets: player.numTickets,
+                                              claimAction: { viewModel.claimTicket(for: player) })
+                                    .offset(y: -(Game.playerAvatarSize/3))
+                                    
+                            )}
                 }
                 .padding(.top, 5)
                 
