@@ -81,7 +81,7 @@ struct GamePlayArea: View {
             Spacer()
             switch viewModel.model.gameState {
             case .GameOver:
-                GameOverText()
+                GameOverText(prevBest: viewModel.gameMode?.highScore ?? -1)
             case .TieBreak:
                 Text("TIED!").boldText()
                 Text("Tap to Continue").boldText()
