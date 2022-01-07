@@ -155,18 +155,24 @@ struct MainMenuView: View {
             if viewModel.showMultiplayerOptions {
                 
                 VStack(spacing:15) {
+                    
+                    // testtube.2 or hammer or graduationcap or books.vertical or brain
+                    Game.MainButton(label: "SINGLE PLAYER", image: AnyView(Image("brain")
+                                                                            .resizable()
+                                                                            .scaledToFit()
+                                                                            .frame(width:30))) { viewModel.trainingMode() }
+                    
                     Game.MainButton(label: "GAME CENTER",
                                     image: AnyView(Image("GK Icon")
                                                     .resizable()
                                                     .aspectRatio(contentMode: .fit)
-                                                    .frame(height: 20))) {
+                                                    .frame(height: 23))) {
                         viewModel.onlinePlay()
                     }
                     
                     Game.MainButton(label: "PASS & PLAY", systemImageName: "person.3") { viewModel.passPlay() }
                     
-                    // testtube.2 or hammer or graduationcap or books.vertical or brain
-                    Game.MainButton(label: "TRAINING", systemImageName: "graduationcap") { viewModel.trainingMode() }
+                    
                     
                 }
                 .transition(.opacity)
