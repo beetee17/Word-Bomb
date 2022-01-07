@@ -24,6 +24,7 @@ struct PlayerCarouselView: View {
                                showScore: .constant(true),
                                showName: .constant(getShowName(for: player)))
                         .scaleEffect(getScale(for: player))
+                        .opacity(getOpacity(for: player))
                         .offset(x: getOffset(for: player).x,
                                 y: getOffset(for: player).y)
                         .zIndex(getZIndex(for: player))
@@ -60,11 +61,18 @@ struct PlayerCarouselView: View {
     }
     private func getScale(for player: Player) -> CGFloat {
         if players.isCurrent(player) {
-            return 1.0
+            return 1.05
         } else if players.isNext(player) || players.isPrev(player) {
-            return 0.9
+            return 0.85
         } else {
             return 0
+        }
+    }
+    private func getOpacity(for player: Player) -> CGFloat {
+        if players.isCurrent(player) {
+            return 1.0
+        } else {
+            return 0.6
         }
     }
 }

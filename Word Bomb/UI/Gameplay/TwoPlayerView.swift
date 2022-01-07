@@ -33,7 +33,8 @@ struct TwoPlayerView: View {
                                    chargeUpBar: true,
                                    showScore: .constant(true),
                                    showName: .constant(true))
-                            .scaleEffect(viewModel.model.players.current == player ? 1 : 0.9)
+                            .scaleEffect(players.isCurrent(player) ? 1.05 : 0.85)
+                            .opacity(players.isCurrent(player) ? 1 : 0.6)
                             .animation(.easeInOut)
       
                     }
@@ -42,8 +43,8 @@ struct TwoPlayerView: View {
             }
             
             BombView(timeLeft: $viewModel.model.controller.timeLeft, timeLimit: viewModel.model.controller.timeLimit)
-                .frame(width: Game.miniBombSize,
-                       height: Game.miniBombSize)
+                .frame(width: Game.miniBombSize*1.1,
+                       height: Game.miniBombSize*1.1)
                 .offset(x: getBombOffset())
                 .animation(.easeInOut(duration: 0.3).delay(.PlayerTimedOut == viewModel.model.gameState ? 0.8 : 0))
                 .overlay (
