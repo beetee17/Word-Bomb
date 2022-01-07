@@ -22,7 +22,7 @@ struct ContainsWordGameModel: WordGameModel {
     var pivot: Int
     
     var numTurns = 0
-    var numTurnsBeforeDifficultyIncrease = 2
+    var numTurnsBeforeDifficultyIncrease = 1
     
     init(variants: [String: [String]] = [:], queries: [(String, Int)], totalWords: Int) {
         self.words = variants.keys.sorted(by: {$0 < $1})
@@ -138,7 +138,7 @@ struct ContainsWordGameModel: WordGameModel {
         // Need to graph this distribution over time to visualise what's happening
         for i in queries.indices {
             let weight = queries[i].1
-            let currentOffset = Int(Double(abs(queries[i].1 - queries[pivot].1)) * 0.05)
+            let currentOffset = Int(Double(abs(queries[i].1 - queries[pivot].1)) * 0.1)
             
             if i < pivot {
                 queries[i] = (queries[i].0, weight + currentOffset)
