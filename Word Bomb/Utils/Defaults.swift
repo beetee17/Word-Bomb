@@ -43,7 +43,7 @@ struct Game {
         case 3:
             return 200
         default:
-            return 500
+            return 750
         }
     }
     
@@ -63,5 +63,6 @@ extension Game {
         var timeConstraint = UserDefaults.standard.float(forKey:"Time Constraint")
         var timeMultiplier = UserDefaults.standard.float(forKey: "Time Multiplier")
         var playerLives = UserDefaults.standard.integer(forKey: "Player Lives")
+        var numTurnsBeforeNewQuery = 2
     }
 }
