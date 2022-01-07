@@ -169,14 +169,16 @@ struct WordBombGame: Codable {
                                      response: response),
                             toHost: false)
         }
-        
+        if let newQuery = response.newQuery {
+            query = newQuery
+        }
         output = response.output
-        query = response.newQuery
         
         players.handleInput(response)
         
         if response.status == .Correct {
-
+            
+            numTurnsWithoutCorrectAnswer = 0
             numCorrect += 1
             game?.updateUsedWords(for: response.input)
             
@@ -202,11 +204,13 @@ struct WordBombGame: Codable {
         
         numTurnsWithoutCorrectAnswer += 1
         if numTurnsWithoutCorrectAnswer >= numTurnsBeforeNewQuery {
-            query = game?.getRandQuery(nil)
+            if !GameCenter.isNonHost {
+                query = game?.getRandQuery(nil)
+                numTurnsWithoutCorrectAnswer = 0
+            }
             if GameCenter.isHost {
                 GameCenter.send(GameData(query: query), toHost: false)
             }
-            numTurnsWithoutCorrectAnswer = 0
         }
         
         // We need to keep game state on non-host devices in sync
