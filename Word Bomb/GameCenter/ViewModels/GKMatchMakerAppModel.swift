@@ -121,13 +121,12 @@ class GKMatchMakerAppModel: NSObject, ObservableObject {
      - As the host player, if there are no non-host players in the match
      */
     func cancel() {
-        DispatchQueue.main.async {
-            Game.viewModel.resetGameModel()
-            GKMatchManager.shared.cancel()
-            self.gkMatch = nil
-            self.showMatch = false
-            Game.viewModel.viewToShow = .Main
-        }
+        Game.viewModel.resetGameModel()
+        GKMatchManager.shared.cancel()
+        self.gkMatch = nil
+        self.showMatch = false
+        Game.viewModel.viewToShow = .Main
+        
     }
 }
 
@@ -141,15 +140,21 @@ extension GKMatchMakerAppModel: GKMatchDelegate {
     ///   - data: The data received by the user
     ///   - player: The sender of the data
     func match(_ match: GKMatch, didReceive data: Data, fromRemotePlayer player: GKPlayer) {
-        do {
-            let data = try JSONDecoder().decode(GameData.self, from: data)
-            print("got GameData")
-            data.process()
+
+        print("DECODING")
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                let gameData = try JSONDecoder().decode(GameData.self, from: data)
+                DispatchQueue.main.async {
+                    gameData.process()
+                }
+            } catch {
+                print(String(describing: error))
+                print("error trying to decode data, maybe this was not GameData")
+            }
         }
-        catch {
-            print(String(describing: error))
-            print("error trying to decode data, maybe this was not GameData")
-        }
+        print("got GameData")
+
     }
     
     /*
@@ -213,6 +218,4 @@ extension GKMatchMakerAppModel: GKMatchDelegate {
         }
     }
 }
-
-
 
