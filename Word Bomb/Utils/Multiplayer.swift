@@ -19,30 +19,24 @@ struct GameData: Codable {
     var variants: [String: [String]]?
     var totalWords: Int?
     var nonHostIsReady: Bool?
+    var allPlayersReady: Bool?
     
     public func process() {
         if let model = self.model {
             DispatchQueue.main.async {
                 print("Got model from host!")
-                if let gameModel = Game.viewModel.model.game {
-                    // do not override the game model if it arrives earlier than the shared model
-                    Game.viewModel.setSharedModel(model)
-                    Game.viewModel.model.game = gameModel
-                } else {
-                    Game.viewModel.setSharedModel(model)
-                }
+                Game.viewModel.setSharedModel(model)
+                GameCenter.send(GameData(nonHostIsReady: true), toHost: true)
                 for player in Game.viewModel.model.players.queue {
                     print("\(player.name): \(player.livesLeft) lives")
                 }
             }
         }
-        else if let gameState = self.state {
+        if let gameState = self.state {
             switch gameState {
                 
             case .Initial:
-                Game.viewModel.viewToShow = .Game
-                Game.viewModel.startTimer()
-                Game.viewModel.model.game?.reset()
+                Game.viewModel.viewToShow = .Waiting
             case .PlayerInput:
                 print("received input response from host")
                 Game.viewModel.handleGameState(gameState,
@@ -80,19 +74,13 @@ struct GameData: Codable {
             print("receive new time limit from host \(timeLimit)")
             Game.viewModel.model.controller.timeLimit = timeLimit
         }
-        else if let variants = variants {
-            if let totalWords = totalWords {
-                print("received all the words from host")
-                WordBombGame.getNonHostGameModel(variants, totalWords: totalWords) { gameModel in
-                    Game.viewModel.model.setGameModel(with: gameModel)
-                    GameCenter.send(GameData(nonHostIsReady: true), toHost: true)
-                    print("set up game model!")
-                }
-            }
-        }
         else if nonHostIsReady != nil {
             Game.viewModel.gkConnectedPlayers += 1
             print("Received ready notification from non host")
+        } else if allPlayersReady != nil {
+            Game.viewModel.viewToShow = .Game
+            Game.viewModel.startTimer()
+            Game.viewModel.model.game.reset()
         }
     }
 }
