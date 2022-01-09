@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsMenu: View {
     
     @EnvironmentObject var viewModel: WordBombGameViewModel
-    @StateObject var settings = SettingsMenuVM()
+    @ObservedObject var settings = SettingsMenuVM.shared
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -50,9 +50,20 @@ struct SettingsMenu: View {
                         Stepper("Time Constraint: \(settings.timeConstraint, specifier: "%.1f") s", value: $settings.timeConstraint, in: 1...settings.timeLimit, step: 0.5)
                         
                     }
-//                    Section(footer: Text("For debugging")) {
-//                        Toggle("Debug", isOn:$gameVM.debugging)
-//                    }
+
+                    Section {
+                        Toggle("Sound FXs", isOn: $settings.soundFXs)
+                        Slider(value: $settings.soundFXVolume, in: 0...2)
+                    }
+                    
+                    Section {
+                        Toggle("Soundtrack", isOn: $settings.soundTrack)
+                        Slider(value: $settings.soundTrackVolume, in: 0...2)
+                    }
+                    
+                    Section(footer: Text("For debugging")) {
+                        Toggle("Debug", isOn: $viewModel.debugging)
+                    }
                     
                     Section(footer: Text("Buy me a drink!")) {
                         DonationButton(title: "Donate", productId: "onedollar")
@@ -101,6 +112,8 @@ struct DonationButton: View {
 
 /// Source of truth for `SettingsMenu`. Handles the saving of game settings to `UserDefaults`
 class SettingsMenuVM: ObservableObject {
+    static let shared = SettingsMenuVM()
+    
     @Published var numPlayers = UserDefaults.standard.integer(forKey: "Num Players") {
         didSet {
             UserDefaults.standard.set(numPlayers, forKey: "Num Players")
@@ -131,6 +144,35 @@ class SettingsMenuVM: ObservableObject {
     @Published var timeConstraint = UserDefaults.standard.float(forKey: "Time Constraint") {
         didSet {
             UserDefaults.standard.set(timeConstraint, forKey: "Time Constraint")
+        }
+    }
+    @Published var soundFXs = UserDefaults.standard.bool(forKey: "Sound FXs") {
+        didSet {
+            UserDefaults.standard.set(soundFXs, forKey: "Sound FXs")
+        }
+    }
+    
+    @Published var soundFXVolume = UserDefaults.standard.float(forKey: "SoundFX Volume") {
+        didSet {
+            UserDefaults.standard.set(soundFXVolume, forKey: "SoundFX Volume")
+        }
+    }
+        
+    @Published var soundTrack = UserDefaults.standard.bool(forKey: "Soundtrack") {
+        didSet {
+            UserDefaults.standard.set(soundTrack, forKey: "Soundtrack")
+            if soundTrack {
+                AudioPlayer.playSoundTrack(.BGMusic)
+            } else {
+                AudioPlayer.soundTrack?.pause()
+            }
+        }
+    }
+    
+    @Published var soundTrackVolume = UserDefaults.standard.float(forKey: "Soundtrack Volume") {
+        didSet {
+            UserDefaults.standard.set(soundTrackVolume, forKey: "Soundtrack Volume")
+            AudioPlayer.soundTrack?.scaleVolume(by: soundTrackVolume)
         }
     }
 }
