@@ -39,15 +39,22 @@ struct PlayerView: View {
                     MainPlayer(player: viewModel.model.players.current,
                                chargeUpBar: false,
                                showScore: .constant(true),
-                               showName: .constant(true))
+                               showName: .constant(true),
+                               showLives: viewModel.frenzyMode ? .constant(false) : .constant(true))
                         .transition(.scale)
-                        .if(viewModel.arcadeMode) {
+                        .if(viewModel.arcadeMode || viewModel.frenzyMode) {
                             $0.overlay(
                                 GoldenTickets(numTickets: player.numTickets,
-                                              claimAction: { viewModel.claimTicket(for: player) })
-                                    .offset(y: -(Game.playerAvatarSize/3))
+                                              claimAction: viewModel.claimTicket )
+                                    .offset(y: -(Game.playerAvatarSize/3.5))
                                     
                             )}
+                    
+                    if viewModel.frenzyMode && viewModel.model.gameState != .GameOver {
+                        Game.MainButton(label: "PASS", systemImageName: "questionmark.square.fill") {
+                            viewModel.passQuery()
+                        }
+                    }
                 }
                 .padding(.top, 5)
                 
