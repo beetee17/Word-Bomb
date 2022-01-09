@@ -32,7 +32,8 @@ struct TopBarView: View {
                 players: $viewModel.model.players,
                 timeLeft: $viewModel.model.controller.timeLeft,
                 timeLimit: $viewModel.model.controller.timeLimit,
-                animateExplosion: $viewModel.model.controller.animateExplosion
+                animateExplosion: $viewModel.model.controller.animateExplosion,
+                rootThreshold: viewModel.frenzyMode ? 10 : 4
             )
                 .offset(x: gkMatch == nil ? 0 : -20)
                 .frame(width:Device.width*0.5)
@@ -76,14 +77,16 @@ struct TopRight: View {
     @State private var showRewards = false
     
     var body: some View {
+        let singlePlayer = viewModel.frenzyMode || viewModel.arcadeMode
+        
         ZStack {
             if .GameOver == viewModel.model.gameState {
                 RestartButton()
-            } else if !viewModel.arcadeMode && !showMatchProgress {
+            } else if !singlePlayer && !showMatchProgress {
                 CorrectCounter(
                     numCorrect: viewModel.model.numCorrect,
                     action: { showMatchProgress.toggle() })
-            } else if viewModel.arcadeMode && !showUsedLetters {
+            } else if singlePlayer && !showUsedLetters {
                 let currPlayer = viewModel.model.players.current
                 
                 CorrectCounter(
@@ -96,7 +99,8 @@ struct TopRight: View {
                     }
                     .overlay(
                         RewardOptions(isShowing: showRewards,
-                                      addLifeAction: {
+                                      addLifeAction: viewModel.frenzyMode ? nil :
+                                        {
                                           withAnimation(.easeInOut) {
                                               viewModel.getLifeReward()
                                               showRewards.toggle()
