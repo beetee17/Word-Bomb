@@ -55,13 +55,6 @@ class CoreDataViewModel: ObservableObject {
             
             PersistenceController.resetAll()
             
-            let countries = Database(context: moc,
-                                     name: "countries",
-                                     type: .Words,
-                                     isDefault: true)
-            self.populateDB(context: moc, db: countries, words: Game.countries)
-            
-            
             let syllables = Database(context: moc,
                                      name: "syllables",
                                      type: .Queries,
@@ -76,10 +69,7 @@ class CoreDataViewModel: ObservableObject {
             
             self.updateStatus(text: "Just awhile more")
 
-            let _ = GameMode(context: moc, gameType: .Exact, name: "country", instruction: "NAME A COUNTRY", wordsDB: countries, isDefault: true)
             self.incrementProgress(value: 0.05)
-            
-            let _ = GameMode(context: moc, gameType: .Reverse, name: "country", instruction: "COUNTRIES STARTING WITH", wordsDB: countries, isDefault: true)
             self.incrementProgress(value: 0.05)
             
             let _ = GameMode(context: moc, gameType: .Classic, name: "words", instruction: "WORDS CONTAINING", wordsDB: words, queriesDB: syllables, isDefault: true)
