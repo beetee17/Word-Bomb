@@ -12,6 +12,7 @@ struct MainPlayer:  View {
     var chargeUpBar: Bool
     @Binding var showScore: Bool
     @Binding var showName: Bool
+    @Binding var showLives: Bool
     @StateObject var imagePicker = StarImagePicker()
     
     var body: some View {
@@ -36,15 +37,16 @@ struct MainPlayer:  View {
             if showName {
                 PlayerName(player: player)
             }
-            
-            PlayerLives(player: player)
-                .onChange(of: player.livesLeft) { _ in
-                    if player.totalLives == player.livesLeft {
-                        imagePicker.getImage(for: .Combo)
-                    } else {
-                        imagePicker.getImage(for: .Sad)
+            if showLives {
+                PlayerLives(player: player)
+                    .onChange(of: player.livesLeft) { _ in
+                        if player.totalLives == player.livesLeft {
+                            imagePicker.getImage(for: .Combo)
+                        } else {
+                            imagePicker.getImage(for: .Sad)
+                        }
                     }
-                }
+            }
         }
     }
 }
@@ -107,7 +109,8 @@ struct MainPlayer_Previews: PreviewProvider {
             MainPlayer(player: viewModel.model.players.current,
                        chargeUpBar: true,
                        showScore: .constant(true),
-                       showName: .constant(true)
+                       showName: .constant(true),
+                       showLives: .constant(true)
             ).environmentObject(viewModel)
             
             Game.MainButton(label: "YAY") {
