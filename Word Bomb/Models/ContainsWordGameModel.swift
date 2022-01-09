@@ -97,22 +97,9 @@ struct ContainsWordGameModel: WordGameModel {
     
     func getScore(for input: String, and query: String?) -> Int {
         if let frequency = queriesCopy.first(where: { $0.0 == query })?.1 {
-            switch frequency {
-            case 0...25:
-                return 25
-            case 26...100:
-                return 15
-            case 101...200:
-                return 10
-            case 201...500:
-                return 5
-            case 501...1000:
-                return 3
-            default:
-                return 1
-            }
+            return Int(Game.getFrequencyScore(frequency) * Game.getInputMultiplier(input))
         }
-        return 1
+        return Int(1 * Game.getInputMultiplier(input))
     }
     
     func checkIfHasAtLeastOneUsableAnswer(_ query: String) -> Bool {
