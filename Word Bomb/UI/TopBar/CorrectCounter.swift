@@ -54,23 +54,23 @@ struct CorrectCounter: View {
 
 struct RewardOptions: View {
     var isShowing: Bool
-    var addLifeAction: () -> Void
+    var addLifeAction: (() -> Void)?
     var addTimeAction: () -> Void
     
     var body: some View {
         if isShowing {
             VStack(spacing: 20) {
-                
-                Button(action: addLifeAction) {
-                    Image(systemName: "heart.fill")
-                        .resizable().scaledToFit()
-                        .frame(width: 30, height: 30)
-                        .foregroundColor(.red)
-                        .shadow(color: .green.opacity(0.5), radius: 3)
-                        .pulseEffect()
+                if let addLifeAction =  addLifeAction {
+                    Button(action: addLifeAction) {
+                        Image(systemName: "heart.fill")
+                            .resizable().scaledToFit()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.red)
+                            .shadow(color: .green.opacity(0.5), radius: 3)
+                            .pulseEffect()
+                    }
+                    .buttonStyle(ScaleEffect())
                 }
-                .buttonStyle(ScaleEffect())
-                .onTapGesture { AudioPlayer.playSound(.Combo) }
                 
                 Button(action: addTimeAction) {
                     Image(systemName: "stopwatch")
@@ -78,11 +78,8 @@ struct RewardOptions: View {
                         .frame(width: 30, height: 30)
                         .shadow(color: .green.opacity(0.7), radius: 3)
                         .pulseEffect()
-                        
                 }
                 .buttonStyle(ScaleEffect())
-                .onTapGesture { AudioPlayer.playSound(.Combo) }
-                
             }
             .background(Color.black.opacity(0.3).blur(radius: 10))
             .offset(y: 75)
