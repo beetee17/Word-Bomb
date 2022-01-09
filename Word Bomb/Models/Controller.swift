@@ -35,9 +35,15 @@ struct Controller: Codable {
             timeLimit = max(timeConstraint, timeLimit * timeMultiplier)
             print("time multiplied")
             timeLeft = timeLimit
-        }
-        // if we are in frenzy mode, we do not reset the time left
+        } 
     }
+    
+    mutating func addTime(_ amount: Float) {
+        timeLeft += amount
+        timeLimit = max(timeLimit, timeLeft)
+        
+    }
+    
     
     mutating func playExplosion() {
         animateExplosion = true
