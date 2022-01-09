@@ -22,7 +22,7 @@ class Player: Codable, Equatable, Identifiable {
     var score = 0
     var chargeProgress = 0
     var multiplier = 1
-    var numTickets = 0
+    var numTickets = 1
     
     var originalTotalLives: Int
     var totalLives: Int
