@@ -13,7 +13,9 @@ struct TimerView: View {
     @Binding var timeLeft: Float
     @Binding var timeLimit: Float
     @Binding var animateExplosion: Bool
+    var rootThreshold: Float
     @State private var animateIncrement = false
+    @State private var increment = 5
     
     var body: some View {
         ZStack {
@@ -21,9 +23,16 @@ struct TimerView: View {
                 ZStack {
                     BombView(timeLeft: $timeLeft, timeLimit: timeLimit)
                         .frame(width: Game.miniBombSize*1.25, height: Game.miniBombSize*1.25)
+                        .if(timeLeft < rootThreshold) { $0.shadow(color: Color.red, radius: 2) }
                         .overlay(
                             Text(String(format: "%.1f", timeLeft))
-                                .offset(x: 5, y: 10))
+                                .offset(x: 5, y: 10)
+                                .shadow(color: .black.opacity(1), radius: 1)
+                                .shadow(color: .black.opacity(1), radius: 1)
+                                .shadow(color: .black.opacity(0.4), radius: 1)
+                                .shadow(color: .black.opacity(0.4), radius: 1)
+                        )
+                        
                     
                     BombExplosion(animating: $animateExplosion)
                         .offset(x: 10, y: 10)
@@ -34,12 +43,29 @@ struct TimerView: View {
             else {
                 Text(String(format: "%.1f", timeLeft))
                     .font(.largeTitle)
+                    .offset(y:Device.height*0.015)
+                    
             }
         }
-        .animatingIncrement(5, isAnimating: animateIncrement, xOffset: 40.0)
+        .animatingIncrement(increment, isAnimating: animateIncrement, xOffset: 40.0)
+        .if(timeLeft < rootThreshold) { $0.pulseEffect() }
         .onChange(of: timeLimit) { [timeLimit] newValue in
             if Int(newValue - timeLimit) == 5 {
                 // TODO: get rid of this hack
+                increment = 5
+                animateIncrement = true
+                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.5) {
+                    animateIncrement = false
+                }
+            }
+        }
+        .onChange(of: timeLeft) { [timeLeft] newValue in
+            if newValue > 0 && newValue < rootThreshold  && Int(newValue) != Int(timeLimit) {
+                AudioPlayer.playROOTSound()
+            }
+            if abs(newValue - timeLeft) > 1  && Int(newValue) != Int(timeLimit) {
+                // TODO: get rid of this hack
+                increment = Int(newValue - timeLeft)
                 animateIncrement = true
                 DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.5) {
                     animateIncrement = false
@@ -60,7 +86,11 @@ struct TimerView_Previews: PreviewProvider {
             VStack {
                 let players = Players(from: (1...numPlayers).map({"\($0)"}))
                 
-                TimerView(players: .constant(players), timeLeft: .constant(10), timeLimit: .constant(10), animateExplosion: $animateExplosion)
+                TimerView(players: .constant(players),
+                          timeLeft: .constant(100),
+                          timeLimit: .constant(100),
+                          animateExplosion: $animateExplosion,
+                          rootThreshold: 4)
 
                 Button("Test Explosion!") {
                     animateExplosion = true
