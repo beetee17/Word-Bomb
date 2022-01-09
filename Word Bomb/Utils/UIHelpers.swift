@@ -43,16 +43,13 @@ struct AnimatingIncrement: ViewModifier {
             content
                 .overlay(
                     HStack {
-                        Image(systemName: "plus")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .scaledToFit()
-                        Text("\(increment)")
+                        
+                        Text("\(increment > 0 ? "+" : "-")\(abs(increment))")
                             .boldText()
                             .fixedSize(horizontal: false, vertical: false) // prevents text from getting truncated to ...
                     }
                         .frame(width: 150, height: 150)
-                        .foregroundColor(.green)
+                        .foregroundColor(increment > 0 ? .green : .red)
                         .offset(x: CGFloat(xOffset), y: isAnimating ? -30 : -20)
                         .animation(.easeIn.speed(0.7))
                         .opacity(isAnimating ? 0.7 : 0)
