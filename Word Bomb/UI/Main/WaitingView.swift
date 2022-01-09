@@ -46,8 +46,8 @@ struct WaitingView: View {
                 // excluding the host
                 if numConnected == expectedPlayers && GameCenter.isHost {
                     // When database is large, non host are not in sync until host restarts (better to find the actual reason why)
-                    viewModel.model.restartGame()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    GameCenter.send(GameData(allPlayersReady: true), toHost: false)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                         viewModel.viewToShow = .Game
                         viewModel.startTimer()
                     }
