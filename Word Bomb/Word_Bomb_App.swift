@@ -32,7 +32,11 @@ struct Word_BombApp: App {
             "Time Constraint" : 5.0,
             "Player Names" : ["A", "B", "C"],
             "Num Players" : 2,
-            "Player Lives" : 3
+            "Player Lives" : 3,
+            "Sound FXs" : true,
+            "Soundtrack" : true,
+            "SoundFX Volume" : 1.0,
+            "Soundtrack Volume" : 1.0
             
             // ... other settings
         ])
@@ -84,9 +88,7 @@ struct Word_BombApp: App {
                             errorHandler.showBanner(title: "Invitation Failed", message: "Sorry, please try again!") // change to something more user friendly on release?
                             
                         } started: { (gkMatch) in
-                            Game.viewModel.viewToShow = .Waiting
                             gkViewModel.gkMatch = gkMatch
-                            
                         }
                     }
                     
