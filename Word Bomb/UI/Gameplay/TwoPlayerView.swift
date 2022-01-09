@@ -32,7 +32,8 @@ struct TwoPlayerView: View {
                         MainPlayer(player: player,
                                    chargeUpBar: true,
                                    showScore: .constant(true),
-                                   showName: .constant(true))
+                                   showName: .constant(true),
+                                   showLives: .constant(true))
                             .scaleEffect(players.isCurrent(player) ? 1.05 : 0.85)
                             .opacity(players.isCurrent(player) ? 1 : 0.6)
                             .animation(.easeInOut)
