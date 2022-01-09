@@ -30,6 +30,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         willSet {
             if viewToShow == .Game && newValue == .Main {
                 AudioPlayer.playSoundTrack(.BGMusic)
+                AudioPlayer.shared?.pause()
             } else if viewToShow == .Waiting && newValue == .Game {
                 AudioPlayer.playSoundTrack(.GamePlayMusic)
             }
@@ -39,6 +40,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
             case .Main:
                 gkSelect = false
                 arcadeMode = false
+                frenzyMode = false
                 gkConnectedPlayers = 0
             default:
                 break
@@ -77,7 +79,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     
     /// Called when settings menu is dismissed. Resets the shared model to account for any changes.
     func updateGameSettings() {
-        model = WordBombGame(players: Players(), settings: Game.Settings())
+        model.setSettings(with: Game.Settings())
     }
     
     /// Resumes the current game
@@ -88,16 +90,11 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         }
     }
     
-    /// Updates the high score of the current mode. Should only be called at gameOver state in training mode
-    func updateHighScore() {
-        gameMode?.highScore = model.game?.usedWords.count ?? 0 
-    }
-    
     /// Restarts the game with the same game mode. Only the host of Game Center match or offline play is allowed to call this function.
     func restartGame() {
+        gkConnectedPlayers = 0
         model.restartGame()
-        viewToShow = .Game
-        startTimer()
+        startGame()
     }
 
     func getSinglePlayer() -> Player {
@@ -118,18 +115,24 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     /// Starts a game with the given game mode, not least by initing the appropriate WordGameModel
     /// - Parameter mode: The given game mode
     func startGame() {
-       
-        let request = GameMode.fetchRequest()
-        request.predicate = NSPredicate(format: "name_ == %@", "words")
-        request.fetchLimit = 1
-        let mode = moc.safeFetch(request).first!
-        
         withAnimation(Game.mainAnimation) {
             viewToShow = .Waiting
         }
         
+        GameCenter.send(GameData(state: .Initial), toHost: false)
+        
+        PersistenceController.shared.container.performBackgroundTask { moc in
+            let request = GameMode.fetchRequest()
+            request.predicate = NSPredicate(format: "name_ = %@", "words")
+            request.fetchLimit = 1
+            let mode = moc.safeFetch(request).first!
+            DispatchQueue.main.async {
+                self.gameMode = mode
+            }
+            
+        }
+
         var players = Players()
-        gameMode = mode
         
         if arcadeMode {
             // Initialise a sharedModel with a single `Player` object
@@ -140,14 +143,15 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                                          timeMultiplier: 0.98,
                                          playerLives: 3,
                                          numTurnsBeforeNewQuery: 1)
-            model = WordBombGame(players: Players(from: [player]),
-                                 settings: settings)
+            model.setPlayers(with: Players(from: [player]))
+            model.setSettings(with: settings)
             
         } else if GameCenter.viewModel.showMatch && GameCenter.isHost {
             // Always use the host settings
             players = getOnlinePlayers(GameCenter.viewModel.gkMatch!.players)
-            model = WordBombGame(players: players, settings: Game.Settings())
-        } else {
+            model.setPlayers(with: players)
+            model.setSettings(with: Game.Settings())
+        } else if frenzyMode {
             // Initialise a sharedModel with a single `Player` object
             let player = getSinglePlayer()
             
@@ -156,28 +160,26 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                                          timeMultiplier: nil,
                                          playerLives: 1,
                                          numTurnsBeforeNewQuery: 1)
-            model = WordBombGame(players: Players(from: [player]),
-                                 settings: settings)
+            model.setPlayers(with: Players(from: [player]))
+            model.setSettings(with: settings)
+        } else {
+            // user playing pass and play offline mode
+            model.setPlayers(with: Players())
+            model.setSettings(with: Game.Settings())
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-            WordBombGame.getGameModel(for: mode) { [self] gameModel in
-                model.setGameModel(with: gameModel)
-                model.handleGameState(
-                    .Initial,
-                    data: ["instruction":mode.instruction,
-                           "query":gameModel.getRandQuery(nil) as Any]
-                )
-                if !GameCenter.isHost && viewToShow == .Waiting {
-                    print("starting game")
-                    withAnimation(.easeInOut) {
-                        viewToShow = .Game
-                    }
-                    startTimer()
+        DispatchQueue.main.asyncAfter(deadline:.now() + 0.75) { [self] in
+            model.handleGameState(.Initial)
+            if !GameCenter.isHost && viewToShow == .Waiting {
+                print("starting game")
+                withAnimation(.easeInOut) {
+                    viewToShow = .Game
                 }
+                startTimer()
             }
         }
     }
+    
     
     /**
      Processes the user's input to determine if it is correct/wrong, and updates the query if necessary
@@ -211,23 +213,9 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                         }
                         
                     }
-//                    if roundedValue % 20 == 0 && model.controller.timeLeft > 0.1 {
-//                        // to keep in sync? Not really necessary unless something happens
-//                        // may cause lag or decreased performance...
-//                        let playerLives = Dictionary(model.players.queue.map { ($0.name, $0.livesLeft) }) { first, _ in first }
-//                        if GameCenter.isHost {
-//                            GameCenter.send(GameData(playerLives: playerLives), toHost: false)
-//
-//                        }
-//                    }
                 }
             }
-
-            if model.controller.timeLeft < 3 {
-                // do not interrupt if explosion sound is playing
-                AudioPlayer.playROOTSound()
-            }
-            
+                
             if model.controller.timeLeft <= 0 && (GameCenter.isHost || !GameCenter.isOnline) {
                 // only handle time out if host of online match or in offline play 
                 
@@ -257,19 +245,25 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     }
     
     func getTimeReward() {
-        model.controller.timeLimit += 5
-        model.controller.timeLeft = model.controller.timeLimit
+        if frenzyMode {
+            model.controller.addTime(30)
+        } else if arcadeMode {
+            model.controller.timeLimit += 5
+            model.controller.timeLeft = model.controller.timeLimit
+        }
         model.players.current.usedLetters = Set<String>()
         AudioPlayer.playSound(.Combo)
     }
     
-    func claimTicket(for player: Player) {
-        if player.queueNumber == 0 && arcadeMode {
-            player.numTickets -= 1
-            model.query = model.game?.getRandQuery(nil)
-            _ = model.players.nextPlayer()
-            AudioPlayer.playSound(.Combo)
-        }
+    func claimTicket() {
+        model.players.current.numTickets -= 1
+        model.query = model.game.getRandQuery(nil)
+        AudioPlayer.playSound(.Combo)
+    }
+    func passQuery() {
+        model.controller.timeLeft -= 5
+        model.query = model.game.getRandQuery(nil)
+        AudioPlayer.playSound(.Wrong)
     }
 }
 
@@ -285,7 +279,8 @@ extension WordBombGameViewModel {
      Should be called when a multiplayer game has ended either due to lack of players, lost of connection or the game has ended
      */
     func resetGameModel() {
-        model = .init(players: Players(), settings: Game.Settings())
+        model.setPlayers(with: Players())
+        model.setSettings(with: Game.Settings())
         Game.stopTimer()
     }
     
