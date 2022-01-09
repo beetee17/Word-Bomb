@@ -32,7 +32,7 @@
 		6C5408FF2751096200EA4E1B /* words.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6C5408FB2751096200EA4E1B /* words.txt */; };
 		6C5514BB26B013A70038C25C /* Multiplayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5514BA26B013A70038C25C /* Multiplayer.swift */; };
 		6C5514BF26B146260038C25C /* FirstLaunchInstructionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5514BE26B146260038C25C /* FirstLaunchInstructionsView.swift */; };
-		6C5514C126B166100038C25C /* GameHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5514C026B1660F0038C25C /* GameHelp.swift */; };
+		6C5514C126B166100038C25C /* HelpMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5514C026B1660F0038C25C /* HelpMessages.swift */; };
 		6C5514C326B1B75F0038C25C /* DatabaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5514C226B1B75E0038C25C /* DatabaseView.swift */; };
 		6C5DBE0C269BA600004A7F71 /* PlayerCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5DBE0B269BA600004A7F71 /* PlayerCarouselView.swift */; };
 		6C5DBE0E269CA6E3004A7F71 /* TwoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5DBE0D269CA6E0004A7F71 /* TwoPlayerView.swift */; };
@@ -91,6 +91,11 @@
 		6CB757F32784ABBC002A8F24 /* AlphabetTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB757F22784ABBC002A8F24 /* AlphabetTracker.swift */; };
 		6CB757F527856D20002A8F24 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB757F427856D20002A8F24 /* Players.swift */; };
 		6CB757F7278800A9002A8F24 /* GoldenTickets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB757F6278800A9002A8F24 /* GoldenTickets.swift */; };
+		6CB757FB27889A5B002A8F24 /* ArcadeHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB757FA27889A5B002A8F24 /* ArcadeHelp.swift */; };
+		6CB757FD27889A8B002A8F24 /* HelpSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB757FC27889A8B002A8F24 /* HelpSheet.swift */; };
+		6CB8D3BA27894F03002AE75A /* InteractiveTutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB8D3B927894F03002AE75A /* InteractiveTutorial.swift */; };
+		6CB8D3BC27896875002AE75A /* FrenzyHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB8D3BB27896875002AE75A /* FrenzyHelp.swift */; };
+		6CB8D3BE27896C37002AE75A /* MultiplayerHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB8D3BD27896C37002AE75A /* MultiplayerHelp.swift */; };
 		6CD8DA062695D342006A27ED /* CustomModeForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD8DA052695D342006A27ED /* CustomModeForm.swift */; };
 		6CE00E6F26A99FD4005406FF /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CE00E6E26A99FD4005406FF /* GameKit.framework */; };
 		6CE00E7226A9A009005406FF /* GameKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6CE00E7126A9A009005406FF /* GameKitUI */; };
@@ -154,7 +159,7 @@
 		6C5408FB2751096200EA4E1B /* words.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = words.txt; sourceTree = "<group>"; };
 		6C5514BA26B013A70038C25C /* Multiplayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Multiplayer.swift; sourceTree = "<group>"; };
 		6C5514BE26B146260038C25C /* FirstLaunchInstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLaunchInstructionsView.swift; sourceTree = "<group>"; };
-		6C5514C026B1660F0038C25C /* GameHelp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHelp.swift; sourceTree = "<group>"; };
+		6C5514C026B1660F0038C25C /* HelpMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpMessages.swift; sourceTree = "<group>"; };
 		6C5514C226B1B75E0038C25C /* DatabaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseView.swift; sourceTree = "<group>"; };
 		6C5DBE0B269BA600004A7F71 /* PlayerCarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCarouselView.swift; sourceTree = "<group>"; };
 		6C5DBE0D269CA6E0004A7F71 /* TwoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoPlayerView.swift; sourceTree = "<group>"; };
@@ -213,6 +218,12 @@
 		6CB757F22784ABBC002A8F24 /* AlphabetTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlphabetTracker.swift; sourceTree = "<group>"; };
 		6CB757F427856D20002A8F24 /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
 		6CB757F6278800A9002A8F24 /* GoldenTickets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoldenTickets.swift; sourceTree = "<group>"; };
+		6CB757F827887CB6002A8F24 /* wordbomb 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "wordbomb 3.xcdatamodel"; sourceTree = "<group>"; };
+		6CB757FA27889A5B002A8F24 /* ArcadeHelp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadeHelp.swift; sourceTree = "<group>"; };
+		6CB757FC27889A8B002A8F24 /* HelpSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpSheet.swift; sourceTree = "<group>"; };
+		6CB8D3B927894F03002AE75A /* InteractiveTutorial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveTutorial.swift; sourceTree = "<group>"; };
+		6CB8D3BB27896875002AE75A /* FrenzyHelp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrenzyHelp.swift; sourceTree = "<group>"; };
+		6CB8D3BD27896C37002AE75A /* MultiplayerHelp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplayerHelp.swift; sourceTree = "<group>"; };
 		6CD8DA052695D342006A27ED /* CustomModeForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModeForm.swift; sourceTree = "<group>"; };
 		6CE00E6E26A99FD4005406FF /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		6CE00EFD26A9BBBB005406FF /* AuthenticationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
@@ -349,6 +360,7 @@
 				6CAE6C5B276B13F200F8BC2C /* IAP */,
 				6CF953902692F61200D16E60 /* Models */,
 				6CF9538A2692E92200D16E60 /* UI */,
+				6CB757F927889A3E002A8F24 /* Help */,
 				6CF9539A2692F67F00D16E60 /* Utils */,
 				6C2E20C5268DD82900CECD3F /* Assets.xcassets */,
 				6C5408F72751096200EA4E1B /* Data */,
@@ -463,6 +475,19 @@
 			path = Confetti;
 			sourceTree = "<group>";
 		};
+		6CB757F927889A3E002A8F24 /* Help */ = {
+			isa = PBXGroup;
+			children = (
+				6C5514C026B1660F0038C25C /* HelpMessages.swift */,
+				6CB8D3B927894F03002AE75A /* InteractiveTutorial.swift */,
+				6CB8D3BB27896875002AE75A /* FrenzyHelp.swift */,
+				6CB757FA27889A5B002A8F24 /* ArcadeHelp.swift */,
+				6CB8D3BD27896C37002AE75A /* MultiplayerHelp.swift */,
+				6CB757FC27889A8B002A8F24 /* HelpSheet.swift */,
+			);
+			path = Help;
+			sourceTree = "<group>";
+		};
 		6CE00E6D26A99FD4005406FF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -555,7 +580,6 @@
 			isa = PBXGroup;
 			children = (
 				6CB6F947268F633600FA9654 /* UIHelpers.swift */,
-				6C5514C026B1660F0038C25C /* GameHelp.swift */,
 				6CE00F1E26ABD043005406FF /* BannerView.swift */,
 				6CF9538D2692F55000D16E60 /* Extensions.swift */,
 				6C2D67F526A596AD006A0347 /* WeightedRandom.swift */,
@@ -673,7 +697,7 @@
 			files = (
 				6CE00F1926AB2A55005406FF /* RestartButton.swift in Sources */,
 				6CE00F1B26AB2A64005406FF /* PauseButton.swift in Sources */,
-				6C5514C126B166100038C25C /* GameHelp.swift in Sources */,
+				6C5514C126B166100038C25C /* HelpMessages.swift in Sources */,
 				6C5DBE0C269BA600004A7F71 /* PlayerCarouselView.swift in Sources */,
 				6CB6F948268F633600FA9654 /* UIHelpers.swift in Sources */,
 				6CE97AAB2782F8E800948560 /* StarImagePicker.swift in Sources */,
@@ -684,10 +708,12 @@
 				6CB757EF27843F8F002A8F24 /* RotatingBomb.swift in Sources */,
 				6CA33F9726BA91FD00080CE6 /* DatabaseListView.swift in Sources */,
 				6CE00F1426A9EE05005406FF /* GKUtils.swift in Sources */,
+				6CB8D3BA27894F03002AE75A /* InteractiveTutorial.swift in Sources */,
 				6C86BCBB2773087700E2D25F /* Persistence.swift in Sources */,
 				6CF9538E2692F55000D16E60 /* Extensions.swift in Sources */,
 				6C0CEEAE2694595C007717E1 /* PlayerView.swift in Sources */,
 				6C86BCBD2773087700E2D25F /* GameMode+CoreDataProperties.swift in Sources */,
+				6CB8D3BC27896875002AE75A /* FrenzyHelp.swift in Sources */,
 				6CE00F0B26A9BBF8005406FF /* AuthenticationViewModel.swift in Sources */,
 				6CA33F9F26BAB8FB00080CE6 /* AlphabetScrollList.swift in Sources */,
 				6C65A31D26A1458D004209F4 /* BombAnimation.swift in Sources */,
@@ -713,6 +739,7 @@
 				6CB6F94B268F64A300FA9654 /* LogoView.swift in Sources */,
 				6C2D67F626A596AD006A0347 /* WeightedRandom.swift in Sources */,
 				6C37E91E269F287B0079279E /* GamePlayView.swift in Sources */,
+				6CB8D3BE27896C37002AE75A /* MultiplayerHelp.swift in Sources */,
 				6CB5BAD4277B387C00F49E7A /* SlidingCircles.swift in Sources */,
 				6CE97A8B277D6FA100948560 /* UIElements.swift in Sources */,
 				6CB5BABC277750D600F49E7A /* MainPlayer.swift in Sources */,
@@ -734,6 +761,7 @@
 				6C0CEEB12694599C007717E1 /* OutputText.swift in Sources */,
 				6CB6F94F268F7E7D00FA9654 /* MainView.swift in Sources */,
 				6C2E20C2268DD81600CECD3F /* Word_Bomb_App.swift in Sources */,
+				6CB757FB27889A5B002A8F24 /* ArcadeHelp.swift in Sources */,
 				6CB5BAC82778D77600F49E7A /* MatchProgressView.swift in Sources */,
 				6C86BCBC2773087700E2D25F /* CoreDataViewModel.swift in Sources */,
 				6C86BCC42773088000E2D25F /* Word+CoreDataClass.swift in Sources */,
@@ -750,6 +778,7 @@
 				6CD8DA062695D342006A27ED /* CustomModeForm.swift in Sources */,
 				6CA33F9926BA921900080CE6 /* AddDatabaseView.swift in Sources */,
 				6CE00F1626AB015F005406FF /* GKQuitButton.swift in Sources */,
+				6CB757FD27889A8B002A8F24 /* HelpSheet.swift in Sources */,
 				6CB6F942268F62C000FA9654 /* PauseMenuView.swift in Sources */,
 				6CAE6C67276C773300F8BC2C /* ErrorViewModel.swift in Sources */,
 				6C5514BB26B013A70038C25C /* Multiplayer.swift in Sources */,
@@ -894,7 +923,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"Word Bomb/Preview Content\"";
 				DEVELOPMENT_TEAM = M9BZ2GV933;
 				ENABLE_PREVIEWS = YES;
@@ -919,7 +948,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"Word Bomb/Preview Content\"";
 				DEVELOPMENT_TEAM = M9BZ2GV933;
 				ENABLE_PREVIEWS = YES;
@@ -1009,10 +1038,11 @@
 		6C0CEEE52695BEAF007717E1 /* wordbomb.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				6CB757F827887CB6002A8F24 /* wordbomb 3.xcdatamodel */,
 				6CB5BAAF2776FDE800F49E7A /* wordbomb 2.xcdatamodel */,
 				6C0CEEE62695BEAF007717E1 /* wordbomb.xcdatamodel */,
 			);
-			currentVersion = 6CB5BAAF2776FDE800F49E7A /* wordbomb 2.xcdatamodel */;
+			currentVersion = 6CB757F827887CB6002A8F24 /* wordbomb 3.xcdatamodel */;
 			path = wordbomb.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
