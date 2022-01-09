@@ -132,10 +132,10 @@ class WordBombGameViewModel: NSObject, ObservableObject {
             // Initialise a sharedModel with a single `Player` object
             let player = getSinglePlayer()
             
-            let settings = Game.Settings(timeLimit: 3,
-                                         timeConstraint: 3,
+            let settings = Game.Settings(timeLimit: 15,
+                                         timeConstraint: 8,
                                          timeMultiplier: 0.98,
-                                         playerLives: 1,
+                                         playerLives: 3,
                                          numTurnsBeforeNewQuery: 1)
             model.setPlayers(with: Players(from: [player]))
             model.setSettings(with: settings)
@@ -149,7 +149,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
             // Initialise a sharedModel with a single `Player` object
             let player = getSinglePlayer()
             
-            let settings = Game.Settings(timeLimit: 5,
+            let settings = Game.Settings(timeLimit: 90,
                                          timeConstraint: 0,
                                          timeMultiplier: nil,
                                          playerLives: 1,
