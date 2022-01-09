@@ -46,7 +46,7 @@ struct GamePlayView: View {
     
         .blur(radius: gamePaused || showMatchProgress || showUsedLetters ? 10 : 0, opaque: false)
         .overlay(
-            MatchProgressView(usedWords: viewModel.model.game?.usedWords.sorted(), showMatchProgress: $showMatchProgress)
+            MatchProgressView(usedWords: viewModel.model.game.usedWords.sorted(), showMatchProgress: $showMatchProgress)
         )
         .overlay(PauseMenuView(gamePaused: $gamePaused))
         .overlay(AlphabetTracker(usedLetters: viewModel.model.players.current.usedLetters, isShowing: $showUsedLetters))
@@ -81,7 +81,10 @@ struct GamePlayArea: View {
             Spacer()
             switch viewModel.model.gameState {
             case .GameOver:
-                GameOverText(prevBest: viewModel.gameMode?.highScore ?? -1)
+                let arcadeHighScore = viewModel.gameMode?.arcadeHighScore
+                let frenzyHighScore = viewModel.gameMode?.frenzyHighScore
+
+                GameOverText(prevBest: (viewModel.arcadeMode ? arcadeHighScore : frenzyHighScore) ?? -1)
             case .TieBreak:
                 Text("TIED!").boldText()
                 Text("Tap to Continue").boldText()
@@ -107,24 +110,24 @@ struct GamePlayView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            ZStack {
-                let viewModel = WordBombGameViewModel.preview(numPlayers: 4)
-                Color("Background").ignoresSafeArea(.all)
-                GamePlayView(gkMatch: nil).environmentObject(viewModel)
-                
-                VStack {
-                    
-                    Game.MainButton(label: "ANIMATE") {
-                        viewModel.model.process(Response(input:
-                                                            "Test",
-                                                         status: .Correct,
-                                                         score: 20))
-                    }
-                    Game.MainButton(label: "OUCH") {
-                        viewModel.model.currentPlayerRanOutOfTime()
-                    }
-                }
-            }
+//            ZStack {
+//                let viewModel = WordBombGameViewModel.preview(numPlayers: 4)
+//                Color("Background").ignoresSafeArea(.all)
+//                GamePlayView(gkMatch: nil).environmentObject(viewModel)
+//
+//                VStack {
+//
+//                    Game.MainButton(label: "ANIMATE") {
+//                        viewModel.model.process(Response(input:
+//                                                            "Test",
+//                                                         status: .Correct,
+//                                                         score: 20))
+//                    }
+//                    Game.MainButton(label: "OUCH") {
+//                        viewModel.model.currentPlayerRanOutOfTime()
+//                    }
+//                }
+//            }
             ZStack {
                 let viewModel = WordBombGameViewModel.preview(numPlayers: 2)
                 
@@ -143,26 +146,47 @@ struct GamePlayView_Previews: PreviewProvider {
                     }
                 }
             }
-            ZStack {
-                let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
-                
-                GamePlayView(gkMatch: nil)
-                    .environmentObject(viewModel)
-                    .onAppear { viewModel.arcadeMode = true }
-                
-                VStack {
-                    
-                    Game.MainButton(label: "ANIMATE") {
-                        viewModel.model.process(Response(input:
-                                                            "Test",
-                                                         status: .Correct,
-                                                         score: 20))
-                    }
-                    Game.MainButton(label: "OUCH") {
-                        viewModel.model.currentPlayerRanOutOfTime()
-                    }
-                }
-            }
+//            ZStack {
+//                let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
+//
+//                GamePlayView(gkMatch: nil)
+//                    .environmentObject(viewModel)
+//                    .onAppear { viewModel.arcadeMode = true }
+//
+//                VStack {
+//
+//                    Game.MainButton(label: "ANIMATE") {
+//                        viewModel.model.process(Response(input:
+//                                                            "Test",
+//                                                         status: .Correct,
+//                                                         score: 20))
+//                    }
+//                    Game.MainButton(label: "OUCH") {
+//                        viewModel.model.currentPlayerRanOutOfTime()
+//                    }
+//                }
+//            }
+            
+//            ZStack {
+//                let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
+//
+//                GamePlayView(gkMatch: nil)
+//                    .environmentObject(viewModel)
+//                    .onAppear { viewModel.frenzyMode = true }
+//
+//                VStack {
+//
+//                    Game.MainButton(label: "ANIMATE") {
+//                        viewModel.model.process(Response(input:
+//                                                            "Test",
+//                                                         status: .Correct,
+//                                                         score: 20))
+//                    }
+//                    Game.MainButton(label: "OUCH") {
+//                        viewModel.model.currentPlayerRanOutOfTime()
+//                    }
+//                }
+//            }
             
         }
         .background(Color("Background").ignoresSafeArea())
