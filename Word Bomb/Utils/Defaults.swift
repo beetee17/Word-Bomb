@@ -22,6 +22,10 @@ struct Game {
     
     static let countries = loadWords("countries")
     static let dictionary = loadWords("words")
+    
+    /// check out https://stackoverflow.com/questions/38454952/map-array-of-objects-to-dictionary-in-swift for more info
+    static let words = dictionary.reduce(into: [String: [String]]()) { $0[$1.first!] = [$1.first!] }
+    
     static let syllables = loadSyllables("syllables_2")
     
     static let playerAvatarSize = Device.width/3.7
@@ -44,6 +48,39 @@ struct Game {
             return 200
         default:
             return 750
+        }
+    }
+    static func getFrequencyScore(_ frequency: Int) -> Float {
+        switch frequency {
+        case 0...25:
+            return 25
+        case 26...100:
+            return 15
+        case 101...200:
+            return 10
+        case 201...500:
+            return 5
+        case 501...1000:
+            return 3
+        default:
+            return 1
+        }
+    }
+    
+    static func getInputMultiplier(_ input: String) -> Float {
+        switch input.trim().count {
+        case 0...3:
+            return 1
+        case 4:
+            return 1.5
+        case 5:
+            return 2
+        case 6...7:
+            return 2.5
+        case 8...10:
+            return 3
+        default:
+            return 5
         }
     }
     
