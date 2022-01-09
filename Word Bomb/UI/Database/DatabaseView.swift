@@ -60,25 +60,6 @@ struct DatabaseView: View {
             }
             .overlay(AlphabetScrollList(filter: $prefix))
             .navigationTitle(Text("Search"))
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    
-                    Button(action: {
-                        withAnimation {
-                            if db.isDefault_ {
-                                Game.errorHandler.showBanner(title: "Action Prohibited", message: "Cannot modify a default database!")
-                            } else {
-                                db.remove(wordsToDelete)
-                            }
-                        }
-                    }) {
-                        Image(systemName: "trash")
-                    }
-                    
-                    EditButton()
-                }
-                
-            }
             .ignoresSafeArea(.all)
             .onDisappear() {
                 saveChanges()

@@ -39,17 +39,6 @@ struct DatabaseListView: View {
                     .environment(\.managedObjectContext, viewContext)
                 
             })
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    
-                    Button(action: { presentAddDBSheet = true }) {
-                        Image(systemName: "plus")
-                    }
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    EditButton()
-                }
-            }
         }
         .banner(isPresented: $errorHandler.bannerIsShown, title: errorHandler.bannerTitle, message: errorHandler.bannerMessage)
     }
@@ -100,15 +89,6 @@ struct DatabaseList: View {
                 destination: DatabaseView(db: db),
                 label: {
                     Text("\(db.name.capitalized)")
-                        .contextMenu {
-                            Button(action: { duplicateDB(db) }) {
-                                HStack {
-                                    Text("Duplicate")
-                                    Image(systemName: "plus.square.fill.on.square.fill")
-                                    
-                                }
-                            }
-                        }
                 })
             
         }
