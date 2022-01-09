@@ -121,27 +121,21 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         
         GameCenter.send(GameData(state: .Initial), toHost: false)
         
-        PersistenceController.shared.container.performBackgroundTask { moc in
-            let request = GameMode.fetchRequest()
-            request.predicate = NSPredicate(format: "name_ = %@", "words")
-            request.fetchLimit = 1
-            let mode = moc.safeFetch(request).first!
-            DispatchQueue.main.async {
-                self.gameMode = mode
-            }
+        let request = GameMode.fetchRequest()
+        request.predicate = NSPredicate(format: "name_ = %@ AND gameType_ = %@", "words", GameType.Classic.rawValue)
+        request.fetchLimit = 1
+        self.gameMode = moc.safeFetch(request).first!
             
-        }
-
         var players = Players()
         
         if arcadeMode {
             // Initialise a sharedModel with a single `Player` object
             let player = getSinglePlayer()
             
-            let settings = Game.Settings(timeLimit: 15,
-                                         timeConstraint: 8,
+            let settings = Game.Settings(timeLimit: 3,
+                                         timeConstraint: 3,
                                          timeMultiplier: 0.98,
-                                         playerLives: 3,
+                                         playerLives: 1,
                                          numTurnsBeforeNewQuery: 1)
             model.setPlayers(with: Players(from: [player]))
             model.setSettings(with: settings)
@@ -155,7 +149,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
             // Initialise a sharedModel with a single `Player` object
             let player = getSinglePlayer()
             
-            let settings = Game.Settings(timeLimit: 90,
+            let settings = Game.Settings(timeLimit: 5,
                                          timeConstraint: 0,
                                          timeMultiplier: nil,
                                          playerLives: 1,
