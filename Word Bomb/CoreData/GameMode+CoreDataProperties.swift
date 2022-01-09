@@ -22,8 +22,8 @@ extension GameMode {
     @NSManaged public var wordsDB_: Database?
     @NSManaged public var queriesDB_: Database?
     @NSManaged public var isDefault_: Bool
-    @NSManaged public var highScore_: Int32
-    
+    @NSManaged public var arcadeHighScore_: Int32
+    @NSManaged public var frenzyHighScore_: Int32
 }
 
 extension GameMode : Identifiable {
@@ -40,7 +40,8 @@ extension GameMode : Identifiable {
         self.name = name.trim().lowercased()
         self.instruction = instruction
         self.wordsDB = wordsDB
-        self.highScore = 0
+        self.arcadeHighScore = 0
+        self.frenzyHighScore = 0
         if let queries = queriesDB {
             self.queriesDB = queries
         }
@@ -87,17 +88,30 @@ extension GameMode : Identifiable {
         }
     }
     
-    var highScore: Int {
+    var arcadeHighScore: Int {
         get {
-            return Int(highScore_)
+            return Int(arcadeHighScore_)
         }
         set {
-            highScore_ = Int32(newValue)
+            arcadeHighScore_ = Int32(newValue)
         }
     }
-    func updateHighScore(with score: Int) {
-        highScore = max(highScore, score)
+    func updateArcadeHighScore(with score: Int) {
+        arcadeHighScore = max(arcadeHighScore, score)
         moc.saveObjects() 
+    }
+    
+    var frenzyHighScore: Int {
+        get {
+            return Int(frenzyHighScore_)
+        }
+        set {
+            frenzyHighScore_ = Int32(newValue)
+        }
+    }
+    func updateFrenzyHighScore(with score: Int) {
+        frenzyHighScore = max(frenzyHighScore, score)
+        moc.saveObjects()
     }
 }
 

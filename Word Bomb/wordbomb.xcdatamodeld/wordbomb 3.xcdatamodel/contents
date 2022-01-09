@@ -13,6 +13,7 @@
     </entity>
     <entity name="GameMode" representedClassName="GameMode" syncable="YES">
         <attribute name="arcadeHighScore_" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="frenzyHighScore_" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="gameType_" optional="YES" attributeType="String"/>
         <attribute name="instruction_" optional="YES" attributeType="String"/>
         <attribute name="isDefault_" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -42,8 +43,8 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="Database" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="GameMode" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Word" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Database" positionX="-182.5402832031251" positionY="160.2005920410156" width="128" height="89"/>
+        <element name="GameMode" positionX="-337.001953125" positionY="-21.2110595703125" width="128" height="149"/>
+        <element name="Word" positionX="47.04217529296869" positionY="24.35401916503906" width="128" height="89"/>
     </elements>
 </model>
