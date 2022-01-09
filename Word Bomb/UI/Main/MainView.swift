@@ -38,9 +38,12 @@ class MainViewVM: ObservableObject {
     @Published var creatingMode = false
     /// `true` if user has selected `"SETTINGS"`
     @Published var changingSettings = false
-    /// Toggled when user selects `"START GAME"`
-    @Published var showPlayOptions = false
+    /// Toggled when user selects `"SINGLE PLAYER"`
+    @Published var showSinglePlayerOptions = false
     /// Toggled when user selects `"MULTIPLAYER"`
+    @Published var showMultiplayerOptions = false
+    
+    /// Toggled when user selects `"GAME CENTER"`
     @Published var showMatchMakerModal = false
     
     /// `true` if user has selected `"DATABASE"`
@@ -63,27 +66,46 @@ class MainViewVM: ObservableObject {
         isFirstLaunch = false
     }
     /// Called when the user selects `"START GAME"`
-    func startGame() {
-        showPlayOptions.toggle()
+    func singlePlayer() {
+        showSinglePlayerOptions.toggle()
+        showMultiplayerOptions = false
     }
+    
+    /// Called when the user selects `"START GAME"`
+    func multiplayer() {
+        showMultiplayerOptions.toggle()
+        showSinglePlayerOptions = false
+    }
+    
     /// Called when the user selects `"ARCADE MODE`
     func arcadeMode() {
         Game.viewModel.arcadeMode = true
-        showPlayOptions = false
+        showSinglePlayerOptions = false
+        showMultiplayerOptions = false
         Game.viewModel.startGame()
     }
     /// Called when the user selects `"FRENZY MODE`
     func frenzyMode() {
         Game.viewModel.frenzyMode = true
-        showPlayOptions = false
+        showSinglePlayerOptions = false
+        showMultiplayerOptions = false
         Game.viewModel.startGame()
     }
     /// Called when the user selects `"MULTIPLAYER"`
     func onlinePlay() {
         Game.viewModel.gkSelect = true
-        showPlayOptions = false
+        showSinglePlayerOptions = false
+        showMultiplayerOptions = false
         showMatchMakerModal = true
     }
+    
+    /// Called when the user selects `"PASS & PLAY"`
+    func passPlay() {
+        showSinglePlayerOptions = false
+        showMultiplayerOptions = false
+        Game.viewModel.startGame()
+    }
+    
     /// Called when the user selects `"SETTINGS"`
     func changeSettings() {
         changingSettings = true
@@ -104,6 +126,7 @@ struct MainView: View {
     @Namespace var mainView
     
     var body: some View {
+        
         
         ZStack {
             
@@ -131,7 +154,6 @@ struct MainView: View {
             if viewModel.showTutorial {
                 FirstLaunchInstructionsView()
             }
-            
         }
         .transition(.asymmetric(insertion: AnyTransition.move(edge: .leading), removal: AnyTransition.move(edge: .trailing)))
         .animation(Game.mainAnimation)
@@ -141,6 +163,7 @@ struct MainView: View {
             viewModel.animatingLogo = false
             viewModel.logoAnimationCompleted = false
         }
+        .overlay(MuteButton(), alignment: .topLeading)
     }
 }
 
@@ -152,19 +175,25 @@ struct MainMenuView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     var body: some View {
+        
+        let showingOptions = viewModel.showMultiplayerOptions || viewModel.showSinglePlayerOptions
+        
         VStack(spacing:15) {
             
-            Game.MainButton(label: "START GAME", systemImageName: "gamecontroller") { viewModel.startGame() }
+            Game.MainButton(label: "SINGLE PLAYER",
+                            image: AnyView(Image("brain")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(height: 23))) { viewModel.singlePlayer() }
+                                            .scaleEffect(showingOptions ? 0.9 : 1)
             
-            if viewModel.showPlayOptions {
+            
+            if viewModel.showSinglePlayerOptions {
                 
                 VStack(spacing:15) {
                     
                     Game.MainButton(label: "ARCADE MODE",
-                                    image: AnyView(Image("brain")
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(width:30))) {
+                                    systemImageName: "gamecontroller") {
                         viewModel.arcadeMode()
                         
                     }
@@ -174,26 +203,39 @@ struct MainMenuView: View {
                         
                     }
                     
-                    Game.MainButton(label: "MULTIPLAYER",
+                    
+                }
+                .pulseEffect()
+                .transition(.opacity)
+                
+            }
+            
+            Game.MainButton(label: "MULTIPLAYER", systemImageName: "person.3.fill") { viewModel.multiplayer() }
+            .offset(y: viewModel.showSinglePlayerOptions ? 300 : 0)
+            .opacity(viewModel.showSinglePlayerOptions ? 0 : 1)
+            .scaleEffect(showingOptions ? 0.9 : 1)
+            
+            
+            if viewModel.showMultiplayerOptions {
+                VStack {
+                    Game.MainButton(label: "GAME CENTER",
                                     image: AnyView(Image("GK Icon")
                                                     .resizable()
                                                     .aspectRatio(contentMode: .fit)
                                                     .frame(height: 23))) {
                         viewModel.onlinePlay()
                     }
-                    
+                    Game.MainButton(label: "PASS & PLAY",
+                                    systemImageName: "house.fill") {
+                        viewModel.passPlay()
+                    }
                 }
+                .pulseEffect()
                 .transition(.opacity)
             }
-            else {
+            if !(viewModel.showMultiplayerOptions || viewModel.showSinglePlayerOptions){
                 
                 VStack(spacing:15) {
-                    Game.MainButton(label: "CREATE MODE", systemImageName: "plus.circle") { viewModel.createMode() }
-                    .sheet(isPresented: $viewModel.creatingMode) {
-                        CustomModeForm()
-                            .environmentObject(errorHandler)
-                            .environment(\.managedObjectContext, viewContext)
-                    }
                     
                     Game.MainButton(label: "DATABASE", systemImageName: "magnifyingglass.circle") { viewModel.searchDBs() }
                     .sheet(isPresented: $viewModel.searchingDatabase) {
@@ -205,11 +247,11 @@ struct MainMenuView: View {
                     Game.MainButton(label: "SETTINGS", systemImageName: "gearshape") { viewModel.changeSettings() }
                     .sheet(isPresented: $viewModel.changingSettings) { SettingsMenu().environmentObject(gameVM) }
                 }
-             
+                
                 .transition(AnyTransition
-                                .offset(x:0, y:200)
-                                .combined(with: .move(edge: viewModel.showPlayOptions ? .top : .bottom)
-                                .combined(with: .opacity)))
+                                .offset(y: 300)
+                                .combined(with: .move(edge: viewModel.showSinglePlayerOptions ? .top : .bottom)
+                                            .combined(with: .opacity)))
             }
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.75, blendDuration: 0.2))
@@ -227,9 +269,34 @@ struct MainMenuView: View {
                 Game.errorHandler.showBanner(title: "Match Making Failed", message: error.localizedDescription)
             } started: { (match) in
                 viewModel.showMatchMakerModal = false
-                viewModel.startGame()
+                print("GAME START")
+                gameVM.startGame()
+                
                 
             }
+        }
+    }
+}
+
+struct MuteButton: View {
+    @ObservedObject var settings = SettingsMenuVM.shared
+    var body: some View {
+        let gameIsMuted = !(settings.soundTrack || settings.soundFXs)
+        Button(action: {
+            if gameIsMuted {
+                settings.soundTrack = true
+                settings.soundFXs = true
+            } else {
+                settings.soundTrack = false
+                settings.soundFXs = false
+            }
+        }) {
+            Image(systemName: gameIsMuted ? "speaker.slash.fill" : "speaker.wave.3.fill")
+                .resizable().scaledToFit()
+                .frame(height: 20)
+                .foregroundColor(.white)
+                .padding(.leading, 20)
+                .padding(.top, Device.height*0.045)
         }
     }
 }
