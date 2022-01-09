@@ -14,9 +14,9 @@ struct GameOverText: View {
     @State var prevBest: Int
     
     var body: some View {
-        let usedWords = viewModel.model.game?.usedWords
+        let usedWords = viewModel.model.game.usedWords
         let score = viewModel.model.players.current.score
-        let trainingMode = viewModel.arcadeMode
+        let singlePlayer = viewModel.arcadeMode || viewModel.frenzyMode
         let gameMode = viewModel.gameMode
         
         VStack {
@@ -24,24 +24,27 @@ struct GameOverText: View {
                     showMatchReview = true
                 }
             
-            if trainingMode {
+            if singlePlayer {
                 // If in training mode there better be a Game Mode
                 Text("Previous Best: \(prevBest)")
                     .boldText()
                     .onAppear() {
                         if score <= prevBest {
                             AudioPlayer.playSound(.Explosion)
+                        } else if viewModel.arcadeMode {
+                            gameMode!.updateArcadeHighScore(with: score)
+                        } else {
+                            gameMode!.updateFrenzyHighScore(with: score)
                         }
-                        gameMode!.updateHighScore(with: score)
                     }
             }
         }
         .if(showConfetti) { $0.overlay(ConfettiView()) }
         .sheet(isPresented: $showMatchReview) {
-            MatchReviewView(words: viewModel.model.game?.words,  usedWords: Set(usedWords ?? []), numCorrect: viewModel.model.numCorrect, totalWords: viewModel.model.game!.totalWords)
+            MatchReviewView(words: viewModel.model.game.words,  usedWords: Set(usedWords ?? []), numCorrect: viewModel.model.numCorrect, totalWords: viewModel.model.game.totalWords)
         }
         .onAppear() {
-            if (score > prevBest) || !trainingMode {
+            if (score > prevBest) || !singlePlayer {
                 showConfetti = true
             }
         }
