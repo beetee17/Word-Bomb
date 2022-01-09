@@ -22,7 +22,8 @@ struct PlayerCarouselView: View {
                     MainPlayer(player: player,
                                chargeUpBar: true,
                                showScore: .constant(true),
-                               showName: .constant(getShowName(for: player)))
+                               showName: .constant(getShowName(for: player)),
+                               showLives: .constant(true))
                         .scaleEffect(getScale(for: player))
                         .opacity(getOpacity(for: player))
                         .offset(x: getOffset(for: player).x,
