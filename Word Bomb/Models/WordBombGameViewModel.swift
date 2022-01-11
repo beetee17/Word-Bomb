@@ -118,7 +118,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         withAnimation(Game.mainAnimation) {
             viewToShow = .Waiting
         }
-        
+        model.restartGame()
         GameCenter.send(GameData(state: .Initial), toHost: false)
         
         let request = GameMode.fetchRequest()
@@ -127,7 +127,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
         self.gameMode = moc.safeFetch(request).first!
             
         var players = Players()
-        
+       
         if arcadeMode {
             // Initialise a sharedModel with a single `Player` object
             let player = getSinglePlayer()
@@ -240,7 +240,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     
     func getTimeReward() {
         if frenzyMode {
-            model.controller.addTime(30)
+            model.controller.addTime(25)
         } else if arcadeMode {
             model.controller.timeLimit += 5
             model.controller.timeLeft = model.controller.timeLimit
