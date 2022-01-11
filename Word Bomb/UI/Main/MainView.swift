@@ -181,10 +181,7 @@ struct MainMenuView: View {
         VStack(spacing:15) {
             
             Game.MainButton(label: "SINGLE PLAYER",
-                            image: AnyView(Image("brain")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(height: 23))) { viewModel.singlePlayer() }
+                            systemImageName: "person.fill") { viewModel.singlePlayer() }
                                             .scaleEffect(showingOptions ? 0.9 : 1)
             
             
@@ -236,14 +233,6 @@ struct MainMenuView: View {
             if !(viewModel.showMultiplayerOptions || viewModel.showSinglePlayerOptions){
                 
                 VStack(spacing:15) {
-                    
-                    Game.MainButton(label: "DATABASE", systemImageName: "magnifyingglass.circle") { viewModel.searchDBs() }
-                    .sheet(isPresented: $viewModel.searchingDatabase) {
-                        DatabaseListView()
-                            .environment(\.managedObjectContext, viewContext)
-                            .environmentObject(errorHandler)
-                    }
-                    
                     Game.MainButton(label: "SETTINGS", systemImageName: "gearshape") { viewModel.changeSettings() }
                     .sheet(isPresented: $viewModel.changingSettings) { SettingsMenu().environmentObject(gameVM) }
                 }
