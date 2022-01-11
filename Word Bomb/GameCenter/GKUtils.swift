@@ -59,4 +59,21 @@ struct GameCenter {
         }
         return ("Authentication Failed", error.localizedDescription)
     }
+    static func submitScore(of score: Int, to leaderboardID: LeaderBoardID) {
+        if GKLocalPlayer.local.isAuthenticated {
+            GKLeaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local, leaderboardIDs: [leaderboardID.rawValue]) { error in
+                print("Score Upload to \(leaderboardID) with error: \(String(describing: error))")
+                if error != nil  {
+                    Game.errorHandler.showBanner(title: "Uploading Score to Game Center Failed", message: String(describing: error))
+                }
+            }
+        } else {
+            Game.errorHandler.showBanner(title: "Could Not Upload Score to Game Center", message: "Login to Game Center to compete with others!")
+        }
+    }
+}
+
+enum LeaderBoardID: String {
+    case Frenzy = "Testing"
+    case Arcade = "Arcade"
 }
