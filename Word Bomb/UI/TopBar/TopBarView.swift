@@ -74,7 +74,6 @@ struct TopRight: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     @Binding var showMatchProgress: Bool
     @Binding var showUsedLetters: Bool
-    @State private var showRewards = false
     
     var body: some View {
         let singlePlayer = viewModel.frenzyMode || viewModel.arcadeMode
@@ -87,32 +86,8 @@ struct TopRight: View {
                     numCorrect: viewModel.model.numCorrect,
                     action: { showMatchProgress.toggle() })
             } else if singlePlayer && !showUsedLetters {
-                let currPlayer = viewModel.model.players.current
-                
-                CorrectCounter(
-                    numCorrect: currPlayer.usedLetters.count,
-                    action: { showUsedLetters.toggle() })
-                    .onChange(of: currPlayer.usedLetters.count) { newValue in
-                        if newValue >= 26 { // 26 letters in the alphabet
-                            withAnimation(.easeInOut) { showRewards = true }
-                        }
-                    }
-                    .overlay(
-                        RewardOptions(isShowing: showRewards,
-                                      addLifeAction: viewModel.frenzyMode ? nil :
-                                        {
-                                          withAnimation(.easeInOut) {
-                                              viewModel.getLifeReward()
-                                              showRewards.toggle()
-                                          }
-                                      },
-                                      addTimeAction: {
-                                          withAnimation(.easeInOut) {
-                                              viewModel.getTimeReward()
-                                              showRewards.toggle()
-                                          }
-                                      })
-                    )
+                UsedLettersCounter(usedLetters: viewModel.model.players.current.usedLetters,
+                                   showUsedLetters: $showUsedLetters)
             }
         }
     }
