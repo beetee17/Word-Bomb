@@ -47,7 +47,7 @@ struct InteractiveTutorial<T: HelpViewModel>: View {
     
     var body: some View {
         let focusingOn = viewModel.focusedElement
-        let dummyPlayer = Player(name: "Dummy", queueNumber: 0)
+        let dummyPlayer = Player(name: "Player", queueNumber: 0)
         
         ZStack {
             Color("Background").ignoresSafeArea()
@@ -259,7 +259,7 @@ struct HelpText: View {
         VStack(spacing: 50) {
             Text(message)
                 .font(.system(.title3, design: .monospaced))
-                .multilineTextAlignment(.center)
+//                .multilineTextAlignment(.center)
         }
         .padding(.vertical, 50)
         .padding(.horizontal, 15)

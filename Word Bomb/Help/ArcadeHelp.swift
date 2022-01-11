@@ -8,7 +8,7 @@
 import SwiftUI
 
 class ArcadeHelpViewModel: ObservableObject, HelpViewModel {
-    var correctCount = 26
+    var correctCount = 25
     var timeLeft: Float = 15
     
     func isVisible(_ element: HelpElement) -> Bool {
@@ -36,11 +36,11 @@ class ArcadeHelpViewModel: ObservableObject, HelpViewModel {
         case .Timer:
             return "Shows the time remaining for the round. Enter a correct answer before it runs out! You lose a life when the time reaches 0. \n\nIn Arcade Mode, you are given up to 15s for each round. As the game progresses, this limit gradually reduces to as low as 8s."
         case .CorrectCount:
-            return "Shows the number of unique letters used. Strategise your answers by tapping on this mid-game, which will show you which letters have yet to be used. \n\nIn Arcade Mode, each time you use all 26 letters in the alphabet earns you a choice of two bonus rewards - an additional life or 5s more for future rounds."
+            return "Shows the number of unique letters used as well as one of the letters that have not been used. \n\nIn this example, 'W' is the only letter left unused. You can also view all the unused letters by tapping on this mid-game. \n\nIn Arcade Mode, each time you use all 26 letters in the alphabet earns you a choice of two bonus rewards - an additional life or 5s more for future rounds!"
         case .Rewards:
             return "These are the bonus rewards that is shown after successfully using all 26 letters in the alphabet. \n\nIn Arcade Mode, selecting the heart earns you an additional life, while selecting the clock adds 5s to the time alloted for future rounds."
         case .ChargeUp:
-            return "Shows the extent of the current streak - that is, the amount of points accumulated since you last ran out of time. \n\nFilling this bar up multiplies your future points earned by up to x3! It also gets you a free pass. Tap on the golden ticket for more information."
+            return "Shows the extent of the current streak - that is, the amount of points accumulated since you last ran out of time. \n\nFilling this bar up multiplies your future points earned by up to x3! It also gets you a free pass. Tap on the golden tickets for more information."
         case .FreePass:
             return "Redeeming the free pass allows you to skip the current syllable without penalty. \n\nSave them for situations where you are given a difficult syllable!"
         case .Lives:

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class FrenzyHelpViewModel: ObservableObject, HelpViewModel {
-    var correctCount = 26
+    var correctCount = 25
     var timeLeft: Float = 90
     
     var animateHelpTextPublished: Published<Bool> { _animateHelpText }
@@ -34,13 +34,13 @@ class FrenzyHelpViewModel: ObservableObject, HelpViewModel {
         case .Pause:
             return "This is the pause button if you wish to quit or restart a game."
         case .Timer:
-            return "Shows the time remaining. In Frenzy Mode, the goal is to get as many points before it runs out! \n\nYou start with a total of 90s. Earn additional time by giving correct answers (1s), filling up the yellow bar (10s), or using all letters in the alphabet (30s)!"
+            return "Shows the time remaining. In Frenzy Mode, the goal is to get as many points before it runs out! \n\nYou start with a total of 90s. Earn additional time by giving correct answers (1s), filling up the yellow bar (10s), or using all letters in the alphabet (25s)!"
         case .CorrectCount:
-            return "Shows the number of unique letters used. Strategise your answers by tapping on this mid-game, which will show you which letters have yet to be used. \n\nIn Frenzy Mode, each time you use all 26 letters in the alphabet earns you 30s of additional time."
+            return "Shows the number of unique letters used as well as one of the letters that have not been used. \n\nIn this example, 'W' is the only letter left unused. \n\nYou can also view all the unused letters by tapping on this mid-game. \n\nIn Frenzy Mode, each time you use all 26 letters in the alphabet earns you 25s of additional time!"
         case .Rewards:
-            return "This is the bonus reward that becomes visible after successfully using all 26 letters in the alphabet. \n\nIn Frenzy Mode, claiming it gives you 30s of additional time."
+            return "This is the bonus reward that becomes visible after successfully using all 26 letters in the alphabet. \n\nIn Frenzy Mode, claiming it gives you 25s of additional time."
         case .ChargeUp:
-            return "Shows the extent of the current streak - that is, the amount of points accumulated since you last ran out of time. \n\nFilling this bar up multiplies your future points earned by up to x3! It also gets you a free pass. Tap on the golden ticket for more information. \n\nIn Frenzy Mode, it also earns you 10s of additional time."
+            return "Shows the extent of the current streak - that is, the amount of points accumulated since you last ran out of time. \n\nFilling this bar up multiplies your future points earned by up to x3! It also gets you a free pass. Tap on the golden tickets for more information. \n\nIn Frenzy Mode, it also earns you 10s of additional time."
         case .FreePass:
             return "Redeeming the free pass allows you to skip the current syllable without penalty. In Frenzy Mode, skipping the current syllable without a free pass (i.e. using the 'PASS' button) results in a -5s penalty. \n\nSave your free passes for situations where you are given a difficult syllable!"
         case .Avatar:
