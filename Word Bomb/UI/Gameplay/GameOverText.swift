@@ -38,7 +38,8 @@ struct GameOverText: View {
                     .onAppear() {
                         if score <= prevBest {
                             AudioPlayer.playSound(.Explosion)
-                        } else if viewModel.arcadeMode {
+                        }
+                        if viewModel.arcadeMode {
                             gameMode!.updateArcadeHighScore(with: score)
                             GameCenter.submitScore(of: score, to: .Arcade)
                             
