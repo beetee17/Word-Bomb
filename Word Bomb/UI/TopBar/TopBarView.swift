@@ -28,13 +28,7 @@ struct TopBarView: View {
                 .frame(width:Device.width*0.2)
                 .offset(y:Device.height*0.015)
             
-            TimerView(
-                players: $viewModel.model.players,
-                timeLeft: $viewModel.model.controller.timeLeft,
-                timeLimit: $viewModel.model.controller.timeLimit,
-                animateExplosion: $viewModel.model.controller.animateExplosion,
-                rootThreshold: viewModel.frenzyMode ? 10 : 4
-            )
+            TimerView()
                 .offset(x: gkMatch == nil ? 0 : -20)
                 .frame(width:Device.width*0.5)
                 .offset(x:Device.width*0.05)
