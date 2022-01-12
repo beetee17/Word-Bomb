@@ -17,7 +17,7 @@ struct RestartButton: View {
                 // do not allow restart for non host in online match
                 viewModel.restartGame()
             } else {
-                Game.errorHandler.showBanner(title: "Unable To Restart Game", message: "Only the host is able to do so!")
+                Game.errorHandler.showBanner(title: "Unable To Restart Game", message: "Only the host (\(String(describing: GameCenter.hostPlayerName))) is able to do so!")
             }
         }) {
             Image(systemName: "gobackward")
