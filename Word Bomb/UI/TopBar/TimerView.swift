@@ -8,89 +8,73 @@
 import SwiftUI
 
 struct TimerView: View {
-    // TODO: why are bindings needed
-    @Binding var players: Players
-    @Binding var timeLeft: Float
-    @Binding var timeLimit: Float
-    @Binding var animateExplosion: Bool
-    var rootThreshold: Float
-    @State private var animateIncrement = false
-    @State private var increment = 5
+    @EnvironmentObject var viewModel: WordBombGameViewModel
+    
+    private var rootThreshold: Float { viewModel.frenzyMode ? 10 : 4 }
+    private var timeLeft: Float { viewModel.model.controller.timeLeft }
+    private var timeDelta: Int { viewModel.model.controller.timeDelta }
+    private var numPlayers: Int { viewModel.model.players.playing.count }
     
     var body: some View {
+        
         ZStack {
-            if players.playing.count != 2 {
-                ZStack {
-                    BombView(timeLeft: $timeLeft, timeLimit: timeLimit)
-                        .frame(width: Game.miniBombSize*1.25, height: Game.miniBombSize*1.25)
-                        .if(timeLeft < rootThreshold) { $0.shadow(color: Color.red, radius: 2) }
-                        .overlay(
-                            Text(String(format: "%.1f", timeLeft))
-                                .offset(x: 5, y: 10)
-                                .shadow(color: .black.opacity(1), radius: 1)
-                                .shadow(color: .black.opacity(1), radius: 1)
-                                .shadow(color: .black.opacity(0.4), radius: 1)
-                                .shadow(color: .black.opacity(0.4), radius: 1)
-                        )
-                        
-                    
-                    BombExplosion(animating: $animateExplosion)
-                        .offset(x: 10, y: 10)
-                    // to center explosion on bomb
-                }
-            }
-            
-            else {
+            if numPlayers != 2 {
+                BombTimerView()
+                    .if(timeLeft < rootThreshold) { $0.shadow(color: Color.red.opacity(0.7), radius: 1) }
+            } else {
                 Text(String(format: "%.1f", timeLeft))
                     .font(.largeTitle)
                     .offset(y:Device.height*0.015)
-                    
             }
         }
-        .animatingIncrement(increment, isAnimating: animateIncrement, xOffset: 40.0)
+        .animatingIncrement(timeDelta, isAnimating: $viewModel.model.controller.animateTimeDelta)
         .if(timeLeft < rootThreshold) { $0.pulseEffect() }
-        .onChange(of: timeLimit) { [timeLimit] newValue in
-            if Int(newValue - timeLimit) == 5 {
-                // TODO: get rid of this hack
-                increment = 5
-                animateIncrement = true
-                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.5) {
-                    animateIncrement = false
-                }
-            }
-        }
-        .onChange(of: timeLeft) { [timeLeft] newValue in
-            if newValue > 0 && newValue < rootThreshold  && Int(newValue) != Int(timeLimit) {
+        .onChange(of: timeLeft) { newValue in
+            if newValue > 0 && newValue < rootThreshold  {
                 AudioPlayer.playROOTSound()
-            }
-            if abs(newValue - timeLeft) > 1  && Int(newValue) != Int(timeLimit) {
-                // TODO: get rid of this hack
-                increment = Int(newValue - timeLeft)
-                animateIncrement = true
-                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.5) {
-                    animateIncrement = false
-                }
             }
         }
     }
 }
 
+struct BombTimerView: View {
+    @EnvironmentObject var viewModel: WordBombGameViewModel
+    
+    private var timeLeft: Float { viewModel.model.controller.timeLeft }
+    private var timeLimit: Float { viewModel.model.controller.timeLimit }
+    
+    var body: some View {
+
+        ZStack {
+            BombView(timeLeft: timeLeft, timeLimit: timeLimit)
+                .frame(width: Game.miniBombSize*1.25, height: Game.miniBombSize*1.25)
+                .overlay(
+                    Text(String(format: "%.1f", timeLeft))
+                        .offset(x: 5, y: 10)
+                        .shadow(color: .black.opacity(1), radius: 1)
+                        .shadow(color: .black.opacity(1), radius: 1)
+                        .shadow(color: .black.opacity(0.4), radius: 1)
+                        .shadow(color: .black.opacity(0.4), radius: 1)
+                )
+
+
+            BombExplosion(animating: $viewModel.model.controller.animateExplosion)
+                .offset(x: 10, y: 10)
+            // to center explosion on bomb
+        }
+    }
+}
 
 struct TimerView_Previews: PreviewProvider {
 
     struct TimerView_Harness: View {
         var numPlayers: Int
         @State private var animateExplosion  = false
-        
+
         var body: some View {
             VStack {
-                let players = Players(from: (1...numPlayers).map({"\($0)"}))
-                
-                TimerView(players: .constant(players),
-                          timeLeft: .constant(100),
-                          timeLimit: .constant(100),
-                          animateExplosion: $animateExplosion,
-                          rootThreshold: 4)
+
+                TimerView().environmentObject(WordBombGameViewModel.preview(numPlayers: numPlayers))
 
                 Button("Test Explosion!") {
                     animateExplosion = true
