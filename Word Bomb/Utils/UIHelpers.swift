@@ -34,7 +34,7 @@ struct ScaleEffect: ButtonStyle {
 
 struct AnimatingIncrement: ViewModifier {
     var increment: Int
-    var isAnimating: Bool
+    @Binding var isAnimating: Bool
     var xOffset: Float
     
     func body(content: Content) -> some View {
@@ -55,11 +55,18 @@ struct AnimatingIncrement: ViewModifier {
                         .opacity(isAnimating ? 0.7 : 0)
                         .animation(.easeInOut.speed(0.7))
             )
+                .onChange(of: isAnimating) { newValue in
+                    if newValue {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            self.isAnimating = false
+                        }
+                    }
+                }
 
     }
 }
 extension View {
-    func animatingIncrement(_ increment: Int, isAnimating: Bool, xOffset: Float = 20) -> some View {
+    func animatingIncrement(_ increment: Int, isAnimating: Binding<Bool>, xOffset: Float = 20) -> some View {
         self.modifier(AnimatingIncrement(increment: increment, isAnimating: isAnimating, xOffset: xOffset))
     }
 }

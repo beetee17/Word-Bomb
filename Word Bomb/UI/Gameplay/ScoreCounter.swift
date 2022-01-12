@@ -29,7 +29,7 @@ struct ScoreCounter: View {
                 .fixedSize(horizontal: false, vertical: false)
                 .scaleEffect(animateScore ? 1 : 1.2)
                 .animation(Game.mainAnimation)
-                .animatingIncrement(increment, isAnimating: animateIncrement)
+                .animatingIncrement(increment, isAnimating: $animateIncrement)
                 .onChange(of: score) { [score] newValue in
                     if newValue > score {
                         if imagePicker.state != .Combo {
@@ -43,9 +43,6 @@ struct ScoreCounter: View {
                             animateIncrement = true
                             DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.075) {
                                 self.animateScore = true
-                            }
-                            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.5) {
-                                self.animateIncrement = false
                             }
                         }
                     }
