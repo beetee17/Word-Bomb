@@ -20,10 +20,10 @@ struct PauseButton: View {
             }
         }) {
             
-            Image(systemName: "pause")
-                .resizable().aspectRatio(contentMode: .fit)
+            Image("line.3.horizontal")
+                .resizable()
                 .foregroundColor(.white)
-                .frame(width: 25, height: 25)
+                .frame(width: 28, height: 20)
         }
         .buttonStyle(ScaleEffect())
     }
@@ -32,7 +32,6 @@ struct PauseButton: View {
     func pauseGame() {
         gamePaused = true
         AudioPlayer.playSound(.Cancel)
-        Game.stopTimer()
     }
 }
 struct PauseButton_Previews: PreviewProvider {
