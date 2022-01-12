@@ -10,6 +10,17 @@ import CoreData
 
 /// Implements the mechanism for games of the `.Classic` type
 struct ContainsWordGameModel: WordGameModel {
+    static var dummy: ContainsWordGameModel {
+        ContainsWordGameModel(variants: ["Test": []],
+                                                        queries: [("te", 1)],
+                                                        totalWords: 1)
+    }
+    
+    static var main: ContainsWordGameModel {
+        ContainsWordGameModel(variants: Game.words,
+                                          queries: Game.syllables,
+                                          totalWords: Game.dictionary.count)
+    }
     var words: [String]
     var variants: [String : [String]] = [:]
     

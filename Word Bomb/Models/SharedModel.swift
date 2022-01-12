@@ -21,9 +21,7 @@ struct WordBombGame: Codable {
     var isMyGKTurn: Bool { GKLocalPlayer.local.displayName == players.current.name }
     
     /// Responsible with processing user inputs and fetching new queries if necessary
-    var game: WordGameModel = ContainsWordGameModel(variants: Game.words,
-                                                    queries: Game.syllables,
-                                                    totalWords: Game.dictionary.count)
+    var game: WordGameModel = ContainsWordGameModel.dummy
     
     var controller: Controller
     
@@ -51,12 +49,17 @@ struct WordBombGame: Codable {
     
     var settings: Game.Settings
     
-    init(players: Players, settings: Game.Settings) {
+    init(players: Players, settings: Game.Settings, preview: Bool = false) {
         self.settings = settings
         self.numTurnsBeforeNewQuery = settings.numTurnsBeforeNewQuery
         self.players = players
         self.players.useSettings(settings)
         self.controller = Controller(settings: settings)
+        if preview {
+            self.game = ContainsWordGameModel.dummy
+        } else {
+            self.game = ContainsWordGameModel.main
+        }
     }
     
     mutating func setPlayers(with players: Players) {
@@ -143,7 +146,7 @@ struct WordBombGame: Codable {
             if multiplier < players.current.multiplier && Game.viewModel.frenzyMode {
                 controller.addTime(10)
             } else if Game.viewModel.frenzyMode {
-                controller.addTime(1)
+                controller.addTime(1, withAnimation: false)
             }
             
             if !GameCenter.isOnline {
@@ -163,6 +166,32 @@ struct WordBombGame: Codable {
         players.remove(player)
     }
     
+    mutating func claimReward(of type: RewardType) {
+        let current = players.current
+        
+        switch type {
+            
+        case .FreePass:
+            players.current.numTickets -= 1
+            query = game.getRandQuery(nil)
+            
+        case .FrenzyTime:
+            controller.addTime(25)
+            current.usedLetters = Set<String>()
+            
+        case .ArcadeTime:
+            controller.addTime(5)
+            current.usedLetters = Set<String>()
+            controller.timeLeft = controller.timeLimit
+            
+        case .ArcadeLife:
+            if current.totalLives == current.livesLeft {
+                current.totalLives += 1
+            }
+            current.livesLeft += 1
+            current.usedLetters = Set<String>()
+        }
+    }
     /// Handles the game state when the current player runs out of time
     mutating func currentPlayerRanOutOfTime() {
         

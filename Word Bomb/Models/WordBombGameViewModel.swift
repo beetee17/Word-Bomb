@@ -15,15 +15,18 @@ import SwiftUI
 class WordBombGameViewModel: NSObject, ObservableObject {
     
     static func preview(numPlayers: Int = 3) -> WordBombGameViewModel {
-        let viewModel = WordBombGameViewModel()
-        let players = Players(from: (1...numPlayers).map({"\($0)"}))
         
-        viewModel.model = WordBombGame(players: players, settings: Game.Settings())
-        viewModel.gameType = .Classic
+        let players = Players(from: (1...numPlayers).map({"\($0)"}))
+        let model = WordBombGame(players: players, settings: Game.Settings(), preview: true)
+        let viewModel = WordBombGameViewModel(model: model)
         return viewModel
     }
+    
+    init(model: WordBombGame = WordBombGame(players: Players(), settings: Game.Settings())) {
+        self.model = model
+    }
     /// Source of truth for many of the variables that concerns game logic
-    @Published var model: WordBombGame = WordBombGame(players: Players(), settings: Game.Settings())
+    @Published var model: WordBombGame
     
     /// Controls the current view shown to the user
     @Published var viewToShow: ViewToShow = .Main {
@@ -42,6 +45,7 @@ class WordBombGameViewModel: NSObject, ObservableObject {
                 arcadeMode = false
                 frenzyMode = false
                 gkConnectedPlayers = 0
+                Game.stopTimer()
             default:
                 break
             }
@@ -227,35 +231,13 @@ class WordBombGameViewModel: NSObject, ObservableObject {
     func handleGameState(_ gameState: GameState, data: [String : Any]? = [:]) {
         model.handleGameState(gameState, data: data)
     }
-                                        
-    func getLifeReward() {
-        let current = model.players.current
-        if current.totalLives == current.livesLeft {
-            current.totalLives += 1
-        }
-        current.livesLeft += 1
-        current.usedLetters = Set<String>()
-        AudioPlayer.playSound(.Combo)
+                      
+    func claimReward(of type: RewardType) {
+        model.claimReward(of: type)
     }
     
-    func getTimeReward() {
-        if frenzyMode {
-            model.controller.addTime(25)
-        } else if arcadeMode {
-            model.controller.timeLimit += 5
-            model.controller.timeLeft = model.controller.timeLimit
-        }
-        model.players.current.usedLetters = Set<String>()
-        AudioPlayer.playSound(.Combo)
-    }
-    
-    func claimTicket() {
-        model.players.current.numTickets -= 1
-        model.query = model.game.getRandQuery(nil)
-        AudioPlayer.playSound(.Combo)
-    }
     func passQuery() {
-        model.controller.timeLeft -= 5
+        model.controller.addTime(-5)
         model.query = model.game.getRandQuery(nil)
         AudioPlayer.playSound(.Wrong)
     }
