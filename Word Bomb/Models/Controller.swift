@@ -10,6 +10,8 @@ import Foundation
 struct Controller: Codable {
     /// Controls when the explosion animation is run. Should be true when a player runs out of time
     var animateExplosion = false
+    var animateTimeDelta = false
+    var timeDelta = 0
     
     /// The amount of time left for the current player.
     var timeLeft: Float
@@ -38,10 +40,14 @@ struct Controller: Codable {
         } 
     }
     
-    mutating func addTime(_ amount: Float) {
+    mutating func addTime(_ amount: Float, withAnimation: Bool = true) {
         timeLeft += amount
         timeLimit = max(timeLimit, timeLeft)
         
+        timeDelta = Int(amount)
+        if withAnimation {
+            animateTimeDelta = true
+        }
     }
     
     
