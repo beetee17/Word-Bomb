@@ -43,7 +43,7 @@ struct TwoPlayerView: View {
  
             }
             
-            BombView(timeLeft: $viewModel.model.controller.timeLeft, timeLimit: viewModel.model.controller.timeLimit)
+            BombView(timeLeft: viewModel.model.controller.timeLeft, timeLimit: viewModel.model.controller.timeLimit)
                 .frame(width: Game.miniBombSize*1.1,
                        height: Game.miniBombSize*1.1)
                 .offset(x: getBombOffset())
