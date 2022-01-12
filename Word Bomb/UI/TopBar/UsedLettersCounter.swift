@@ -32,19 +32,20 @@ struct UsedLettersCounter: View {
             .overlay(
                 RewardOptions(
                     isShowing: showRewards,
-                    addLifeAction: viewModel.frenzyMode ? nil :
-                        {
-                            withAnimation(.easeInOut) {
-                                viewModel.getLifeReward()
-                                showRewards.toggle()
-                            }
-                        },
+                    addLifeAction: viewModel.frenzyMode
+                                   ? nil
+                                   : { viewModel.claimReward(of: .ArcadeLife)
+                                       showRewards = false
+                                     },
                     addTimeAction: {
-                        withAnimation(.easeInOut) {
-                            viewModel.getTimeReward()
-                            showRewards.toggle()
+                        if viewModel.frenzyMode {
+                            viewModel.claimReward(of: .FrenzyTime)
+                        } else {
+                            viewModel.claimReward(of: .ArcadeTime)
                         }
-                    })
+                        showRewards = false
+                    }
+                )
             )
     }
 }
@@ -58,7 +59,12 @@ struct RewardOptions: View {
         if isShowing {
             VStack(spacing: 20) {
                 if let addLifeAction =  addLifeAction {
-                    Button(action: addLifeAction) {
+                    Button(action: {
+                        withAnimation {
+                            addLifeAction()
+                            AudioPlayer.playSound(.Combo)
+                        }
+                        }) {
                         Image(systemName: "heart.fill")
                             .resizable().scaledToFit()
                             .frame(width: 30, height: 30)
@@ -69,7 +75,12 @@ struct RewardOptions: View {
                     .buttonStyle(ScaleEffect())
                 }
                 
-                Button(action: addTimeAction) {
+                Button(action: {
+                    withAnimation {
+                        addTimeAction()
+                        AudioPlayer.playSound(.Combo)
+                    }
+                    }) {
                     Image(systemName: "stopwatch")
                         .resizable().scaledToFit()
                         .frame(width: 30, height: 30)

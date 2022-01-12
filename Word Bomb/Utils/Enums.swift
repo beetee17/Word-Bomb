@@ -33,3 +33,6 @@ enum GameState: String, Codable {
 enum ViewToShow: String, Codable {
     case Main, GameTypeSelect, ModeSelect, Game, Waiting
 }
+enum RewardType {
+    case FreePass, FrenzyTime, ArcadeTime, ArcadeLife
+}
