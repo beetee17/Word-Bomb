@@ -74,6 +74,6 @@ struct GameCenter {
 }
 
 enum LeaderBoardID: String {
-    case Frenzy = "Testing"
+    case Frenzy = "Frenzy"
     case Arcade = "Arcade"
 }
