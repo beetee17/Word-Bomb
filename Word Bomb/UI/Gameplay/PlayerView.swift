@@ -45,16 +45,10 @@ struct PlayerView: View {
                         .if(viewModel.arcadeMode || viewModel.frenzyMode) {
                             $0.overlay(
                                 GoldenTickets(numTickets: player.numTickets,
-                                              claimAction: viewModel.claimTicket )
+                                              claimAction: { viewModel.claimReward(of: .FreePass) } )
                                     .offset(y: -(Game.playerAvatarSize/3.5))
                                     
                             )}
-                    
-                    if viewModel.frenzyMode && viewModel.model.gameState != .GameOver {
-                        Game.MainButton(label: "PASS", systemImageName: "questionmark.square.fill") {
-                            viewModel.passQuery()
-                        }
-                    }
                 }
                 .padding(.top, 5)
                 
