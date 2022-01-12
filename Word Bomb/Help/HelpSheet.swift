@@ -65,7 +65,7 @@ struct HelpScreen: View {
     var body: some View {
         NavigationView {
             List {
-                NavigationLink("Game Overview", destination: HelpMessages())
+//                NavigationLink("Game Overview", destination: HelpMessages())
                 Section(header: Text("Interactive Tutorials")) {
                     NavigationLink("Arcade Mode", destination: InteractiveTutorial(viewModel: arcade))
                     NavigationLink("Frenzy Mode", destination: InteractiveTutorial(viewModel: frenzy))

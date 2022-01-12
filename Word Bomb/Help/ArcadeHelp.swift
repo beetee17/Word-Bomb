@@ -32,7 +32,7 @@ class ArcadeHelpViewModel: ObservableObject, HelpViewModel {
         case .None:
             return "Welcome to the interactive tutorial for Arcade Mode! \n\nTap on the various UI elements for more information"
         case .Pause:
-            return "This is the pause button if you wish to quit or restart a game."
+            return "This is the pause button if you wish to quit or restart a game. Please note that to ensure fairness of leaderboard scores, this does not pause the game."
         case .Timer:
             return "Shows the time remaining for the round. Enter a correct answer before it runs out! You lose a life when the time reaches 0. \n\nIn Arcade Mode, you are given up to 15s for each round. As the game progresses, this limit gradually reduces to as low as 8s."
         case .CorrectCount:

@@ -32,7 +32,7 @@ class FrenzyHelpViewModel: ObservableObject, HelpViewModel {
         case .None:
             return "Welcome to the interactive tutorial for Frenzy Mode \n\nTap on the various UI elements for more information"
         case .Pause:
-            return "This is the pause button if you wish to quit or restart a game."
+            return "This is the menu button if you wish to quit or restart a game. Please note that to ensure fairness of leaderboard scores, this does not pause the game."
         case .Timer:
             return "Shows the time remaining. In Frenzy Mode, the goal is to get as many points before it runs out! \n\nYou start with a total of 90s. Earn additional time by giving correct answers (1s), filling up the yellow bar (10s), or using all letters in the alphabet (25s)!"
         case .CorrectCount:

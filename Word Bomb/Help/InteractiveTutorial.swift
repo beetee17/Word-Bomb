@@ -53,10 +53,10 @@ struct InteractiveTutorial<T: HelpViewModel>: View {
             Color("Background").ignoresSafeArea()
             
             if viewModel.isVisible(.Pause) {
-                Image(systemName: "pause")
-                    .resizable().aspectRatio(contentMode: .fit)
+                Image(systemName: "line.3.horizontal")
+                    .resizable()
                     .foregroundColor(.white)
-                    .frame(width: 25, height: 25)
+                    .frame(width: 25, height: 20)
                     .modifier(SpotlightEffect(viewModel: viewModel,
                                               element: .Pause))
                     .position(x: Device.width*0.1,
@@ -67,12 +67,7 @@ struct InteractiveTutorial<T: HelpViewModel>: View {
             Group {
                 
                 Group {
-                    TimerView(
-                        players: .constant(Players(from: [dummyPlayer])),
-                        timeLeft: .constant(viewModel.timeLeft),
-                        timeLimit: .constant(viewModel.timeLeft),
-                        animateExplosion: .constant(false),
-                        rootThreshold: 0)
+                    TimerView()
                         .modifier(SpotlightEffect(viewModel: viewModel,
                                                   element: .Timer))
                         .position(x: Device.width/2,
