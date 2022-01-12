@@ -10,7 +10,7 @@ import SDWebImageSwiftUI
 
 struct BombView: View {
     
-    @Binding var timeLeft: Float
+    var timeLeft: Float
     var timeLimit: Float
     
     var body: some View {
@@ -77,7 +77,7 @@ struct BombView_Preview: PreviewProvider {
         @State private var timeLimit: Float = 10
         
         var body: some View {
-            BombView(timeLeft: $timeLeft, timeLimit: timeLimit)
+            BombView(timeLeft: timeLeft, timeLimit: timeLimit)
         }
     }
     
