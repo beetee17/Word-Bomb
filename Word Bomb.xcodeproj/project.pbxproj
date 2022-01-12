@@ -53,6 +53,7 @@
 		6C86BCC02773087700E2D25F /* CustomMergePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C86BCB92773087700E2D25F /* CustomMergePolicy.swift */; };
 		6C86BCC42773088000E2D25F /* Word+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C86BCC22773088000E2D25F /* Word+CoreDataClass.swift */; };
 		6C86BCC52773088000E2D25F /* Word+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C86BCC32773088000E2D25F /* Word+CoreDataProperties.swift */; };
+		6C88AEE7278F11DC00E6287A /* combo.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6C88AEE6278F11DC00E6287A /* combo.wav */; };
 		6CA33F9726BA91FD00080CE6 /* DatabaseListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA33F9626BA91FD00080CE6 /* DatabaseListView.swift */; };
 		6CA33F9926BA921900080CE6 /* AddDatabaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA33F9826BA921900080CE6 /* AddDatabaseView.swift */; };
 		6CA33F9F26BAB8FB00080CE6 /* AlphabetScrollList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA33F9E26BAB8FB00080CE6 /* AlphabetScrollList.swift */; };
@@ -89,7 +90,6 @@
 		6CB6F94B268F64A300FA9654 /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F94A268F64A300FA9654 /* LogoView.swift */; };
 		6CB6F94F268F7E7D00FA9654 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB6F94E268F7E7D00FA9654 /* MainView.swift */; };
 		6CB757EF27843F8F002A8F24 /* RotatingBomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB757EE27843F8F002A8F24 /* RotatingBomb.swift */; };
-		6CB757F12784512D002A8F24 /* combo.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CB757F027845062002A8F24 /* combo.wav */; };
 		6CB757F32784ABBC002A8F24 /* AlphabetTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB757F22784ABBC002A8F24 /* AlphabetTracker.swift */; };
 		6CB757F527856D20002A8F24 /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB757F427856D20002A8F24 /* Players.swift */; };
 		6CB757F7278800A9002A8F24 /* GoldenTickets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB757F6278800A9002A8F24 /* GoldenTickets.swift */; };
@@ -181,6 +181,7 @@
 		6C86BCB92773087700E2D25F /* CustomMergePolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomMergePolicy.swift; path = "Word Bomb/CoreData/CustomMergePolicy.swift"; sourceTree = SOURCE_ROOT; };
 		6C86BCC22773088000E2D25F /* Word+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Word+CoreDataClass.swift"; path = "Word Bomb/CoreData/Word+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		6C86BCC32773088000E2D25F /* Word+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Word+CoreDataProperties.swift"; path = "Word Bomb/CoreData/Word+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		6C88AEE6278F11DC00E6287A /* combo.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = combo.wav; sourceTree = "<group>"; };
 		6CA33F9626BA91FD00080CE6 /* DatabaseListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseListView.swift; sourceTree = "<group>"; };
 		6CA33F9826BA921900080CE6 /* AddDatabaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDatabaseView.swift; sourceTree = "<group>"; };
 		6CA33F9E26BAB8FB00080CE6 /* AlphabetScrollList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlphabetScrollList.swift; sourceTree = "<group>"; };
@@ -218,7 +219,6 @@
 		6CB6F94A268F64A300FA9654 /* LogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		6CB6F94E268F7E7D00FA9654 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		6CB757EE27843F8F002A8F24 /* RotatingBomb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatingBomb.swift; sourceTree = "<group>"; };
-		6CB757F027845062002A8F24 /* combo.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; name = combo.wav; path = ../../../../Downloads/combo.wav; sourceTree = "<group>"; };
 		6CB757F22784ABBC002A8F24 /* AlphabetTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlphabetTracker.swift; sourceTree = "<group>"; };
 		6CB757F427856D20002A8F24 /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
 		6CB757F6278800A9002A8F24 /* GoldenTickets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoldenTickets.swift; sourceTree = "<group>"; };
@@ -448,7 +448,7 @@
 		6CB5BAAD277352A200F49E7A /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				6CB757F027845062002A8F24 /* combo.wav */,
+				6C88AEE6278F11DC00E6287A /* combo.wav */,
 				6CE97AB02783609500948560 /* JandaManateeBubble.ttf */,
 				6CB5BAB9277714B200F49E7A /* confetti.wav */,
 				6CB5BAAE2773531200F49E7A /* explosion.gif */,
@@ -669,7 +669,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6CB757F12784512D002A8F24 /* combo.wav in Resources */,
 				6CE97A9D277DE14C00948560 /* alert.wav in Resources */,
 				6CE97A98277DDE2300948560 /* victory.wav in Resources */,
 				6CE97A99277DDE2300948560 /* wrong-1.wav in Resources */,
@@ -689,6 +688,7 @@
 				6C5408FC2751096200EA4E1B /* syllables.txt in Resources */,
 				6C5408FF2751096200EA4E1B /* words.txt in Resources */,
 				6C65A32A26A1BA8C004209F4 /* explosion-2-merge.gif in Resources */,
+				6C88AEE7278F11DC00E6287A /* combo.wav in Resources */,
 				6C2E20C6268DD82900CECD3F /* Assets.xcassets in Resources */,
 				6C5408FE2751096200EA4E1B /* countries.txt in Resources */,
 			);
@@ -931,7 +931,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_ASSET_PATHS = "\"Word Bomb/Preview Content\"";
 				DEVELOPMENT_TEAM = M9BZ2GV933;
 				ENABLE_PREVIEWS = YES;
@@ -956,7 +956,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_ASSET_PATHS = "\"Word Bomb/Preview Content\"";
 				DEVELOPMENT_TEAM = M9BZ2GV933;
 				ENABLE_PREVIEWS = YES;
