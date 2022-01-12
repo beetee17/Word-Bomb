@@ -89,6 +89,11 @@ struct GamePlayArea: View {
                 Text("TIED!").boldText()
                 Text("Tap to Continue").boldText()
             default:
+                if viewModel.frenzyMode {
+                    Game.MainButton(label: "PASS", systemImageName: "questionmark.square.fill") {
+                        viewModel.passQuery()
+                    }
+                }
                 Text(viewModel.model.instruction ).boldText()
                 Text(viewModel.model.query ?? "").boldText()
                 PermanentKeyboard(
@@ -128,24 +133,24 @@ struct GamePlayView_Previews: PreviewProvider {
 //                    }
 //                }
 //            }
-            ZStack {
-                let viewModel = WordBombGameViewModel.preview(numPlayers: 2)
-                
-                GamePlayView(gkMatch: nil).environmentObject(viewModel)
-                
-                VStack {
-                    
-                    Game.MainButton(label: "ANIMATE") {
-                        viewModel.model.process(Response(input:
-                                                            "Test",
-                                                         status: .Correct,
-                                                         score: Int.random(in: 1...10)))
-                    }
-                    Game.MainButton(label: "OUCH") {
-                        viewModel.model.currentPlayerRanOutOfTime()
-                    }
-                }
-            }
+//            ZStack {
+//                let viewModel = WordBombGameViewModel.preview(numPlayers: 2)
+//
+//                GamePlayView(gkMatch: nil).environmentObject(viewModel)
+//
+//                VStack {
+//
+//                    Game.MainButton(label: "ANIMATE") {
+//                        viewModel.model.process(Response(input:
+//                                                            "Test",
+//                                                         status: .Correct,
+//                                                         score: Int.random(in: 1...10)))
+//                    }
+//                    Game.MainButton(label: "OUCH") {
+//                        viewModel.model.currentPlayerRanOutOfTime()
+//                    }
+//                }
+//            }
 //            ZStack {
 //                let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
 //
@@ -167,13 +172,13 @@ struct GamePlayView_Previews: PreviewProvider {
 //                }
 //            }
             
-//            ZStack {
-//                let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
-//
-//                GamePlayView(gkMatch: nil)
-//                    .environmentObject(viewModel)
-//                    .onAppear { viewModel.frenzyMode = true }
-//
+            ZStack {
+                let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
+
+                GamePlayView(gkMatch: nil)
+                    .environmentObject(viewModel)
+                    .onAppear { viewModel.frenzyMode = true }
+
 //                VStack {
 //
 //                    Game.MainButton(label: "ANIMATE") {
@@ -186,7 +191,7 @@ struct GamePlayView_Previews: PreviewProvider {
 //                        viewModel.model.currentPlayerRanOutOfTime()
 //                    }
 //                }
-//            }
+            }
             
         }
         .background(Color("Background").ignoresSafeArea())
