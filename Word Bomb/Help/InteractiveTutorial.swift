@@ -67,7 +67,7 @@ struct InteractiveTutorial<T: HelpViewModel>: View {
             Group {
                 
                 Group {
-                    TimerView()
+                    StaticTimerView(timeLeft: viewModel.timeLeft)
                         .modifier(SpotlightEffect(viewModel: viewModel,
                                                   element: .Timer))
                         .position(x: Device.width/2,
@@ -264,6 +264,23 @@ struct HelpText: View {
     }
 }
 
+struct StaticTimerView: View {
+    
+    var timeLeft: Float
+    
+    var body: some View {
+        BombView(timeLeft: timeLeft, timeLimit: timeLeft)
+            .frame(width: Game.miniBombSize*1.25, height: Game.miniBombSize*1.25)
+            .overlay(
+                Text(String(format: "%.1f", timeLeft))
+                    .offset(x: 5, y: 10)
+                    .shadow(color: .black.opacity(1), radius: 1)
+                    .shadow(color: .black.opacity(1), radius: 1)
+                    .shadow(color: .black.opacity(0.4), radius: 1)
+                    .shadow(color: .black.opacity(0.4), radius: 1)
+            )
+    }
+}
 struct FrenzyHelp_Previews: PreviewProvider {
     static var previews: some View {
         Group {
