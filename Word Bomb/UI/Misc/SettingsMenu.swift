@@ -61,9 +61,9 @@ struct SettingsMenu: View {
                         Slider(value: $settings.soundTrackVolume, in: 0...2)
                     }
                     
-                    Section(footer: Text("For debugging")) {
-                        Toggle("Debug", isOn: $viewModel.debugging)
-                    }
+//                    Section(footer: Text("For debugging")) {
+//                        Toggle("Debug", isOn: $viewModel.debugging)
+//                    }
                     
                     Section(footer: Text("Buy me a drink!")) {
                         DonationButton(title: "Donate", productId: "onedollar")

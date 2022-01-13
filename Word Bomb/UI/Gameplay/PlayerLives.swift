@@ -19,10 +19,13 @@ struct PlayerLives: View {
             // redraws the hearts when player livesLeft changes
             ForEach(1...totalLives, id: \.self) { i in
                 // draws player's remaining lives filled with red
-                PlayerLive(size: totalLives > 4 ? CGFloat(68 / totalLives) : 20.0, animate: Binding(
-                    get: { i > player.livesLeft },
-                    set: { _ in  }
-                ))
+                PlayerLive(size: totalLives > 4
+                                 ? 4.0*Game.playerLivesSize / CGFloat(totalLives)
+                                 : Game.playerLivesSize,
+                           animate: Binding(
+                            get: { i > player.livesLeft },
+                            set: { _ in  }
+                           ))
             }
         }
     }

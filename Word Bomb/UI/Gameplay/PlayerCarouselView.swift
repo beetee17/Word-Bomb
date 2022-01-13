@@ -8,7 +8,8 @@ import SwiftUI
 struct PlayerCarouselView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     
-    let spacing = CGFloat(5)
+    let spacing = (Device.width - Game.playerAvatarSize*3.5)/2.0
+    
     let playerSize = Game.playerAvatarSize
     let animationDuration = 0.5
     
@@ -53,7 +54,7 @@ struct PlayerCarouselView: View {
     
     private func getOffset(for player: Player) -> (x: CGFloat, y: CGFloat) {
         if players.isCurrent(player) {
-            return (5, 50)
+            return (5, playerSize*0.5)
         } else if players.isPrev(player) {
             return (playerSize + spacing + 15, 0)
         } else {
