@@ -9,7 +9,8 @@ import SwiftUI
 import GameKit
 import GameKitUI
 import CoreData
-import Purchases
+import RevenueCat
+import GoogleMobileAds
 
 let moc = PersistenceController.shared.container.viewContext
 let moc_preview = PersistenceController.preview.container.viewContext
@@ -43,9 +44,20 @@ struct Word_BombApp: App {
         
         moc.automaticallyMergesChangesFromParent = true
         
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers =
+            ["920a7d4cc03b9cbb0521cdb04f72a3b9"]
+        
         // Initialise Revenue Cat
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: "appl_PbFyqlyrPaJzyFUtKnwBuUxLvNN")
+        Purchases.shared.delegate = PurchasesDelegateHandler.shared
+        
+        /* Fetch the available offerings */
+        Purchases.shared.getOfferings { (offerings, error) in
+            UserViewModel.shared.offerings = offerings
+        }
+        
     }
     @State private var authRequired = true
     @State private var authenticated = GKLocalPlayer.local.isAuthenticated

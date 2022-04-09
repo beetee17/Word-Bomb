@@ -11,7 +11,7 @@ import GameKitUI
 
 struct GamePlayView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
-    
+    @ObservedObject var IAPHandler = UserViewModel.shared
     @State var showMatchProgress = false
     @State var showUsedLetters = false
     @State var gamePaused = false
@@ -21,26 +21,35 @@ struct GamePlayView: View {
     
     var body: some View {
         ZStack {
-            ZStack {
-                Color.clear
+            VStack {
+                if !IAPHandler.subscriptionActive {
+                    BannerAd(adID: .Release)
+                        .frame(width: 320, height: 50)
+                } else {
+                    Color.clear.frame(width: 320, height: 50)
+                }
                 
-                VStack(spacing:0) {
-                    TopBarView(gamePaused: $gamePaused,
-                               showMatchProgress: $showMatchProgress,
-                               showUsedLetters: $showUsedLetters,
-                               gkMatch: gkMatch)
-                        .zIndex(1)
+                ZStack {
+                    Color.clear
                     
-                    PlayerView()
-                        .offset(y: -Device.height*0.05)
-                    
-                    
-                    Spacer()
+                    VStack(spacing:0) {
+                        
+                        TopBarView(gamePaused: $gamePaused,
+                                   showMatchProgress: $showMatchProgress,
+                                   showUsedLetters: $showUsedLetters,
+                                   gkMatch: gkMatch)
+                            .zIndex(1)
+                        
+                        PlayerView()
+                            .offset(y: -Device.height*0.05)
+                        
+                        
+                        Spacer()
+                    }
                 }
             }
 
             GamePlayArea(forceHideKeyboard: $forceHideKeyboard)
-                .offset(y: Device.height*0.03)
                 .ignoresSafeArea(.all)
         }
     
@@ -94,8 +103,24 @@ struct GamePlayArea: View {
                         viewModel.passQuery()
                     }
                 }
-                Text(viewModel.model.instruction ).boldText()
-                Text(viewModel.model.query ?? "").boldText()
+                
+                Text(viewModel.model.instruction)
+                    .font(.headline)
+                    .bold()
+                    .textCase(.uppercase)
+                
+                let queryText = Array(viewModel.model.query ?? "")
+                let highlightIndex =  getQueryHighlightIndex()
+                
+                HStack(spacing: 0) {
+                    ForEach(Array(queryText.enumerated()), id:\.0) { index, char in
+                        Text(String(char))
+                            .boldText()
+                            .foregroundColor(index < highlightIndex ? .green : .white)
+                    }
+                }
+            
+                
                 PermanentKeyboard(
                     text: $viewModel.input,
                     forceResignFirstResponder: $forceHideKeyboard
@@ -108,6 +133,20 @@ struct GamePlayArea: View {
             OutputText(text: $viewModel.model.output)
             Spacer()
         }
+    }
+    
+    private func getQueryHighlightIndex() -> Int {
+        let input = viewModel.input.lowercased()
+        let query = viewModel.model.query?.lowercased() ?? ""
+        
+        var count = -1
+        
+        for i in (0...query.count) {
+            if input.contains(query.prefix(i)) {
+                count = i
+            }
+        }
+        return count
     }
 }
 

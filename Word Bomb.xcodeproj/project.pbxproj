@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		374C0885B0D4372F0225136D /* Pods_Word_Bomb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21039C33E406C51E662D2CDB /* Pods_Word_Bomb.framework */; };
+		6C0944FC2801A4D100FE0314 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6C0944FB2801A4D100FE0314 /* SDWebImageSwiftUI */; };
+		6C0945022801A51100FE0314 /* GameKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6C0945012801A51100FE0314 /* GameKitUI */; };
 		6C09D973276F383100D5F3EC /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C09D972276F383100D5F3EC /* LoadingView.swift */; };
 		6C0CEEA8269458D6007717E1 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0CEEA7269458D6007717E1 /* TopBarView.swift */; };
 		6C0CEEAE2694595C007717E1 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0CEEAD2694595C007717E1 /* PlayerView.swift */; };
@@ -38,7 +41,6 @@
 		6C5DBE0E269CA6E3004A7F71 /* TwoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5DBE0D269CA6E0004A7F71 /* TwoPlayerView.swift */; };
 		6C646E7626ADC9FF003989AB /* GKHostText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C646E7526ADC9FF003989AB /* GKHostText.swift */; };
 		6C65A31D26A1458D004209F4 /* BombAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C65A31C26A1458D004209F4 /* BombAnimation.swift */; };
-		6C65A32026A180D7004209F4 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6C65A31F26A180D7004209F4 /* SDWebImageSwiftUI */; };
 		6C65A32A26A1BA8C004209F4 /* explosion-2-merge.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6C65A32926A1BA8B004209F4 /* explosion-2-merge.gif */; };
 		6C6BDFF9278AF7C70005B4E8 /* GameMode+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6BDFF7278AF7C70005B4E8 /* GameMode+CoreDataClass.swift */; };
 		6C6BDFFA278AF7C70005B4E8 /* GameMode+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6BDFF8278AF7C70005B4E8 /* GameMode+CoreDataProperties.swift */; };
@@ -60,8 +62,6 @@
 		6CA33FA126BAB91100080CE6 /* WordSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA33FA026BAB91100080CE6 /* WordSearchBar.swift */; };
 		6CA33FA326BAB94400080CE6 /* NewWordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA33FA226BAB94400080CE6 /* NewWordsView.swift */; };
 		6CAE6C57276B0DE800F8BC2C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CAE6C56276B0DE800F8BC2C /* StoreKit.framework */; };
-		6CAE6C5A276B133A00F8BC2C /* Purchases in Frameworks */ = {isa = PBXBuildFile; productRef = 6CAE6C59276B133A00F8BC2C /* Purchases */; };
-		6CAE6C5D276B140500F8BC2C /* PurchaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CAE6C5C276B140500F8BC2C /* PurchaseService.swift */; };
 		6CAE6C67276C773300F8BC2C /* ErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CAE6C66276C773300F8BC2C /* ErrorViewModel.swift */; };
 		6CB5BAA527734A7800F49E7A /* ping.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CB5BAA127734A4B00F49E7A /* ping.wav */; };
 		6CB5BAA627734A7800F49E7A /* pop.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6CB5BAA227734A4B00F49E7A /* pop.wav */; };
@@ -98,9 +98,12 @@
 		6CB8D3BA27894F03002AE75A /* InteractiveTutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB8D3B927894F03002AE75A /* InteractiveTutorial.swift */; };
 		6CB8D3BC27896875002AE75A /* FrenzyHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB8D3BB27896875002AE75A /* FrenzyHelp.swift */; };
 		6CB8D3BE27896C37002AE75A /* MultiplayerHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB8D3BD27896C37002AE75A /* MultiplayerHelp.swift */; };
+		6CD215D22801AC2700FD4DA5 /* BannerAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD215D12801AC2700FD4DA5 /* BannerAd.swift */; };
+		6CD215D42801CC0100FD4DA5 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 6CD215D32801CC0100FD4DA5 /* RevenueCat */; };
+		6CD215D62801CCC200FD4DA5 /* PurchasesDelegateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD215D52801CCC200FD4DA5 /* PurchasesDelegateHandler.swift */; };
+		6CD215D82801CD2300FD4DA5 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD215D72801CD2300FD4DA5 /* UserViewModel.swift */; };
 		6CD8DA062695D342006A27ED /* CustomModeForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD8DA052695D342006A27ED /* CustomModeForm.swift */; };
 		6CE00E6F26A99FD4005406FF /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CE00E6E26A99FD4005406FF /* GameKit.framework */; };
-		6CE00E7226A9A009005406FF /* GameKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6CE00E7126A9A009005406FF /* GameKitUI */; };
 		6CE00F0126A9BBBB005406FF /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE00EFD26A9BBBB005406FF /* AuthenticationView.swift */; };
 		6CE00F0A26A9BBF8005406FF /* GKMatchMakerAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE00F0526A9BBF8005406FF /* GKMatchMakerAppModel.swift */; };
 		6CE00F0B26A9BBF8005406FF /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE00F0726A9BBF8005406FF /* AuthenticationViewModel.swift */; };
@@ -134,6 +137,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		21039C33E406C51E662D2CDB /* Pods_Word_Bomb.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Word_Bomb.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BCF53A61A7F7E96AF95762D /* Pods-Word Bomb.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Word Bomb.release.xcconfig"; path = "Target Support Files/Pods-Word Bomb/Pods-Word Bomb.release.xcconfig"; sourceTree = "<group>"; };
 		6C09D972276F383100D5F3EC /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		6C0CEEA7269458D6007717E1 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 		6C0CEEAD2694595C007717E1 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
@@ -188,7 +193,6 @@
 		6CA33FA026BAB91100080CE6 /* WordSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordSearchBar.swift; sourceTree = "<group>"; };
 		6CA33FA226BAB94400080CE6 /* NewWordsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWordsView.swift; sourceTree = "<group>"; };
 		6CAE6C56276B0DE800F8BC2C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		6CAE6C5C276B140500F8BC2C /* PurchaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseService.swift; sourceTree = "<group>"; };
 		6CAE6C66276C773300F8BC2C /* ErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewModel.swift; sourceTree = "<group>"; };
 		6CB5BAA127734A4B00F49E7A /* ping.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; path = ping.wav; sourceTree = "<group>"; };
 		6CB5BAA227734A4B00F49E7A /* pop.wav */ = {isa = PBXFileReference; explicitFileType = audio.wav; path = pop.wav; sourceTree = "<group>"; };
@@ -228,6 +232,9 @@
 		6CB8D3B927894F03002AE75A /* InteractiveTutorial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveTutorial.swift; sourceTree = "<group>"; };
 		6CB8D3BB27896875002AE75A /* FrenzyHelp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrenzyHelp.swift; sourceTree = "<group>"; };
 		6CB8D3BD27896C37002AE75A /* MultiplayerHelp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplayerHelp.swift; sourceTree = "<group>"; };
+		6CD215D12801AC2700FD4DA5 /* BannerAd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAd.swift; sourceTree = "<group>"; };
+		6CD215D52801CCC200FD4DA5 /* PurchasesDelegateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesDelegateHandler.swift; sourceTree = "<group>"; };
+		6CD215D72801CD2300FD4DA5 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		6CD8DA052695D342006A27ED /* CustomModeForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModeForm.swift; sourceTree = "<group>"; };
 		6CE00E6E26A99FD4005406FF /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		6CE00EFD26A9BBBB005406FF /* AuthenticationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
@@ -261,6 +268,7 @@
 		6CF953962692F65700D16E60 /* ContainsWordGameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainsWordGameModel.swift; sourceTree = "<group>"; };
 		6CF9539B2692F68E00D16E60 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		6CF9539E2692F6D100D16E60 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		8A14FD47ABC24917C8E4B13F /* Pods-Word Bomb.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Word Bomb.debug.xcconfig"; path = "Target Support Files/Pods-Word Bomb/Pods-Word Bomb.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,11 +276,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6C0944FC2801A4D100FE0314 /* SDWebImageSwiftUI in Frameworks */,
 				6CE00E6F26A99FD4005406FF /* GameKit.framework in Frameworks */,
-				6CE00E7226A9A009005406FF /* GameKitUI in Frameworks */,
+				6CD215D42801CC0100FD4DA5 /* RevenueCat in Frameworks */,
 				6CAE6C57276B0DE800F8BC2C /* StoreKit.framework in Frameworks */,
-				6C65A32026A180D7004209F4 /* SDWebImageSwiftUI in Frameworks */,
-				6CAE6C5A276B133A00F8BC2C /* Purchases in Frameworks */,
+				6C0945022801A51100FE0314 /* GameKitUI in Frameworks */,
+				374C0885B0D4372F0225136D /* Pods_Word_Bomb.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,6 +353,7 @@
 				6C2E20C0268DD81600CECD3F /* Word Bomb */,
 				6C2E20BF268DD81600CECD3F /* Products */,
 				6CE00E6D26A99FD4005406FF /* Frameworks */,
+				AF68A6C816B32B87585B8942 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -361,6 +371,7 @@
 				6C86BCC62773089200E2D25F /* CoreData */,
 				6CE00E7926A9AD4D005406FF /* GameCenter */,
 				6C2E20C1268DD81600CECD3F /* Word_Bomb_App.swift */,
+				6CD215D02801AC1B00FD4DA5 /* AdMob */,
 				6CAE6C5B276B13F200F8BC2C /* IAP */,
 				6CF953902692F61200D16E60 /* Models */,
 				6CF9538A2692E92200D16E60 /* UI */,
@@ -440,7 +451,8 @@
 		6CAE6C5B276B13F200F8BC2C /* IAP */ = {
 			isa = PBXGroup;
 			children = (
-				6CAE6C5C276B140500F8BC2C /* PurchaseService.swift */,
+				6CD215D52801CCC200FD4DA5 /* PurchasesDelegateHandler.swift */,
+				6CD215D72801CD2300FD4DA5 /* UserViewModel.swift */,
 			);
 			path = IAP;
 			sourceTree = "<group>";
@@ -493,11 +505,20 @@
 			path = Help;
 			sourceTree = "<group>";
 		};
+		6CD215D02801AC1B00FD4DA5 /* AdMob */ = {
+			isa = PBXGroup;
+			children = (
+				6CD215D12801AC2700FD4DA5 /* BannerAd.swift */,
+			);
+			path = AdMob;
+			sourceTree = "<group>";
+		};
 		6CE00E6D26A99FD4005406FF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				6CAE6C56276B0DE800F8BC2C /* StoreKit.framework */,
 				6CE00E6E26A99FD4005406FF /* GameKit.framework */,
+				21039C33E406C51E662D2CDB /* Pods_Word_Bomb.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -602,6 +623,15 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		AF68A6C816B32B87585B8942 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8A14FD47ABC24917C8E4B13F /* Pods-Word Bomb.debug.xcconfig */,
+				2BCF53A61A7F7E96AF95762D /* Pods-Word Bomb.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -609,9 +639,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6C2E20CD268DD82900CECD3F /* Build configuration list for PBXNativeTarget "Word Bomb" */;
 			buildPhases = (
+				CB69823059652A33461B9362 /* [CP] Check Pods Manifest.lock */,
 				6C2E20BA268DD81600CECD3F /* Sources */,
 				6C2E20BB268DD81600CECD3F /* Frameworks */,
 				6C2E20BC268DD81600CECD3F /* Resources */,
+				F7AC79527A7334607E27F905 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -619,9 +651,9 @@
 			);
 			name = "Word Bomb";
 			packageProductDependencies = (
-				6C65A31F26A180D7004209F4 /* SDWebImageSwiftUI */,
-				6CE00E7126A9A009005406FF /* GameKitUI */,
-				6CAE6C59276B133A00F8BC2C /* Purchases */,
+				6C0944FB2801A4D100FE0314 /* SDWebImageSwiftUI */,
+				6C0945012801A51100FE0314 /* GameKitUI */,
+				6CD215D32801CC0100FD4DA5 /* RevenueCat */,
 			);
 			productName = "Word Bomb";
 			productReference = 6C2E20BE268DD81600CECD3F /* Word Bomb.app */;
@@ -651,9 +683,9 @@
 			);
 			mainGroup = 6C2E20B5268DD81600CECD3F;
 			packageReferences = (
-				6C65A31E26A180D6004209F4 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
-				6CE00E7026A9A009005406FF /* XCRemoteSwiftPackageReference "GameKitUI.swift" */,
-				6CAE6C58276B133A00F8BC2C /* XCRemoteSwiftPackageReference "purchases-ios" */,
+				6C0944FA2801A4D100FE0314 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				6C0945002801A51000FE0314 /* XCRemoteSwiftPackageReference "GameKitUI.swift" */,
+				6C0945032801A5E700FE0314 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 			);
 			productRefGroup = 6C2E20BF268DD81600CECD3F /* Products */;
 			projectDirPath = "";
@@ -696,6 +728,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		CB69823059652A33461B9362 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Word Bomb-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F7AC79527A7334607E27F905 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Word Bomb/Pods-Word Bomb-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Word Bomb/Pods-Word Bomb-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Word Bomb/Pods-Word Bomb-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		6C2E20BA268DD81600CECD3F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -709,11 +783,13 @@
 				6CE97AAB2782F8E800948560 /* StarImagePicker.swift in Sources */,
 				6C7E458E269B249400E24504 /* PlayerEditorView.swift in Sources */,
 				6CE97AA72782CF9E00948560 /* CorrectCounter.swift in Sources */,
+				6CD215D82801CD2300FD4DA5 /* UserViewModel.swift in Sources */,
 				6C86BCBE2773087700E2D25F /* Database+CoreDataProperties.swift in Sources */,
 				6CF953972692F65700D16E60 /* ContainsWordGameModel.swift in Sources */,
 				6CB757EF27843F8F002A8F24 /* RotatingBomb.swift in Sources */,
 				6CA33F9726BA91FD00080CE6 /* DatabaseListView.swift in Sources */,
 				6CE00F1426A9EE05005406FF /* GKUtils.swift in Sources */,
+				6CD215D62801CCC200FD4DA5 /* PurchasesDelegateHandler.swift in Sources */,
 				6CB8D3BA27894F03002AE75A /* InteractiveTutorial.swift in Sources */,
 				6C86BCBB2773087700E2D25F /* Persistence.swift in Sources */,
 				6CF9538E2692F55000D16E60 /* Extensions.swift in Sources */,
@@ -728,7 +804,6 @@
 				6CE97A9F277EC35B00948560 /* PlayerLives.swift in Sources */,
 				6C5514C326B1B75F0038C25C /* DatabaseView.swift in Sources */,
 				6CE97AA32781507C00948560 /* ChargeUpBar.swift in Sources */,
-				6CAE6C5D276B140500F8BC2C /* PurchaseService.swift in Sources */,
 				6CE00F1F26ABD044005406FF /* BannerView.swift in Sources */,
 				6C2E20D2268DEFBC00CECD3F /* SharedModel.swift in Sources */,
 				6C2E20C4268DD81600CECD3F /* ContentView.swift in Sources */,
@@ -765,6 +840,7 @@
 				6C7E458C269B16A500E24504 /* SettingsMenu.swift in Sources */,
 				6CB5BAD2277B369000F49E7A /* LoadingText.swift in Sources */,
 				6C6BDFFA278AF7C70005B4E8 /* GameMode+CoreDataProperties.swift in Sources */,
+				6CD215D22801AC2700FD4DA5 /* BannerAd.swift in Sources */,
 				6CE00F1126A9BCF9005406FF /* GKPlayerView.swift in Sources */,
 				6C0CEEB12694599C007717E1 /* OutputText.swift in Sources */,
 				6CB6F94F268F7E7D00FA9654 /* MainView.swift in Sources */,
@@ -926,12 +1002,13 @@
 		};
 		6C2E20CE268DD82900CECD3F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8A14FD47ABC24917C8E4B13F /* Pods-Word Bomb.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Word Bomb/Preview Content\"";
 				DEVELOPMENT_TEAM = M9BZ2GV933;
 				ENABLE_PREVIEWS = YES;
@@ -941,7 +1018,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.0;
+				MARKETING_VERSION = 0.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "brandonthio.Word-Bomb";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -951,12 +1028,13 @@
 		};
 		6C2E20CF268DD82900CECD3F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2BCF53A61A7F7E96AF95762D /* Pods-Word Bomb.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Word Bomb/Preview Content\"";
 				DEVELOPMENT_TEAM = M9BZ2GV933;
 				ENABLE_PREVIEWS = YES;
@@ -966,7 +1044,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.0;
+				MARKETING_VERSION = 0.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "brandonthio.Word-Bomb";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -998,7 +1076,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		6C65A31E26A180D6004209F4 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+		6C0944FA2801A4D100FE0314 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
 			requirement = {
@@ -1006,39 +1084,39 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		6CAE6C58276B133A00F8BC2C /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RevenueCat/purchases-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.12.6;
-			};
-		};
-		6CE00E7026A9A009005406FF /* XCRemoteSwiftPackageReference "GameKitUI.swift" */ = {
+		6C0945002801A51000FE0314 /* XCRemoteSwiftPackageReference "GameKitUI.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftPackageRepository/GameKitUI.swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.0;
+				minimumVersion = 0.5.1;
+			};
+		};
+		6C0945032801A5E700FE0314 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6C65A31F26A180D7004209F4 /* SDWebImageSwiftUI */ = {
+		6C0944FB2801A4D100FE0314 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6C65A31E26A180D6004209F4 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			package = 6C0944FA2801A4D100FE0314 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
 		};
-		6CAE6C59276B133A00F8BC2C /* Purchases */ = {
+		6C0945012801A51100FE0314 /* GameKitUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6CAE6C58276B133A00F8BC2C /* XCRemoteSwiftPackageReference "purchases-ios" */;
-			productName = Purchases;
-		};
-		6CE00E7126A9A009005406FF /* GameKitUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6CE00E7026A9A009005406FF /* XCRemoteSwiftPackageReference "GameKitUI.swift" */;
+			package = 6C0945002801A51000FE0314 /* XCRemoteSwiftPackageReference "GameKitUI.swift" */;
 			productName = GameKitUI;
+		};
+		6CD215D32801CC0100FD4DA5 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6C0945032801A5E700FE0314 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCat;
 		};
 /* End XCSwiftPackageProductDependency section */
 

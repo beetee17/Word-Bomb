@@ -199,7 +199,7 @@ struct InteractiveTutorial<T: HelpViewModel>: View {
                 }
                 
                 VStack {
-                    Text("Words Containing" ).boldText()
+                    Text("Words Containing..." ).boldText()
                     Text("in").boldText()
                 }
                 .modifier(SpotlightEffect(viewModel: viewModel,

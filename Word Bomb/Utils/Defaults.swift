@@ -16,7 +16,7 @@ struct Device {
 
 
 struct Game {
-    
+    static let noAdsEntitlementID = "No Banner Ads"
     static var viewModel = WordBombGameViewModel()
     static var errorHandler = ErrorViewModel()
     
@@ -28,8 +28,8 @@ struct Game {
     
     static let syllables = loadSyllables("syllables_2")
     
-    static let playerAvatarSize = Device.height*0.12
-    static let playerLivesSize = Device.height*0.025
+    static let playerAvatarSize = Device.height*0.1
+    static let playerLivesSize = Device.height*0.02
     
     static let bombSize = Device.width*0.4
     

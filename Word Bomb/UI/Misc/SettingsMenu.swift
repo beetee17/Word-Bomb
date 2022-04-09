@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import RevenueCat
 
 struct SettingsMenu: View {
     
     @EnvironmentObject var viewModel: WordBombGameViewModel
     @ObservedObject var settings = SettingsMenuVM.shared
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var IAPHandler = UserViewModel.shared
+    /// - The current offering saved from PurchasesDelegateHandler
+    private(set) var offering: Offering? = UserViewModel.shared.offerings?.current
+    
     
     var body: some View {
         NavigationView {
@@ -50,7 +55,7 @@ struct SettingsMenu: View {
                         Stepper("Time Constraint: \(settings.timeConstraint, specifier: "%.1f") s", value: $settings.timeConstraint, in: 1...settings.timeLimit, step: 0.5)
                         
                     }
-
+                    
                     Section {
                         Toggle("Sound FXs", isOn: $settings.soundFXs)
                         Slider(value: $settings.soundFXVolume, in: 0...2)
@@ -61,12 +66,29 @@ struct SettingsMenu: View {
                         Slider(value: $settings.soundTrackVolume, in: 0...2)
                     }
                     
-//                    Section(footer: Text("For debugging")) {
-//                        Toggle("Debug", isOn: $viewModel.debugging)
-//                    }
+                    //                    Section(footer: Text("For debugging")) {
+                    //                        Toggle("Debug", isOn: $viewModel.debugging)
+                    //                    }
                     
-                    Section(footer: Text("Buy me a drink!")) {
-                        DonationButton(title: "Donate", productId: "onedollar")
+                    Section(footer: Text("Remove all ads from the game (buys me a drink too!)")) {
+                        List {
+                            ForEach(offering?.availablePackages ?? []) { package in
+                                PackageCellView(package: package) { (package) in
+                                    
+                                    /// - Purchase a package
+                                    Purchases.shared.purchase(package: package) { (transaction, info, error, userCancelled) in
+                                        IAPHandler.customerInfo = info
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    Section {
+                        Button(action: { Purchases.shared.restorePurchases(completion: nil) }) {
+                            Text("Restore Purchases")
+                                .font(.title3)
+                        }
                     }
                     
                 }
@@ -79,36 +101,39 @@ struct SettingsMenu: View {
     }
     
 }
-
-struct DonationButton: View {
-    @State var productPrice = ""
-    var title: String
-    var productId: String
+/* The cell view for each package */
+struct PackageCellView: View {
+    let package: Package
+    let onSelection: (Package) -> Void
     
     var body: some View {
-        HStack {
-            Text(title)
-            Spacer()
-            Button(productPrice) {
-                PurchaseService.purchase(productId: "onedollar", successfulPurchase: { print( "Purchase Made")
-                    
-                })
+        Button(action: { onSelection(package) }) {
+            HStack {
+                VStack {
+                    HStack {
+                        Text(package.storeProduct.localizedTitle)
+                            .font(.title3)
+                            .foregroundColor(.white)
+                            .bold()
+                        
+                        Spacer()
+                    }
+                }
+                .padding([.top, .bottom], 8.0)
+                
+                Spacer()
+                
+                
+                Text(UserViewModel.shared.subscriptionActive ? "Purchased" : package.localizedPriceString)
+                    .font(.title3)
+                    .bold()
+                
             }
-            .buttonStyle(DonateButtonStyle())
-            .onAppear() { getProductPrice()}
-        }
-    }
-    func getProductPrice() {
-        PurchaseService.retrieve(productId) {  result in
-            switch result {
-            case .success(let product):
-                productPrice = product.localizedPrice
-            case .failure:
-                productPrice = "$err"
-            }
+            .contentShape(Rectangle()) // Make the whole cell tappable
         }
     }
 }
+
 
 /// Source of truth for `SettingsMenu`. Handles the saving of game settings to `UserDefaults`
 class SettingsMenuVM: ObservableObject {
@@ -157,7 +182,7 @@ class SettingsMenuVM: ObservableObject {
             UserDefaults.standard.set(soundFXVolume, forKey: "SoundFX Volume")
         }
     }
-        
+    
     @Published var soundTrack = UserDefaults.standard.bool(forKey: "Soundtrack") {
         didSet {
             UserDefaults.standard.set(soundTrack, forKey: "Soundtrack")

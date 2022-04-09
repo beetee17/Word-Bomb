@@ -39,7 +39,7 @@ struct PlayerView: View {
                     MainPlayer(player: viewModel.model.players.current,
                                chargeUpBar: false,
                                showScore: .constant(true),
-                               showName: .constant(true),
+                               showName: .constant(false),
                                showLives: viewModel.frenzyMode ? .constant(false) : .constant(true))
                         .transition(.scale)
                         .if(viewModel.arcadeMode || viewModel.frenzyMode) {

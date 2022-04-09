@@ -59,12 +59,12 @@ struct PlayerName: View {
         if viewModel.model.gameState == .GameOver && viewModel.model.players.current == player && !viewModel.arcadeMode {
             
             Text("\(player.name) WINS!")
-                .font(.title)
+                .font(.title2)
                 .lineLimit(1).minimumScaleFactor(0.5)
         } else {
             
             Text("\(player.name)")
-                .font(.title)
+                .font(.title3)
                 .lineLimit(1).minimumScaleFactor(0.5)
         }
     }
@@ -91,7 +91,7 @@ struct PlayerAvatar: View {
                 .frame(width: Game.playerAvatarSize, height: Game.playerAvatarSize, alignment: .center)
                 .foregroundColor(.gray)
                 .overlay(Text(text)
-                            .font(.system(size: 50,
+                            .font(.system(size: 40,
                                           weight: .regular,
                                           design: .rounded))
                 )

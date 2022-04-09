@@ -41,7 +41,7 @@ struct TopBarView: View {
                 .offset(y:Device.height*0.015)
         }
         // The top bar is smaller when there are less than 3 players due to the bomb explosion animation.
-        .frame(height: Game.miniBombSize*1.5)
+        .frame(height: Game.miniBombSize*1.17)
         .offset(x: 0,y: -Device.height*0.04)
     }
 }

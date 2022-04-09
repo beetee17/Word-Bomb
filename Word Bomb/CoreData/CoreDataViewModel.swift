@@ -72,7 +72,7 @@ class CoreDataViewModel: ObservableObject {
             self.incrementProgress(value: 0.05)
             self.incrementProgress(value: 0.05)
             
-            let _ = GameMode(context: moc, gameType: .Classic, name: "words", instruction: "WORDS CONTAINING", wordsDB: words, queriesDB: syllables, isDefault: true)
+            let _ = GameMode(context: moc, gameType: .Classic, name: "words", instruction: "WORDS CONTAINING...", wordsDB: words, queriesDB: syllables, isDefault: true)
             self.incrementProgress(value: 0.05)
             
             let _ = GameMode(context: moc, gameType: .Reverse, name: "words", instruction: "WORDS STARTING WITH", wordsDB: words, isDefault: true)

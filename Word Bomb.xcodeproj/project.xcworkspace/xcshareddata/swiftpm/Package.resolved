@@ -1,43 +1,41 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "GameKitUI",
-        "repositoryURL": "https://github.com/SwiftPackageRepository/GameKitUI.swift.git",
-        "state": {
-          "branch": null,
-          "revision": "8152fa267503d58232c4c7109e910a9863e678ca",
-          "version": "0.5.0"
-        }
-      },
-      {
-        "package": "Purchases",
-        "repositoryURL": "https://github.com/RevenueCat/purchases-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "54247bc5e924cc36b75799bd20dd895a2d919aae",
-          "version": "3.13.1"
-        }
-      },
-      {
-        "package": "SDWebImage",
-        "repositoryURL": "https://github.com/SDWebImage/SDWebImage.git",
-        "state": {
-          "branch": null,
-          "revision": "76dd4b49110b8624317fc128e7fa0d8a252018bc",
-          "version": "5.11.1"
-        }
-      },
-      {
-        "package": "SDWebImageSwiftUI",
-        "repositoryURL": "https://github.com/SDWebImage/SDWebImageSwiftUI",
-        "state": {
-          "branch": null,
-          "revision": "cd8625b7cf11a97698e180d28bb7d5d357196678",
-          "version": "2.0.2"
-        }
+  "pins" : [
+    {
+      "identity" : "gamekitui.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftPackageRepository/GameKitUI.swift.git",
+      "state" : {
+        "revision" : "4e95f70fb99281d74913b840e8c593f33675f46b",
+        "version" : "0.5.1"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "purchases-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RevenueCat/purchases-ios.git",
+      "state" : {
+        "revision" : "3f72670330ef187f5e309657b8de067e042c0d0d",
+        "version" : "3.14.1"
+      }
+    },
+    {
+      "identity" : "sdwebimage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SDWebImage/SDWebImage.git",
+      "state" : {
+        "revision" : "76dd4b49110b8624317fc128e7fa0d8a252018bc",
+        "version" : "5.11.1"
+      }
+    },
+    {
+      "identity" : "sdwebimageswiftui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SDWebImage/SDWebImageSwiftUI",
+      "state" : {
+        "revision" : "cd8625b7cf11a97698e180d28bb7d5d357196678",
+        "version" : "2.0.2"
+      }
+    }
+  ],
+  "version" : 2
 }

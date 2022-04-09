@@ -41,7 +41,7 @@ struct WordBombGame: Codable {
     var query: String?
     
     /// The instruction text to be displayed
-    var instruction = "words containing" {
+    var instruction = "words containing..." {
         didSet {
             print("instruction set to \(instruction)")
         }

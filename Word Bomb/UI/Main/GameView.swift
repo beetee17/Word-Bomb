@@ -13,7 +13,7 @@ import GameKitUI
 struct GameView: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     @EnvironmentObject var gkViewModel: GKMatchMakerAppModel
-    
+    @State var showAds: Bool = true
     var body: some View {
         ZStack {
             switch viewModel.viewToShow {
