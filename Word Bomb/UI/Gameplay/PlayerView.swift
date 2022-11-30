@@ -10,12 +10,13 @@ import SwiftUI
 struct PlayerView: View {
     
     // Appears in game scene to display current player's name
-    @EnvironmentObject var viewModel: WordBombGameViewModel
+    var viewModel = Game.viewModel
+    var props: Props
     
     var body: some View {
-        
-        ZStack {
-            switch viewModel.model.players.playing.count {
+        print("Redrawing PlayerView")
+        return ZStack {
+            switch props.players.playing.count {
                 
             case 3...Int.max:
                 PlayerCarouselView()
@@ -28,7 +29,7 @@ struct PlayerView: View {
             default:
                 
                 VStack {
-                    let player = viewModel.model.players.current
+                    let player = props.players.current
                     ChargeUpBar(imagePicker: StarImagePicker(),
                                 value: player.chargeProgress,
                                 multiplier: player.multiplier,
@@ -36,13 +37,13 @@ struct PlayerView: View {
                         .frame(height: Device.height*0.035)
                         .padding(.horizontal)
                     
-                    MainPlayer(player: viewModel.model.players.current,
+                    MainPlayer(player: props.players.current,
                                chargeUpBar: false,
                                showScore: .constant(true),
                                showName: .constant(false),
-                               showLives: viewModel.frenzyMode ? .constant(false) : .constant(true))
+                               showLives: props.frenzyMode ? .constant(false) : .constant(true))
                         .transition(.scale)
-                        .if(viewModel.arcadeMode || viewModel.frenzyMode) {
+                        .if(props.arcadeMode || props.frenzyMode) {
                             $0.overlay(
                                 GoldenTickets(numTickets: player.numTickets,
                                               claimAction: { viewModel.claimReward(of: .FreePass) } )
@@ -58,13 +59,30 @@ struct PlayerView: View {
     }
 }
 
+extension PlayerView {
+    struct Props {
+        var players: Players
+        var frenzyMode: Bool
+        var arcadeMode: Bool
+    }
+}
+
+extension WordBombGameViewModel {
+    var playerViewProps: PlayerView.Props {
+        .init(players: model.players, frenzyMode: frenzyMode, arcadeMode: arcadeMode)
+    }
+}
+
 struct PlayerView_Previews: PreviewProvider {
 
     static var previews: some View {
-
+        let threePlayerVm = WordBombGameViewModel.preview(numPlayers: 3)
+        let twoPlayerVm = WordBombGameViewModel.preview(numPlayers: 2)
         Group {
-            PlayerView().environmentObject(WordBombGameViewModel.preview(numPlayers: 3))
-            PlayerView().environmentObject(WordBombGameViewModel.preview(numPlayers: 2))
+            PlayerView(props: threePlayerVm.playerViewProps)
+                .environmentObject(threePlayerVm)
+            PlayerView(props: twoPlayerVm.playerViewProps)
+                .environmentObject(twoPlayerVm)
         }
     }
 }

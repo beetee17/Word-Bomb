@@ -29,6 +29,7 @@
 		6C2E20D2268DEFBC00CECD3F /* SharedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E20D1268DEFBC00CECD3F /* SharedModel.swift */; };
 		6C2E20D5268DEFD700CECD3F /* WordBombGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E20D4268DEFD700CECD3F /* WordBombGameViewModel.swift */; };
 		6C37E91E269F287B0079279E /* GamePlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C37E91D269F287B0079279E /* GamePlayView.swift */; };
+		6C526615293753B4001538F3 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 6C526614293753B4001538F3 /* RevenueCat */; };
 		6C5408FC2751096200EA4E1B /* syllables.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6C5408F82751096200EA4E1B /* syllables.txt */; };
 		6C5408FD2751096200EA4E1B /* syllables_2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6C5408F92751096200EA4E1B /* syllables_2.txt */; };
 		6C5408FE2751096200EA4E1B /* countries.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6C5408FA2751096200EA4E1B /* countries.txt */; };
@@ -99,7 +100,6 @@
 		6CB8D3BC27896875002AE75A /* FrenzyHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB8D3BB27896875002AE75A /* FrenzyHelp.swift */; };
 		6CB8D3BE27896C37002AE75A /* MultiplayerHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CB8D3BD27896C37002AE75A /* MultiplayerHelp.swift */; };
 		6CD215D22801AC2700FD4DA5 /* BannerAd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD215D12801AC2700FD4DA5 /* BannerAd.swift */; };
-		6CD215D42801CC0100FD4DA5 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 6CD215D32801CC0100FD4DA5 /* RevenueCat */; };
 		6CD215D62801CCC200FD4DA5 /* PurchasesDelegateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD215D52801CCC200FD4DA5 /* PurchasesDelegateHandler.swift */; };
 		6CD215D82801CD2300FD4DA5 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD215D72801CD2300FD4DA5 /* UserViewModel.swift */; };
 		6CD8DA062695D342006A27ED /* CustomModeForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD8DA052695D342006A27ED /* CustomModeForm.swift */; };
@@ -278,7 +278,7 @@
 			files = (
 				6C0944FC2801A4D100FE0314 /* SDWebImageSwiftUI in Frameworks */,
 				6CE00E6F26A99FD4005406FF /* GameKit.framework in Frameworks */,
-				6CD215D42801CC0100FD4DA5 /* RevenueCat in Frameworks */,
+				6C526615293753B4001538F3 /* RevenueCat in Frameworks */,
 				6CAE6C57276B0DE800F8BC2C /* StoreKit.framework in Frameworks */,
 				6C0945022801A51100FE0314 /* GameKitUI in Frameworks */,
 				374C0885B0D4372F0225136D /* Pods_Word_Bomb.framework in Frameworks */,
@@ -653,7 +653,7 @@
 			packageProductDependencies = (
 				6C0944FB2801A4D100FE0314 /* SDWebImageSwiftUI */,
 				6C0945012801A51100FE0314 /* GameKitUI */,
-				6CD215D32801CC0100FD4DA5 /* RevenueCat */,
+				6C526614293753B4001538F3 /* RevenueCat */,
 			);
 			productName = "Word Bomb";
 			productReference = 6C2E20BE268DD81600CECD3F /* Word Bomb.app */;
@@ -685,7 +685,7 @@
 			packageReferences = (
 				6C0944FA2801A4D100FE0314 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				6C0945002801A51000FE0314 /* XCRemoteSwiftPackageReference "GameKitUI.swift" */,
-				6C0945032801A5E700FE0314 /* XCRemoteSwiftPackageReference "purchases-ios" */,
+				6C526613293753B4001538F3 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 			);
 			productRefGroup = 6C2E20BF268DD81600CECD3F /* Products */;
 			projectDirPath = "";
@@ -1092,12 +1092,12 @@
 				minimumVersion = 0.5.1;
 			};
 		};
-		6C0945032801A5E700FE0314 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
+		6C526613293753B4001538F3 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1113,9 +1113,9 @@
 			package = 6C0945002801A51000FE0314 /* XCRemoteSwiftPackageReference "GameKitUI.swift" */;
 			productName = GameKitUI;
 		};
-		6CD215D32801CC0100FD4DA5 /* RevenueCat */ = {
+		6C526614293753B4001538F3 /* RevenueCat */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6C0945032801A5E700FE0314 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			package = 6C526613293753B4001538F3 /* XCRemoteSwiftPackageReference "purchases-ios" */;
 			productName = RevenueCat;
 		};
 /* End XCSwiftPackageProductDependency section */

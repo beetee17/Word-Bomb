@@ -23,7 +23,7 @@ struct GamePlayView: View {
         ZStack {
             VStack {
                 if !IAPHandler.subscriptionActive {
-                    BannerAd(adID: .Release)
+                    BannerAd(adID: .Test)
                         .frame(width: 320, height: 50)
                 } else {
                     Color.clear.frame(width: 320, height: 50)
@@ -40,7 +40,7 @@ struct GamePlayView: View {
                                    gkMatch: gkMatch)
                             .zIndex(1)
                         
-                        PlayerView()
+                        PlayerView(props: viewModel.playerViewProps)
                             .offset(y: -Device.height*0.05)
                         
                         
@@ -49,7 +49,10 @@ struct GamePlayView: View {
                 }
             }
 
-            GamePlayArea(forceHideKeyboard: $forceHideKeyboard)
+            GamePlayArea(props: viewModel.gamePlayAreaProps,
+                         input: $viewModel.input,
+                         output: $viewModel.model.output,
+                         forceHideKeyboard: $forceHideKeyboard)
                 .ignoresSafeArea(.all)
         }
     
@@ -81,35 +84,38 @@ struct GamePlayView: View {
 
 struct GamePlayArea: View {
     
-    @EnvironmentObject var viewModel: WordBombGameViewModel
+    var viewModel: WordBombGameViewModel = Game.viewModel
+    var props: Props
+    @Binding var input: String
+    @Binding var output: String
     @Binding var forceHideKeyboard: Bool
     
     var body: some View {
-
-        VStack(spacing:0) {
+        print("Redrawing GamePlayArea")
+        return VStack(spacing:0) {
             Spacer()
-            switch viewModel.model.gameState {
+            switch props.gameState {
             case .GameOver:
-                let arcadeHighScore = viewModel.gameMode?.arcadeHighScore
-                let frenzyHighScore = viewModel.gameMode?.frenzyHighScore
+                let arcadeHighScore = props.gameMode?.arcadeHighScore
+                let frenzyHighScore = props.gameMode?.frenzyHighScore
 
-                GameOverText(prevBest: (viewModel.arcadeMode ? arcadeHighScore : frenzyHighScore) ?? -1)
+                GameOverText(prevBest: (props.arcadeMode ? arcadeHighScore : frenzyHighScore) ?? -1)
             case .TieBreak:
                 Text("TIED!").boldText()
                 Text("Tap to Continue").boldText()
             default:
-                if viewModel.frenzyMode {
+                if props.frenzyMode {
                     Game.MainButton(label: "PASS", systemImageName: "questionmark.square.fill") {
                         viewModel.passQuery()
                     }
                 }
                 
-                Text(viewModel.model.instruction)
+                Text(props.instruction)
                     .font(.headline)
                     .bold()
                     .textCase(.uppercase)
                 
-                let queryText = Array(viewModel.model.query ?? "")
+                let queryText = Array(props.query ?? "")
                 let highlightIndex =  getQueryHighlightIndex()
                 
                 HStack(spacing: 0) {
@@ -122,7 +128,7 @@ struct GamePlayArea: View {
             
                 
                 PermanentKeyboard(
-                    text: $viewModel.input,
+                    text: $input,
                     forceResignFirstResponder: $forceHideKeyboard
                 ) {
                     viewModel.processInput()
@@ -130,14 +136,14 @@ struct GamePlayArea: View {
                 .font(Font.system(size: 20))
             }
             
-            OutputText(text: $viewModel.model.output)
+            OutputText(text: $output)
             Spacer()
         }
     }
     
     private func getQueryHighlightIndex() -> Int {
-        let input = viewModel.input.lowercased()
-        let query = viewModel.model.query?.lowercased() ?? ""
+        let input = input.lowercased()
+        let query = props.query?.lowercased() ?? ""
         
         var count = -1
         
@@ -147,6 +153,28 @@ struct GamePlayArea: View {
             }
         }
         return count
+    }
+}
+
+extension GamePlayArea {
+    struct Props {
+        var gameState: GameState
+        var gameMode: GameMode?
+        var frenzyMode: Bool
+        var arcadeMode: Bool
+        var instruction: String
+        var query: String?
+    }
+}
+
+extension WordBombGameViewModel {
+    var gamePlayAreaProps: GamePlayArea.Props {
+        .init(gameState: model.gameState,
+              gameMode: gameMode,
+              frenzyMode: frenzyMode,
+              arcadeMode: arcadeMode,
+              instruction: model.instruction,
+              query: model.query)
     }
 }
 
