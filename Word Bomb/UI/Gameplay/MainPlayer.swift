@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct MainPlayer:  View {
-    var player: Player
+    @ObservedObject var player: Player
+    @StateObject var imagePicker = StarImagePicker()
+    
     var chargeUpBar: Bool
     @Binding var showScore: Bool
     @Binding var showName: Bool
     @Binding var showLives: Bool
-    @StateObject var imagePicker = StarImagePicker()
     
     var body: some View {
         
@@ -53,7 +54,7 @@ struct MainPlayer:  View {
 
 struct PlayerName: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
-    var player: Player
+    @ObservedObject var player: Player
     
     var body: some View {
         if viewModel.model.gameState == .GameOver && viewModel.model.players.current == player && !viewModel.arcadeMode {
@@ -73,8 +74,7 @@ struct PlayerName: View {
 
 
 struct PlayerAvatar: View {
-    @EnvironmentObject var viewModel: WordBombGameViewModel
-    var player: Player
+    @ObservedObject var player: Player
     
     var body: some View {
         

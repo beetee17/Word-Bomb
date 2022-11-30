@@ -9,36 +9,46 @@ import SwiftUI
 import GameKit
 
 struct ContentView: View {
-    @EnvironmentObject var viewModel: WordBombGameViewModel
-    @EnvironmentObject var coreDataVM: CoreDataViewModel
+    
+    @ObservedObject var viewModel: WordBombGameViewModel = Game.viewModel
+    @ObservedObject var cdViewModel: CoreDataViewModel = .shared
+    
+    var props: Props {
+        .init(gameViewProps: viewModel.gameViewProps,
+              setUpComplete: cdViewModel.setUpComplete)
+    }
     
     var body: some View {
         ZStack {
-
             Color("Background")
                 .ignoresSafeArea(.all)
             
-            if !coreDataVM.setUpComplete {
+            if !props.setUpComplete {
                 LoadingView()
             } else {
-                GameView()
+                GameView(props: props.gameViewProps,
+                         input: $viewModel.input,
+                         output: $viewModel.model.output)
+                .equatable()
             }
         }
+        .environmentObject(viewModel)
+        .environmentObject(cdViewModel)
     }
 }
 
-
-
-
+extension ContentView {
+    struct Props: Equatable {
+        var gameViewProps: GameView.Props
+        var setUpComplete: Bool
+    }
+}
 
 
 struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
-
-       ContentView()
-            .environmentObject(WordBombGameViewModel())
-            .environmentObject(CoreDataViewModel())
+        ContentView()
     }
 }
 

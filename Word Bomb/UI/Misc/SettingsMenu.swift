@@ -10,7 +10,8 @@ import RevenueCat
 
 struct SettingsMenu: View {
     
-    @EnvironmentObject var viewModel: WordBombGameViewModel
+    var viewModel: WordBombGameViewModel = Game.viewModel
+    
     @ObservedObject var settings = SettingsMenuVM.shared
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var IAPHandler = UserViewModel.shared

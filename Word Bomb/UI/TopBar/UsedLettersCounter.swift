@@ -8,45 +8,53 @@
 import SwiftUI
 
 struct UsedLettersCounter: View {
-    @EnvironmentObject var viewModel: WordBombGameViewModel
+    var viewModel: WordBombGameViewModel = Game.viewModel
     
-    var usedLetters: Set<String>
+    var props: Props
+    
     @Binding var showUsedLetters: Bool
     @State private var showRewards = false
 
     let alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y", "Z"]
     
     var body: some View {
-        let usedLettersArray = usedLetters.sorted().map({ $0.uppercased() })
+        let usedLettersArray = props.usedLetters.sorted().map({ $0.uppercased() })
         
         let letterToShow = alphabet.first(where: { !usedLettersArray.contains($0) }) ?? "W"
         
-        CorrectCounter(numCorrect: usedLetters.count,
+        CorrectCounter(numCorrect: props.usedLetters.count,
                        action: { showUsedLetters.toggle() },
                        letterToShow: letterToShow)
-            .onChange(of: usedLetters.count) { newValue in
-                if newValue >= 26 { // 26 letters in the alphabet
-                    withAnimation(.easeInOut) { showRewards = true }
-                }
+        .onChange(of: props.usedLetters.count) { newValue in
+            if newValue >= 26 { // 26 letters in the alphabet
+                withAnimation(.easeInOut) { showRewards = true }
             }
-            .overlay(
-                RewardOptions(
-                    isShowing: showRewards,
-                    addLifeAction: viewModel.frenzyMode
-                                   ? nil
-                                   : { viewModel.claimReward(of: .ArcadeLife)
-                                       showRewards = false
-                                     },
-                    addTimeAction: {
-                        if viewModel.frenzyMode {
-                            viewModel.claimReward(of: .FrenzyTime)
-                        } else {
-                            viewModel.claimReward(of: .ArcadeTime)
-                        }
-                        showRewards = false
+        }
+        .overlay(
+            RewardOptions(
+                isShowing: showRewards,
+                addLifeAction: props.frenzyMode
+                ? nil
+                : { viewModel.claimReward(of: .ArcadeLife)
+                    showRewards = false
+                },
+                addTimeAction: {
+                    if props.frenzyMode {
+                        viewModel.claimReward(of: .FrenzyTime)
+                    } else {
+                        viewModel.claimReward(of: .ArcadeTime)
                     }
-                )
+                    showRewards = false
+                }
             )
+        )
+    }
+}
+
+extension UsedLettersCounter {
+    struct Props: Equatable {
+        var frenzyMode: Bool
+        var usedLetters: Set<String>
     }
 }
 
@@ -98,6 +106,8 @@ struct RewardOptions: View {
 
 struct UsedLettersCounter_Previews: PreviewProvider {
     struct UsedLettersCounter_Harness: View {
+        @StateObject var viewModel = WordBombGameViewModel.preview()
+        
         @State var numCorrect = 0
         @State var showReward = false
         @State private var usedLetters = Set(["a", "b", "d"])
@@ -107,8 +117,8 @@ struct UsedLettersCounter_Previews: PreviewProvider {
                     .ignoresSafeArea()
                 VStack {
                     
-                    UsedLettersCounter(usedLetters: usedLetters, showUsedLetters: .constant(false))
-                        .environmentObject(WordBombGameViewModel.preview())
+                    UsedLettersCounter(props: viewModel.topBarViewProps.topRightProps.usedLettersCounterProps,
+                                       showUsedLetters: .constant(false))
                         
                     Game.MainButton(label: "Plus C") {
                         usedLetters.insert("c")

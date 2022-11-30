@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Players: Codable {
+struct Players: Codable, Equatable {
     
     /**
      Mutating array of `Player` objects that provides information about the current sequence of players.

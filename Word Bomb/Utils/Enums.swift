@@ -25,7 +25,7 @@ enum GameType: String, CaseIterable, Codable {
     
 }
 
-enum GameState: String, Codable {
+enum GameState: String, Equatable, Codable {
     case Initial, PlayerInput, PlayerTimedOut, GameOver, TieBreak, Playing
 }
 

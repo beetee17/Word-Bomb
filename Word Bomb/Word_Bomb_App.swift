@@ -20,8 +20,6 @@ struct Word_BombApp: App {
     
     @ObservedObject var errorHandler = Game.errorHandler
     @ObservedObject var gkViewModel = GameCenter.viewModel
-    @ObservedObject var cdViewModel = CoreDataViewModel()
-    @ObservedObject var gameViewModel = Game.viewModel
     
     init() {
         // register "default defaults"
@@ -110,11 +108,9 @@ struct Word_BombApp: App {
                 
             }
             .banner(isPresented: $errorHandler.bannerIsShown, title: errorHandler.bannerTitle, message: errorHandler.bannerMessage)
-            .environmentObject(gameViewModel)
+            .environmentObject(Game.errorHandler)
             .environmentObject(GameCenter.viewModel)
             .environmentObject(GameCenter.loginViewModel)
-            .environmentObject(cdViewModel)
-            .environmentObject(Game.errorHandler)
             .environment(\.managedObjectContext, moc)
             .onAppear() {
                 AudioPlayer.playSoundTrack(.BGMusic)

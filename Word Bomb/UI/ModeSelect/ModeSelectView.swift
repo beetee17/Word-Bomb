@@ -63,7 +63,6 @@ struct ModeSelectView: View {
     }
 }
 
-
 struct SelectModeText: View {
     
     var body: some View {

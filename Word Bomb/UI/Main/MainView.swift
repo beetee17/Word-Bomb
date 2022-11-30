@@ -167,10 +167,11 @@ struct MainView: View {
     }
 }
 
+
 struct MainMenuView: View {
+    var gameVM: WordBombGameViewModel = Game.viewModel
     
     @ObservedObject var viewModel: MainViewVM
-    @EnvironmentObject var gameVM: WordBombGameViewModel
     @EnvironmentObject var errorHandler: ErrorViewModel
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -234,7 +235,7 @@ struct MainMenuView: View {
                 
                 VStack(spacing:15) {
                     Game.MainButton(label: "SETTINGS", systemImageName: "gearshape") { viewModel.changeSettings() }
-                    .sheet(isPresented: $viewModel.changingSettings) { SettingsMenu().environmentObject(gameVM) }
+                    .sheet(isPresented: $viewModel.changingSettings) { SettingsMenu() }
                 }
                 
                 .transition(AnyTransition
@@ -260,8 +261,6 @@ struct MainMenuView: View {
                 viewModel.showMatchMakerModal = false
                 print("GAME START")
                 gameVM.startGame()
-                
-                
             }
         }
     }

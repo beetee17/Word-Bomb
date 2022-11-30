@@ -10,7 +10,9 @@ import CoreData
 
 /// View model that controls the setting up of the Core Data environment, and is the source of truth for `LoadingView`
 class CoreDataViewModel: ObservableObject {
+    static let shared = CoreDataViewModel()
     
+    private init() { }
     /// True once all Core Data objects have been initialised successfully
     /// Remains true from then onwards via `UserDefaults` since the set-up process is only required once
     /// The boolean is handled in this way since `UserDefaults.standard.bool(forKey:)` returns false if value is not found (occurs on first launch of game)

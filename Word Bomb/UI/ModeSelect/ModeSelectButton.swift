@@ -15,6 +15,7 @@ struct ModeSelectButton: View {
     @EnvironmentObject var viewModel: WordBombGameViewModel
     
     @State var showMatchMakerModal = false
+    
     var mode: GameMode
     
     func deleteMode() {

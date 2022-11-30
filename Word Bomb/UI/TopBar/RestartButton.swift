@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RestartButton: View {
-    @EnvironmentObject var viewModel: WordBombGameViewModel
+    var viewModel: WordBombGameViewModel = Game.viewModel
     
     var body: some View {
         Button(action: {

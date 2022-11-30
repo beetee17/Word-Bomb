@@ -9,9 +9,23 @@ import SwiftUI
 import GameKit
 import GameKitUI
 
-struct GamePlayView: View {
-    @EnvironmentObject var viewModel: WordBombGameViewModel
+struct GamePlayView: View, Equatable {
+    static func == (lhs: GamePlayView, rhs: GamePlayView) -> Bool {
+        lhs.props == rhs.props &&
+        lhs.input == rhs.input &&
+        lhs.output == rhs.output &&
+        lhs.gkMatch == rhs.gkMatch
+    }
+    
+    var viewModel: WordBombGameViewModel = Game.viewModel
+    
+    var props: Props
+    
     @ObservedObject var IAPHandler = UserViewModel.shared
+    
+    @Binding var input: String
+    @Binding var output: String
+    
     @State var showMatchProgress = false
     @State var showUsedLetters = false
     @State var gamePaused = false
@@ -20,7 +34,8 @@ struct GamePlayView: View {
     var gkMatch: GKMatch?
     
     var body: some View {
-        ZStack {
+        print("Redrawing GamePlayView")
+        return ZStack {
             VStack {
                 if !IAPHandler.subscriptionActive {
                     BannerAd(adID: .Test)
@@ -38,9 +53,9 @@ struct GamePlayView: View {
                                    showMatchProgress: $showMatchProgress,
                                    showUsedLetters: $showUsedLetters,
                                    gkMatch: gkMatch)
-                            .zIndex(1)
+                        .zIndex(1)
                         
-                        PlayerView(props: viewModel.playerViewProps)
+                        PlayerView(props: props.playerViewProps)
                             .offset(y: -Device.height*0.05)
                         
                         
@@ -49,19 +64,20 @@ struct GamePlayView: View {
                 }
             }
 
-            GamePlayArea(props: viewModel.gamePlayAreaProps,
-                         input: $viewModel.input,
-                         output: $viewModel.model.output,
+            GamePlayArea(props: props.gamePlayAreaProps,
+                         input: $input,
+                         output: $output,
                          forceHideKeyboard: $forceHideKeyboard)
-                .ignoresSafeArea(.all)
+            .equatable()
+            .ignoresSafeArea(.all)
         }
     
         .blur(radius: gamePaused || showMatchProgress || showUsedLetters ? 10 : 0, opaque: false)
         .overlay(
-            MatchProgressView(usedWords: viewModel.model.game.usedWords.sorted(), showMatchProgress: $showMatchProgress)
+            MatchProgressView(usedWords: props.usedWords, showMatchProgress: $showMatchProgress)
         )
         .overlay(PauseMenuView(gamePaused: $gamePaused))
-        .overlay(AlphabetTracker(usedLetters: viewModel.model.players.current.usedLetters, isShowing: $showUsedLetters))
+        .overlay(AlphabetTracker(usedLetters: props.usedLetters, isShowing: $showUsedLetters))
         .onChange(of: gamePaused) { newValue in
             forceHideKeyboard = newValue
         }
@@ -71,7 +87,7 @@ struct GamePlayView: View {
         .onChange(of: showUsedLetters) { newValue in
             forceHideKeyboard = newValue
         }
-        .if(viewModel.model.gameState == .TieBreak && !GameCenter.isNonHost) {
+        .if(props.gamePlayAreaProps.gameState == .TieBreak && !GameCenter.isNonHost) {
             // Do not allow non host to resume the tie breaker
             $0.onTapGesture {
                 viewModel.startTimer()
@@ -81,11 +97,38 @@ struct GamePlayView: View {
     }
 }
 
+extension GamePlayView {
+    struct Props: Equatable {
+        var gamePlayAreaProps: GamePlayArea.Props
+        var playerViewProps: PlayerView.Props
+        
+        var usedLetters: Set<String>
+        var usedWords: [String]
+    }
+}
 
-struct GamePlayArea: View {
+extension WordBombGameViewModel {
+    var gamePlayViewProps: GamePlayView.Props {
+        .init(gamePlayAreaProps: gamePlayAreaProps,
+              playerViewProps: playerViewProps,
+              usedLetters: model.players.current.usedLetters,
+              usedWords: model.game.usedWords.sorted())
+    }
+}
+
+
+struct GamePlayArea: View, Equatable {
+    static func == (lhs: GamePlayArea, rhs: GamePlayArea) -> Bool {
+        lhs.props == rhs.props &&
+        lhs.input == rhs.input &&
+        lhs.output == rhs.output &&
+        lhs.forceHideKeyboard == rhs.forceHideKeyboard
+    }
     
     var viewModel: WordBombGameViewModel = Game.viewModel
+    
     var props: Props
+    
     @Binding var input: String
     @Binding var output: String
     @Binding var forceHideKeyboard: Bool
@@ -157,7 +200,7 @@ struct GamePlayArea: View {
 }
 
 extension GamePlayArea {
-    struct Props {
+    struct Props: Equatable {
         var gameState: GameState
         var gameMode: GameMode?
         var frenzyMode: Bool
@@ -242,9 +285,9 @@ struct GamePlayView_Previews: PreviewProvider {
             ZStack {
                 let viewModel = WordBombGameViewModel.preview(numPlayers: 1)
 
-                GamePlayView(gkMatch: nil)
-                    .environmentObject(viewModel)
-                    .onAppear { viewModel.frenzyMode = true }
+//                GamePlayView(gkMatch: nil)
+//                    .environmentObject(viewModel)
+//                    .onAppear { viewModel.frenzyMode = true }
 
 //                VStack {
 //

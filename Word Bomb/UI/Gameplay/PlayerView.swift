@@ -27,40 +27,50 @@ struct PlayerView: View {
                     .offset(y: Device.height*0.02)
                     .transition(.scale)
             default:
-                
-                VStack {
-                    let player = props.players.current
-                    ChargeUpBar(imagePicker: StarImagePicker(),
-                                value: player.chargeProgress,
-                                multiplier: player.multiplier,
-                                invert: false)
-                        .frame(height: Device.height*0.035)
-                        .padding(.horizontal)
-                    
-                    MainPlayer(player: props.players.current,
-                               chargeUpBar: false,
-                               showScore: .constant(true),
-                               showName: .constant(false),
-                               showLives: props.frenzyMode ? .constant(false) : .constant(true))
-                        .transition(.scale)
-                        .if(props.arcadeMode || props.frenzyMode) {
-                            $0.overlay(
-                                GoldenTickets(numTickets: player.numTickets,
-                                              claimAction: { viewModel.claimReward(of: .FreePass) } )
-                                    .offset(y: -(Game.playerAvatarSize/3.5))
-                                    
-                            )}
-                }
-                .padding(.top, 5)
-                
+                SinglePlayer(player: props.players.current, props: props)
             }
         }
         .animation(Game.mainAnimation)
     }
 }
 
+struct SinglePlayer: View {
+    var viewModel = Game.viewModel
+    
+    @ObservedObject var player: Player
+    
+    var props: PlayerView.Props
+    
+    var body: some View {
+        VStack {
+            let player = props.players.current
+            ChargeUpBar(imagePicker: StarImagePicker(),
+                        value: player.chargeProgress,
+                        multiplier: player.multiplier,
+                        invert: false)
+                .frame(height: Device.height*0.035)
+                .padding(.horizontal)
+            
+            MainPlayer(player: player,
+                       chargeUpBar: false,
+                       showScore: .constant(true),
+                       showName: .constant(false),
+                       showLives: props.frenzyMode ? .constant(false) : .constant(true))
+                .transition(.scale)
+                .if(props.arcadeMode || props.frenzyMode) {
+                    $0.overlay(
+                        GoldenTickets(numTickets: player.numTickets,
+                                      claimAction: { viewModel.claimReward(of: .FreePass) } )
+                            .offset(y: -(Game.playerAvatarSize/3.5))
+                            
+                    )}
+        }
+        .padding(.top, 5)
+    }
+}
+
 extension PlayerView {
-    struct Props {
+    struct Props: Equatable {
         var players: Players
         var frenzyMode: Bool
         var arcadeMode: Bool

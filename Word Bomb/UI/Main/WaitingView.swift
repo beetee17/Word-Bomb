@@ -7,17 +7,20 @@
 
 import SwiftUI
 
-struct WaitingView: View {
+struct WaitingView: View, Equatable {
+    static func == (lhs: WaitingView, rhs: WaitingView) -> Bool {
+        lhs.props == rhs.props
+    }
+    
+    var viewModel: WordBombGameViewModel = Game.viewModel
+    
+    var props: Props
+
     @State var animating = false
-    @EnvironmentObject var viewModel: WordBombGameViewModel
     @State var loadStatusText = "Getting Things Ready"
     
     var body: some View {
 
-        // For Game Center matches
-        let numConnected = viewModel.gkConnectedPlayers
-        let expectedPlayers = viewModel.model.players.queue.count - 1
-        
         ZStack {
             Color("Background")
                 .ignoresSafeArea(.all)
@@ -38,13 +41,13 @@ struct WaitingView: View {
                     .font(.bold(.subheadline)())
                 
                 if GameCenter.isHost {
-                    Text("Players Connected: \(numConnected)/\(expectedPlayers)")
+                    Text("Players Connected: \(props.numConnectedPlayers)/\(props.numExpectedPlayers)")
                 }
                 Spacer()
             }
-            .onChange(of: numConnected) { numConnected in
+            .onChange(of: props.numConnectedPlayers) { numConnected in
                 // excluding the host
-                if numConnected == expectedPlayers && GameCenter.isHost {
+                if numConnected == props.numExpectedPlayers && GameCenter.isHost {
                     // When database is large, non host are not in sync until host restarts (better to find the actual reason why)
                     GameCenter.send(GameData(allPlayersReady: true), toHost: false)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -65,9 +68,22 @@ struct WaitingView: View {
     }
 }
 
+extension WaitingView {
+    struct Props: Equatable {
+        var numConnectedPlayers: Int
+        var numExpectedPlayers: Int
+    }
+}
+
+extension WordBombGameViewModel {
+    var waitingViewProps: WaitingView.Props {
+        .init(numConnectedPlayers: gkConnectedPlayers,
+              numExpectedPlayers: model.players.queue.count - 1)
+    }
+}
+
 struct WaitingView_Previews: PreviewProvider {
     static var previews: some View {
-        WaitingView()
-            .environmentObject(WordBombGameViewModel())
+        WaitingView(props: .init(numConnectedPlayers: 2, numExpectedPlayers: 3))
     }
 }

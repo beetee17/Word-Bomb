@@ -178,7 +178,7 @@ struct AddDatabaseView_Previews: PreviewProvider {
 
     static var previews: some View {
         AddDatabaseView()
-            .environmentObject(CoreDataViewModel())
+            .environmentObject(CoreDataViewModel.shared)
             .environment(\.managedObjectContext, moc_preview)
     }
 }
